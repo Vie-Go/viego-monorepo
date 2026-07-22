@@ -28,7 +28,7 @@ flowchart LR
 
 | Environment | Backend | Database | Mobile |
 |-------------|---------|----------|--------|
-| **local** | `./gradlew bootRun` | Postgres via Docker Compose | Simulator → local/staging API |
+| **local** | `./mvnw spring-boot:run` | Postgres via Docker Compose | Simulator → local/staging API |
 | **dev** | Auto-deploy from `main` | Managed Postgres (dev) | Internal build |
 | **staging** | Release candidate | Managed Postgres (staging) | Beta (TestFlight / Play beta) |
 | **prod** | Tagged release | Managed Postgres (prod) | App Store / Play production |

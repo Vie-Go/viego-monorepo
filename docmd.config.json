@@ -59,6 +59,11 @@
         { "title": "Backend — Modular Monolith", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/backend-modular-monolith", "icon": "server" },
         { "title": "Service Extraction Playbook", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/service-extraction-playbook", "icon": "git-branch" },
         { "title": "Frontend Architecture", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/frontend-architecture", "icon": "smartphone" },
+        { "title": "Detailed Design (per module)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design", "icon": "boxes" },
+        { "title": "· Identity (Authentication)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/identity", "icon": "key" },
+        { "title": "· Exploration (Unlocking)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/exploration", "icon": "map-pin" },
+        { "title": "· Engagement (Streaks)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/engagement", "icon": "flame" },
+        { "title": "· Content (Heritage)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/content", "icon": "music" },
         { "title": "Infrastructure", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/infrastructure", "icon": "cloud" },
         { "title": "Decisions (ADRs)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions", "icon": "git-commit" }
       ]

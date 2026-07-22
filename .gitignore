@@ -73,3 +73,5 @@ Desktop.ini
 logs/
 tmp/
 coverage/
+
+.vercel

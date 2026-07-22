@@ -9,12 +9,16 @@ For developers building the app/backend or integrating with the API. Partially g
 [Core Specifications](../01-core-specifications/).
 
 ## Quick start
+Everything lives in one [monorepo](../02-authored-system-documentation/software-architecture-document/decisions/0006-monorepo-source-control.md)
+(`backend/`, `mobile/`, `contracts/`, `docs/`). Clone once, then:
 ```bash
 # Backend (Spring Boot, Java 25)
-./gradlew bootRun                      # modular monolith on :8080
-./gradlew test --tests '*ModularityTests'   # verify module boundaries
+cd backend
+./mvnw spring-boot:run                      # modular monolith on :8080
+./mvnw test -Dtest='*ModularityTests'       # verify module boundaries
 
 # Mobile (React Native)
+cd mobile
 npm install && npm run ios             # or: npm run android
 
 # Reference prototype (interactive map + datasets)

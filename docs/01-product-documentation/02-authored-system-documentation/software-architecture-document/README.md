@@ -18,6 +18,7 @@ services.
 | [Backend — Modular Monolith](backend-modular-monolith.md) | Spring Modulith module structure, events, persistence |
 | [Service Extraction Playbook](service-extraction-playbook.md) | Turning a module into a standalone service |
 | [Frontend Architecture](frontend-architecture.md) | React Native app structure, data/state, navigation |
+| [Detailed Design (per module)](design/) | Low-level design for each module / core feature, mapped to delivery phases |
 | [Infrastructure](infrastructure.md) | Deployment topology & environments |
 | [Decisions (ADRs)](decisions/) | Recorded architecture decisions |
 
@@ -28,7 +29,8 @@ services.
 | Backend language | Java 25 (LTS) | [0004](decisions/0004-java-and-spring-boot.md) |
 | Backend framework | Spring Boot 3.x | [0004](decisions/0004-java-and-spring-boot.md) |
 | Backend architecture | Modular monolith · Spring Modulith | [0002](decisions/0002-modular-monolith-with-spring-modulith.md) |
-| Build | Gradle (Kotlin DSL) | — |
+| Build | Maven (backend) · npm/EAS (mobile) | — |
+| Source control | Single monorepo, path-scoped CI | [0006](decisions/0006-monorepo-source-control.md) |
 | Datastore | PostgreSQL, schema-per-module | [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
 | Module integration | Domain events (transactional outbox) → broker on extraction | [0002](decisions/0002-modular-monolith-with-spring-modulith.md) / [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
 | Mobile | React Native + TypeScript (iOS/Android) | [0003](decisions/0003-react-native-for-mobile.md) |

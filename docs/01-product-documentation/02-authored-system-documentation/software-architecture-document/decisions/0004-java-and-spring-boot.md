@@ -1,6 +1,6 @@
 ---
 title: "ADR 0004 — Java 25 + Spring Boot as backend platform"
-description: "Use Java 25 (LTS) with Spring Boot 3.x and Gradle for the backend."
+description: "Use Java 25 (LTS) with Spring Boot 3.x and Maven for the backend."
 ---
 
 # ADR 0004 — Java 25 + Spring Boot as backend platform
@@ -15,7 +15,7 @@ first-class support for the [modular-monolith approach](0002-modular-monolith-wi
 Use **Java 25 (LTS)** with **Spring Boot 3.x**:
 - Spring Modulith for boundaries and event-driven integration.
 - Spring Data JPA (persistence), Spring Security (auth), springdoc (OpenAPI).
-- **Gradle (Kotlin DSL)** build.
+- **Maven** build.
 - Modern Java (virtual threads, records, sealed types, pattern matching) for concise domain
   modelling and scalable I/O.
 
