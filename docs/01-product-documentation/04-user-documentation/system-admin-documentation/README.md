@@ -5,7 +5,7 @@ description: "Operating the running system: deployment, CI/CD, observability, se
 
 # System Admin Documentation
 
-For operators running Vibeat in production.
+For operators running VieGo in production.
 
 | Doc | Covers |
 |-----|--------|

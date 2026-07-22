@@ -5,10 +5,10 @@ description: "Use React Native + TypeScript to ship iOS and Android from one cod
 
 # ADR 0003 — React Native for cross-platform mobile
 
-- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** VieGo team
 
 ## Context
-Vibeat must ship to **both iOS and Android** with a small team, a highly custom UI (interactive
+VieGo must ship to **both iOS and Android** with a small team, a highly custom UI (interactive
 SVG map, animations, theming), and fast iteration. The prototype is web/JS.
 
 ## Decision

@@ -1,6 +1,6 @@
 ---
 title: "Plans, Estimates, Schedules"
-description: "The two-engineer delivery roadmap taking Vibeat from scratch to production."
+description: "The two-engineer delivery roadmap taking VieGo from scratch to production."
 ---
 
 # Plans, Estimates, Schedules
@@ -50,7 +50,7 @@ ahead) against the agreed contracts. Ownership swaps every phase.
 
 ```mermaid
 gantt
-  title Vibeat — scratch to production (vertical ownership, two engineers)
+  title VieGo — scratch to production (vertical ownership, two engineers)
   dateFormat  YYYY-MM-DD
   axisFormat  %b %d
   section Engineer A

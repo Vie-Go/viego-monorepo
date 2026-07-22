@@ -5,10 +5,10 @@ description: "We record significant technical decisions as immutable, numbered A
 
 # ADR 0001 — Record architecture decisions with ADRs
 
-- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** VieGo team
 
 ## Context
-Vibeat follows Spec-Driven Development. Behavioural decisions live in
+VieGo follows Spec-Driven Development. Behavioural decisions live in
 [Core Specifications](../../../01-core-specifications/), but we also make **technical** decisions
 (frameworks, data ownership, integration) that need durable, reviewable rationale.
 

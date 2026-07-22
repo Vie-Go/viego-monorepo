@@ -1,5 +1,5 @@
 ---
-name: Vibeat
+name: VieGo
 description: Gamified Vietnam cultural exploration map & heritage journal
 colors:
   primary: "#BE382A"
@@ -74,13 +74,13 @@ components:
     rounded: "{rounded.md}"
 ---
 
-# Design System: Vibeat
+# Design System: VieGo
 
 ## Overview
 
 **Creative North Star: "The Crimson Heritage Map"**
 
-Vibeat is a vibrant, tactile mobile journal celebrating Vietnam's cultural treasures. Built around an interactive SVG map of Vietnam's 63/64 provinces and archipelagos, the interface pairs deep heritage crimson (`#BE382A`) with warm golden accents (`#F2B72F`) and soft organic surfaces (`#F6F3EE`). 
+VieGo is a vibrant, tactile mobile journal celebrating Vietnam's cultural treasures. Built around an interactive SVG map of Vietnam's 63/64 provinces and archipelagos, the interface pairs deep heritage crimson (`#BE382A`) with warm golden accents (`#F2B72F`) and soft organic surfaces (`#F6F3EE`). 
 
 The atmosphere balances cultural pride with modern mobile ergonomics. Friendly rounded forms (16px cards, 27px pill buttons) invite touch, while purposeful micro-animations give every province unlock, streak bump, and tab switch a tactile physical feedback.
 
@@ -92,7 +92,7 @@ The atmosphere balances cultural pride with modern mobile ergonomics. Friendly r
 
 ## Colors
 
-Vibeat's color identity relies on a bold primary crimson accent, energetic golden heritage highlights, and warm organic neutral surfaces.
+VieGo's color identity relies on a bold primary crimson accent, energetic golden heritage highlights, and warm organic neutral surfaces.
 
 ### Primary
 - **Heritage Crimson** (`#BE382A`): Primary brand identifier used for main call-to-action buttons, key links, active progress indicators, and high-impact actions.
@@ -136,7 +136,7 @@ Vibeat's color identity relies on a bold primary crimson accent, energetic golde
 
 ## Layout
 
-Vibeat is structured around single-handed mobile viewports (typically 402px wide by 874px high in frame view).
+VieGo is structured around single-handed mobile viewports (typically 402px wide by 874px high in frame view).
 
 - **Padding Rhythm:** 24px-26px horizontal padding on screen edges; 10px-16px gap between stacked cards and fields.
 - **Container Structure:** Full-viewport screens with flexbox column flow (`display: flex; flex-direction: column`).
@@ -144,7 +144,7 @@ Vibeat is structured around single-handed mobile viewports (typically 402px wide
 
 ## Elevation & Depth
 
-Vibeat uses ambient drop shadows and soft tonal card fills to create tactile depth without harsh outlines.
+VieGo uses ambient drop shadows and soft tonal card fills to create tactile depth without harsh outlines.
 
 ### Shadow Vocabulary
 - **Card Ambient** (`box-shadow: 0 12px 32px rgba(12,5,7,0.12)` in light theme, `0 12px 32px rgba(0,0,0,0.5)` in dark theme): Used on main surface cards, navigation bars, and floating action sheets.
@@ -194,4 +194,4 @@ Form language relies on friendly, curved organic shapes with smooth pill-style c
 ### Don't:
 - **Don't** use sharp 0px corners on interactive cards or buttons.
 - **Don't** apply primary crimson glowing shadows to non-primary buttons or containers.
-- **Don't** introduce cold blues or stark neon colors into Vibeat's warm cultural palette.
+- **Don't** introduce cold blues or stark neon colors into VieGo's warm cultural palette.

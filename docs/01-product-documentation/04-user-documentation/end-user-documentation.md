@@ -1,11 +1,11 @@
 ---
 title: "End-user Documentation"
-description: "Help content for Explorers using the Vibeat mobile app."
+description: "Help content for Explorers using the VieGo mobile app."
 ---
 
 # End-user Documentation
 
-Help content for **Explorers** — the people exploring Vietnam through Vibeat. Written in-product
+Help content for **Explorers** — the people exploring Vietnam through VieGo. Written in-product
 in Vietnamese and English.
 
 ## Topics (to author)

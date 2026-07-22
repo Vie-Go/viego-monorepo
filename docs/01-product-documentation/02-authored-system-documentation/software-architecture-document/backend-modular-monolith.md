@@ -12,8 +12,8 @@ module**, built to be [extracted into a service](service-extraction-playbook.md)
 ## Module topology
 
 ```
-com.viego.vibeat
-├── VibeatApplication.java
+com.viego
+├── VieGoApplication.java
 ├── shared/        ← open kernel: ids, LocalizedText (no business logic)
 ├── identity/      ← Explorer accounts, auth, preferences
 ├── exploration/   ← map, provinces, unlocking, collection
@@ -27,7 +27,7 @@ com.viego.vibeat
 ## Package skeleton (per module)
 
 ```
-com.viego.vibeat.exploration
+com.viego.exploration
 ├── package-info.java          ← @ApplicationModule(displayName = "Exploration")
 ├── api/                       ← PUBLISHED (named interface "api")
 │   ├── package-info.java      ← @NamedInterface("api")
@@ -65,7 +65,7 @@ Only a module's root + `api` package are visible to peers; everything else is in
 ```java
 // exploration/api/package-info.java
 @org.springframework.modulith.NamedInterface("api")
-package com.viego.vibeat.exploration.api;
+package com.viego.exploration.api;
 ```
 
 ## Event-driven integration
@@ -114,7 +114,7 @@ POST /api/v1/provinces/{id}/unlock
 
 ```java
 class ModularityTests {
-  static final ApplicationModules modules = ApplicationModules.of(VibeatApplication.class);
+  static final ApplicationModules modules = ApplicationModules.of(VieGoApplication.class);
   @Test void verifiesBoundaries() { modules.verify(); }
   @Test void writesDocs() { new Documenter(modules).writeDocumentation(); }
 }

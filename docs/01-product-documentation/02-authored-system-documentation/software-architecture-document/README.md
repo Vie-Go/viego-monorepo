@@ -1,11 +1,11 @@
 ---
 title: "Software Architecture Document (SAD)"
-description: "System context, C4 models, and the architecture of Vibeat's backend, frontend, and infrastructure."
+description: "System context, C4 models, and the architecture of VieGo's backend, frontend, and infrastructure."
 ---
 
 # Software Architecture Document (SAD)
 
-The authoritative description of **how Vibeat is built**. A React Native app talks to a Spring
+The authoritative description of **how VieGo is built**. A React Native app talks to a Spring
 Boot (Java 25) backend built as a **modular monolith** (Spring Modulith) whose modules map 1:1
 to DDD [bounded contexts](ddd-and-domain-model.md) and are designed for future extraction into
 services.
@@ -40,8 +40,8 @@ services.
 
 ```mermaid
 flowchart TD
-  Explorer([Explorer]) -->|uses| App[Vibeat Mobile App\nReact Native]
-  App -->|REST/JSON over HTTPS| API[Vibeat Backend\nSpring Boot · Java 25]
+  Explorer([Explorer]) -->|uses| App[VieGo Mobile App\nReact Native]
+  App -->|REST/JSON over HTTPS| API[VieGo Backend\nSpring Boot · Java 25]
   App -.->|OIDC/OAuth2| IdP[(Identity Providers\nGoogle · Facebook · Zalo)]
   API --> DB[(PostgreSQL)]
   API --> Media[(Object Storage / CDN\nCultural Beats media)]

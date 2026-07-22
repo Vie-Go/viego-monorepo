@@ -1,11 +1,11 @@
 ---
 title: "UX Design Documentation"
-description: "Design system, theming, localization, and experience principles for the Vibeat app."
+description: "Design system, theming, localization, and experience principles for the VieGo app."
 ---
 
 # UX Design Documentation
 
-How Vibeat looks and feels. The canonical visual source is [`DESIGN.md`](../../../../../DESIGN.md)
+How VieGo looks and feels. The canonical visual source is [`DESIGN.md`](../../../../../DESIGN.md)
 ("The Crimson Heritage Map"); this section makes it actionable for engineering.
 
 | Doc | Covers |

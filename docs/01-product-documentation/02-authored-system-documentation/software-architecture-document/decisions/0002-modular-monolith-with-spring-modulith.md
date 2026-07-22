@@ -5,16 +5,16 @@ description: "Build the backend as a Spring Modulith modular monolith whose modu
 
 # ADR 0002 — Modular monolith with Spring Modulith
 
-- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** VieGo team
 
 ## Context
-Vibeat has four clear [bounded contexts](../ddd-and-domain-model.md). Microservices-first adds
+VieGo has four clear [bounded contexts](../ddd-and-domain-model.md). Microservices-first adds
 distributed-systems overhead a pre-PMF app doesn't need — but we expect some contexts to need
 independent scaling/deployment later.
 
 ## Decision
 Build the backend as a **modular monolith** using **Spring Modulith**:
-- One Spring Boot app; each context is one **application module** under `com.viego.vibeat.<module>`.
+- One Spring Boot app; each context is one **application module** under `com.viego.<module>`.
 - Modules expose only a **named-interface API**; other packages are internal.
 - Integration is primarily **asynchronous domain events** via a **transactional event log** (JPA).
 - Boundaries are **verified in CI** (`ApplicationModules.verify()`); diagrams via `Documenter`.

@@ -1,6 +1,6 @@
 ---
 title: "1.1.4 User Documentation"
-description: "Docs for the people who use, integrate with, and operate Vibeat."
+description: "Docs for the people who use, integrate with, and operate VieGo."
 ---
 
 # 1.1.4 User Documentation

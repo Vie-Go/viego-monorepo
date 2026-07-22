@@ -10,7 +10,7 @@ adaptive
 Cultural explorers and travelers gamifying their journey across Vietnam's provinces.
 
 ## Product Purpose
-Vibeat is an interactive cultural exploration app that enables users to discover, unlock, and collect Vietnam's rich regional heritage, traditions, and local beats province by province.
+VieGo is an interactive cultural exploration app that enables users to discover, unlock, and collect Vietnam's rich regional heritage, traditions, and local beats province by province.
 
 ## Positioning
 A gamified regional discovery platform combining an interactive Vietnam map, daily cultural streaks, regional trivia, and rich audio-visual heritage collections that make exploring Vietnamese culture immersive and habitual.
@@ -24,7 +24,7 @@ Mobile application used on-the-go while traveling or during daily discovery ritu
 - **Terminology**: Province unlocking, Streaks, Cultural Beats, Regional Heritage, Unlocked status.
 
 ## Brand Commitments
-- **Name**: Vibeat (under Vie-Go)
+- **Name**: VieGo
 - **Palette**: Signature deep crimson red (`#BE382A`), warm vibrant yellow/gold (`#F2B72F`), warm off-white canvas (`#EBE5DC` / `#F6F3EE`), sleek dark theme (`#151011`).
 - **Typography**: Urbanist font family with bold geometric weights (800 / 700 / 600).
 - **Tone & Voice**: Warm, vibrant, culturally proud, encouraging, and playful.

@@ -30,7 +30,7 @@ In scope: Email + Google now; JWT issue/refresh; preferences. Deferred: Facebook
 - **Preferences** *(value object)* — `{ language: vi|en, theme: light|dark }`. Replaced wholesale
   on update (VOs are immutable).
 - **AuthProvider** *(value object)* — `{ kind: email|google|facebook|zalo, ref }` where `ref` is
-  the provider's subject id (never a password — Vibeat is an OIDC relying party, it stores no
+  the provider's subject id (never a password — VieGo is an OIDC relying party, it stores no
   credentials).
 
 ## Commands & events
@@ -50,7 +50,7 @@ Contract: [OpenAPI](../../../01-core-specifications/api-system-specifications/re
 
 | Method & path | Purpose | Notes |
 |---------------|---------|-------|
-| `POST /api/v1/auth/{provider}` | Exchange a provider token for a Vibeat session | Returns access + refresh JWT; provider ∈ `email\|google` at P1 |
+| `POST /api/v1/auth/{provider}` | Exchange a provider token for a VieGo session | Returns access + refresh JWT; provider ∈ `email\|google` at P1 |
 | `POST /api/v1/auth/refresh` | Rotate the access token | Refresh-token rotation |
 | `GET /api/v1/me` | Current Explorer + preferences | Bearer JWT |
 | `PUT /api/v1/me/preferences` | Update language/theme | Emits `PreferencesUpdated` |

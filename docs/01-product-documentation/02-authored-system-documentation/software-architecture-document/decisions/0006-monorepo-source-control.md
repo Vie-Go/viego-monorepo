@@ -5,10 +5,10 @@ description: "Keep the Spring Boot backend and React Native app in one Git repos
 
 # ADR 0006 — Single monorepo for backend and mobile
 
-- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** VieGo team
 
 ## Context
-Vibeat is built by two full-stack engineers working **contract-first** and **trunk-based**
+VieGo is built by two full-stack engineers working **contract-first** and **trunk-based**
 (see [Plans, Estimates, Schedules](../../../../../02-process-documentation/plans-estimates-schedules.md)).
 The system is two deployable units — the Spring Boot (Java 25) modular monolith and the React
 Native app — that share the [OpenAPI](../../../01-core-specifications/api-system-specifications/rest-api.openapi.yaml)

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-07-22T15:23:30Z",
-  "title": "Design System: Vibeat",
+  "title": "Design System: VieGo",
   "extensions": {
     "colorMeta": {
       "primary": {
@@ -73,7 +73,7 @@
   ],
   "narrative": {
     "northStar": "The Crimson Heritage Map",
-    "overview": "Vibeat is a vibrant, tactile mobile journal celebrating Vietnam's cultural treasures. Built around an interactive SVG map of Vietnam's 63/64 provinces, the interface pairs deep heritage crimson (#BE382A) with warm golden accents (#F2B72F) and soft organic surfaces (#F6F3EE).",
+    "overview": "VieGo is a vibrant, tactile mobile journal celebrating Vietnam's cultural treasures. Built around an interactive SVG map of Vietnam's 63/64 provinces, the interface pairs deep heritage crimson (#BE382A) with warm golden accents (#F2B72F) and soft organic surfaces (#F6F3EE).",
     "keyCharacteristics": [
       "Crimson & Gold Anchor: Primary CTA red (#BE382A) paired with glowing heritage yellow (#F2B72F).",
       "Organic Tactility: Softly rounded corners (16px cards, 27px full pill CTA buttons).",
@@ -92,7 +92,7 @@
     "donts": [
       "Don't use sharp 0px corners on interactive cards or buttons.",
       "Don't apply primary crimson glowing shadows to non-primary buttons or containers.",
-      "Don't introduce cold blues or stark neon colors into Vibeat's warm cultural palette."
+      "Don't introduce cold blues or stark neon colors into VieGo's warm cultural palette."
     ]
   }
 }

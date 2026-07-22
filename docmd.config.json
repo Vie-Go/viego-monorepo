@@ -1,5 +1,5 @@
 {
-  "title": "Vibeat — Project Documentation",
+  "title": "VieGo — Project Documentation",
   "url": "https://docs.vibeat.app",
   "src": "docs",
   "out": "site",
@@ -22,7 +22,7 @@
     },
     "footer": {
       "style": "minimal",
-      "content": "© 2026 Vie-Go — Vibeat.",
+      "content": "© 2026 VieGo.",
       "branding": true
     }
   },
@@ -122,7 +122,7 @@
       "maxCommits": 5
     },
     "seo": {
-      "defaultDescription": "Vibeat project documentation — Spring Boot / Java 25 backend, React Native mobile, SDD + DDD."
+      "defaultDescription": "VieGo project documentation — Spring Boot / Java 25 backend, React Native mobile, SDD + DDD."
     }
   }
 }

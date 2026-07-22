@@ -1,6 +1,6 @@
-# Vibeat — Project Documentation
+# VieGo — Project Documentation
 
-Knowledge base for **Vibeat** (under Vie-Go): a gamified app for discovering, unlocking, and
+Knowledge base for **VieGo**: a gamified app for discovering, unlocking, and
 collecting Vietnam's regional cultural heritage — province by province. It serves both
 developers and AI agents.
 
@@ -13,7 +13,7 @@ Docs follow a standard Product / Process taxonomy under [`docs/`](docs/):
 
 ```
 docs/
-├── 01-product-documentation/          # WHAT Vibeat is & how it behaves
+├── 01-product-documentation/          # WHAT VieGo is & how it behaves
 │   ├── 01-core-specifications/        # Source of truth: OpenAPI, AsyncAPI, BDD/Gherkin
 │   ├── 02-authored-system-documentation/
 │   │   ├── software-architecture-document/   # C4, DDD, Spring Modulith, ADRs, infra

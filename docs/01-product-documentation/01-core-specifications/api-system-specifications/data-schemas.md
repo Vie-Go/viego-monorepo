@@ -1,11 +1,11 @@
 ---
 title: "Canonical Data Schemas"
-description: "Field-level schemas for Vibeat's canonical province/ward datasets."
+description: "Field-level schemas for VieGo's canonical province/ward datasets."
 ---
 
 # Canonical Data Schemas
 
-Field-level documentation for Vibeat's canonical datasets (currently in
+Field-level documentation for VieGo's canonical datasets (currently in
 [`prototype/data/`](../../../../../prototype/data/)). The `exploration` module ingests these;
 **do not fork or hand-edit derived copies.**
 

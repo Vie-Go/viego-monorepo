@@ -1,6 +1,6 @@
 ---
 title: "Developer Integration Guides"
-description: "How developers build against and contribute to Vibeat (partially generated)."
+description: "How developers build against and contribute to VieGo (partially generated)."
 ---
 
 # Developer Integration Guides

@@ -5,7 +5,7 @@ description: "Ubiquitous language, context map, domain model, and the four bound
 
 # DDD & Domain Model
 
-Vibeat is modelled with Domain-Driven Design. Each **bounded context** becomes one
+VieGo is modelled with Domain-Driven Design. Each **bounded context** becomes one
 [Spring Modulith module](backend-modular-monolith.md).
 
 ## Ubiquitous language (glossary)
@@ -14,7 +14,7 @@ The shared vocabulary used identically in specs, UI, and code. **Never introduce
 
 | Term | Definition | Context |
 |------|-----------|---------|
-| **Explorer** | A user of Vibeat; a cultural explorer/traveler | Identity |
+| **Explorer** | A user of VieGo; a cultural explorer/traveler | Identity |
 | **Province** | A provincial region on the map; primary unit of exploration | Exploration |
 | **Ward** | A sub-division of a Province with its own metadata | Exploration |
 | **Unlock** | Gaining access to a Province's heritage | Exploration |
@@ -30,7 +30,7 @@ The shared vocabulary used identically in specs, UI, and code. **Never introduce
 
 ## Context map
 
-Each context is one Modulith module under `com.viego.vibeat.<module>`.
+Each context is one Modulith module under `com.viego.<module>`.
 
 | Context | Module | Responsibility |
 |---------|--------|----------------|

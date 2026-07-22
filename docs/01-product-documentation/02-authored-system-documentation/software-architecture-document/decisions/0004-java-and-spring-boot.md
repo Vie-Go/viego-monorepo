@@ -5,7 +5,7 @@ description: "Use Java 25 (LTS) with Spring Boot 3.x and Maven for the backend."
 
 # ADR 0004 — Java 25 + Spring Boot as backend platform
 
-- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** VieGo team
 
 ## Context
 We need a mature backend platform with strong modularity tooling, a large hiring pool, and

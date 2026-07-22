@@ -2,9 +2,9 @@
   "name": "vietnam-map",
   "version": "1.0.0",
   "private": true,
-  "description": "Vibeat - Vietnam Cultural Map",
+  "description": "VieGo - Vietnam Cultural Map",
   "scripts": {
-    "build": "node -e \"require('fs').copyFileSync('Vibeat.dc.html', 'index.html')\"",
+    "build": "node -e \"require('fs').copyFileSync('VieGo.dc.html', 'index.html')\"",
     "start": "npx serve ."
   }
 }

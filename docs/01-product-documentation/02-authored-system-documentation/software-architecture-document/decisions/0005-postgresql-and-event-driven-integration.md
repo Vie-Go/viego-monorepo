@@ -5,7 +5,7 @@ description: "PostgreSQL with schema-per-module and domain events over a transac
 
 # ADR 0005 — PostgreSQL + event-driven module integration
 
-- **Status:** Proposed · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+- **Status:** Proposed · **Date:** 2026-07-22 · **Deciders:** VieGo team
 
 ## Context
 The [modular monolith](0002-modular-monolith-with-spring-modulith.md) needs a datastore and an

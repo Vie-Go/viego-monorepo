@@ -1,11 +1,11 @@
 ---
-title: "Vibeat — Project Documentation"
-description: "Knowledge base for Vibeat (Vie-Go): Spring Boot / Java 25 backend, React Native mobile, Spec-Driven Development, and DDD."
+title: "VieGo — Project Documentation"
+description: "Knowledge base for VieGo: Spring Boot / Java 25 backend, React Native mobile, Spec-Driven Development, and DDD."
 ---
 
-# Vibeat — Project Documentation
+# VieGo — Project Documentation
 
-Knowledge base for **Vibeat** (under Vie-Go): a gamified app for discovering, unlocking, and
+Knowledge base for **VieGo**: a gamified app for discovering, unlocking, and
 collecting Vietnam's regional cultural heritage — province by province.
 
 **Stack:** Spring Boot (Java 25) modular monolith · React Native (iOS/Android) · PostgreSQL.

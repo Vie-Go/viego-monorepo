@@ -1,11 +1,11 @@
 ---
 title: "1.1 Product Documentation"
-description: "Everything describing what Vibeat is and how the system behaves."
+description: "Everything describing what VieGo is and how the system behaves."
 ---
 
 # 1.1 Product Documentation
 
-Describes **what** Vibeat is and how the system behaves. Four categories:
+Describes **what** VieGo is and how the system behaves. Four categories:
 
 | # | Section | Purpose |
 |---|---------|---------|

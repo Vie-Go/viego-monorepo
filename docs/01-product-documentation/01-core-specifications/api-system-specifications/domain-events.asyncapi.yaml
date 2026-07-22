@@ -1,6 +1,6 @@
 asyncapi: 3.0.0
 info:
-  title: Vibeat Domain Events
+  title: VieGo Domain Events
   version: 1.0.0
   description: >
     Asynchronous domain events published between Spring Modulith modules via the transactional

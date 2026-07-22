@@ -1,6 +1,6 @@
 ---
 title: "1.2 Process Documentation"
-description: "How the team plans, standardizes, tests, and ships Vibeat."
+description: "How the team plans, standardizes, tests, and ships VieGo."
 ---
 
 # 1.2 Process Documentation
