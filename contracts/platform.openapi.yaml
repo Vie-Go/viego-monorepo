@@ -1,0 +1,81 @@
+openapi: 3.1.0
+info:
+  title: VieGo Platform API (Phase 0 — Walking Skeleton)
+  version: 0.0.1
+  description: >
+    Non-domain platform endpoints for the Phase 0 walking skeleton. Establishes the
+    contract-first seam (Constitution Principle I) with a trivial status resource the
+    mobile app calls to prove end-to-end connectivity. No product behaviour here — the
+    four bounded contexts (identity/exploration/engagement/content) are empty skeletons.
+servers:
+  - url: https://dev.api.viego.example/api/v1
+    description: dev environment
+  - url: http://localhost:8080/api/v1
+    description: local
+paths:
+  /status:
+    get:
+      operationId: getStatus
+      summary: Trivial application status (the app's connectivity check)
+      description: >
+        Unauthenticated, read-only, idempotent. Returns overall app health plus
+        service/version/time. Used by the mobile API-client skeleton to render the
+        walking-skeleton "connected" state (spec FR-006, FR-016).
+      security: []
+      responses:
+        "200":
+          description: Application is up.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Status"
+              examples:
+                healthy:
+                  value:
+                    status: UP
+                    service: viego-backend
+                    version: "0.0.1+abc1234"
+                    time: "2026-08-04T09:00:00Z"
+        "503":
+          description: Application is not ready (dependency down).
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+components:
+  schemas:
+    Status:
+      type: object
+      required: [status, service, time]
+      properties:
+        status:
+          type: string
+          enum: [UP, DOWN]
+          description: Overall application health.
+        service:
+          type: string
+          description: Constant service identifier.
+          example: viego-backend
+        version:
+          type: string
+          description: Build/git version.
+          example: "0.0.1+abc1234"
+        time:
+          type: string
+          format: date-time
+          description: Server time of the check (ISO-8601).
+    Problem:
+      type: object
+      description: RFC 9457 Problem Details (the platform-wide error shape).
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string

@@ -5,7 +5,12 @@ description: "Use Java 25 (LTS) with Spring Boot 3.x and Maven for the backend."
 
 # ADR 0004 — Java 25 + Spring Boot as backend platform
 
-- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** VieGo team
+- **Status:** Superseded by [ADR 0009](0009-spring-boot-4-and-spring-cli-scaffolding.md) · **Date:** 2026-07-22 · **Deciders:** VieGo team
+
+> **Superseded (framework version only):** the Spring Boot **3.x** pin below is replaced by
+> **Spring Boot 4** in [ADR 0009](0009-spring-boot-4-and-spring-cli-scaffolding.md), which also adds
+> Spring CLI scaffolding. The **Java 25** and **Maven** decisions here remain authoritative. Per the
+> ADR convention this record is left intact (immutable); only its status changes.
 
 ## Context
 We need a mature backend platform with strong modularity tooling, a large hiring pool, and

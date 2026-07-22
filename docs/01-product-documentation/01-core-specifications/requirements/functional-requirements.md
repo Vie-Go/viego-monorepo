@@ -53,7 +53,7 @@ Phase [P2](../../../../02-process-documentation/plans-estimates-schedules.md) ·
 | FR-EX-03 | Unlocking is **idempotent** — a second unlock of the same province is refused (409) and leaves the Collection unchanged. | MUST | [province-unlocking.feature](../executable-specifications/features/exploration/province-unlocking.feature) | ready |
 | FR-EX-04 | A successful unlock publishes **`ProvinceUnlocked`** (the backbone event downstream contexts consume). | MUST | [domain-events](../api-system-specifications/domain-events.asyncapi.yaml) | ready |
 | FR-EX-05 | An Explorer can view their **Collection** of unlocked provinces. | MUST | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
-| FR-EX-06 | On the map, unlocked provinces are visually distinguished (filled gold) from locked ones. | MUST | [design-system](../../02-authored-system-documentation/ux-design-documentation/design-system.md) | ready |
+| FR-EX-06 | On the map, unlocked provinces are visually distinguished (filled gold) from locked ones. | MUST | [design-system](../../02-authored-system-documentation/ui-ux-design-document/design-system.md) | ready |
 | FR-EX-07 | An unlock is only permitted when its **unlock condition** is met (proximity / trivia / tap / purchase — TBD). | MUST | [province-unlocking.feature](../executable-specifications/features/exploration/province-unlocking.feature) | draft |
 
 ## FR-EN — Engagement (Daily streak)
@@ -88,8 +88,8 @@ Applies across contexts; see also the [Non-Functional Requirements](non-function
 
 | ID | Requirement | Priority | Spec | Status |
 |----|-------------|----------|------|--------|
-| FR-CC-01 | Every user-facing string is available in **Vietnamese and English**; the active locale drives all content and copy. | MUST | [localization](../../02-authored-system-documentation/ux-design-documentation/localization.md) | ready |
-| FR-CC-02 | The app supports **light and dark themes**, switchable and persisted via preferences. | MUST | [design-system](../../02-authored-system-documentation/ux-design-documentation/design-system.md) | ready |
+| FR-CC-01 | Every user-facing string is available in **Vietnamese and English**; the active locale drives all content and copy. | MUST | [localization](../../02-authored-system-documentation/ui-ux-design-document/localization.md) | ready |
+| FR-CC-02 | The app supports **light and dark themes**, switchable and persisted via preferences. | MUST | [design-system](../../02-authored-system-documentation/ui-ux-design-document/design-system.md) | ready |
 | FR-CC-03 | An Explorer can only access **their own** (`me`-scoped) resources. | MUST | [security](../../04-user-documentation/system-admin-documentation/security.md) | ready |
 | FR-CC-04 | API errors are returned as **RFC 9457 Problem Details** and mapped to typed client errors. | MUST | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
 

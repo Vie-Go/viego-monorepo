@@ -72,13 +72,22 @@
       ]
     },
     {
-      "title": "1.1.2 UX Design",
+      "title": "1.1.2 UI/UX Design",
       "icon": "palette",
       "collapsible": true,
       "children": [
-        { "title": "Overview", "path": "/01-product-documentation/02-authored-system-documentation/ux-design-documentation", "icon": "book-open" },
-        { "title": "Design System", "path": "/01-product-documentation/02-authored-system-documentation/ux-design-documentation/design-system", "icon": "swatch" },
-        { "title": "Localization", "path": "/01-product-documentation/02-authored-system-documentation/ux-design-documentation/localization", "icon": "languages" }
+        { "title": "Overview", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document", "icon": "book-open" },
+        { "title": "Design System", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/design-system", "icon": "swatch" },
+        { "title": "Localization", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/localization", "icon": "languages" },
+        { "title": "Screens", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens", "icon": "layout" },
+        { "title": "Screens · Identity", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity", "icon": "user" },
+        { "title": "Screens · Exploration", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration", "icon": "map" },
+        { "title": "Screens · Engagement", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement", "icon": "flame" },
+        { "title": "Screens · Content", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/content", "icon": "book-open" },
+        { "title": "Components", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components", "icon": "component" },
+        { "title": "Components · Core UI", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/core", "icon": "square" },
+        { "title": "Components · Navigation", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/navigation", "icon": "navigation" },
+        { "title": "Components · Map", "path": "/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/map", "icon": "map-pin" }
       ]
     },
     {

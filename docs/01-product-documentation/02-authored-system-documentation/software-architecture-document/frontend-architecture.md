@@ -61,6 +61,6 @@ Content surfaces (heritage, beat player, trivia) open from a province detail. De
 `vibeat://province/{id}`.
 
 ## Cross-cutting rules
-- No hard-coded colors/spacing/type — use [design tokens](../ux-design-documentation/design-system.md).
-- No hard-coded user-facing strings — use [localization](../ux-design-documentation/localization.md).
+- No hard-coded colors/spacing/type — use [design tokens](../ui-ux-design-document/design-system.md).
+- No hard-coded user-facing strings — use [localization](../ui-ux-design-document/localization.md).
 - Test both themes and both locales for key screens.

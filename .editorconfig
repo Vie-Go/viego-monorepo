@@ -1,0 +1,24 @@
+# Enforce LF line endings across the repo (the .specify shell scripts shipped with CRLF
+# and broke on macOS — this prevents a repeat).
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+
+[*.{md,markdown}]
+trim_trailing_whitespace = false
+
+[*.{java,xml,yml,yaml,ts,tsx,js,jsx,json}]
+indent_style = space
+
+[*.java]
+indent_size = 4
+
+[*.{ts,tsx,js,jsx,json,yml,yaml}]
+indent_size = 2
+
+[Makefile]
+indent_style = tab

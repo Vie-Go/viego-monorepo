@@ -46,3 +46,8 @@ Core Specs (OpenAPI/AsyncAPI + Gherkin)  →  generate artifacts  →  implement
 
 When asked to "build feature X": find/author its executable spec + API contract in Core
 Specifications, confirm the owning bounded context/module, then implement to satisfy the spec.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
