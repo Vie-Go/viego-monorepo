@@ -1,0 +1,75 @@
+# ─── docmd docs site ─────────────────────────────────────────────
+/site/                 # docmd build output ("out": "site" in docmd.config.json)
+.docmd/                # docmd cache, if present
+
+# ─── Node / JS (docmd, React Native, tooling) ────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+.npm/
+*.tsbuildinfo
+.eslintcache
+
+# ─── Environment & secrets ───────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.local.json          # e.g. .claude/settings.local.json, .impeccable/config.local.json
+*.pem
+*.key
+
+# ─── React Native / mobile (future app) ──────────────────────────
+# JS bundles & Metro
+.expo/
+.expo-shared/
+*.jsbundle
+# iOS
+ios/Pods/
+ios/build/
+*.xcworkspace/xcuserdata/
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+*.keystore
+!debug.keystore
+google-services.json
+GoogleService-Info.plist
+
+# ─── Backend: Spring Boot / Java / Gradle (future service) ───────
+build/
+!**/src/**/build/
+.gradle/
+target/
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+hs_err_pid*.log
+
+# ─── Deploy / infra ──────────────────────────────────────────────
+.vercel
+
+# ─── OS ──────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Editors / IDEs ──────────────────────────────────────────────
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# ─── Logs & temp ─────────────────────────────────────────────────
+*.log
+logs/
+tmp/
+coverage/
