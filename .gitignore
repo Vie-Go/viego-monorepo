@@ -1,7 +1,7 @@
 # ─── docmd docs site ─────────────────────────────────────────────
 /site/                 # docmd build output ("out": "site" in docmd.config.json)
 .docmd/                # docmd cache, if present
-
+/site/*
 # ─── Node / JS (docmd, React Native, tooling) ────────────────────
 node_modules/
 npm-debug.log*
