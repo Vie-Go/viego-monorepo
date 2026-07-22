@@ -1,0 +1,31 @@
+---
+title: "ADR 0004 — Java 25 + Spring Boot as backend platform"
+description: "Use Java 25 (LTS) with Spring Boot 3.x and Gradle for the backend."
+---
+
+# ADR 0004 — Java 25 + Spring Boot as backend platform
+
+- **Status:** Accepted · **Date:** 2026-07-22 · **Deciders:** Vie-Go team
+
+## Context
+We need a mature backend platform with strong modularity tooling, a large hiring pool, and
+first-class support for the [modular-monolith approach](0002-modular-monolith-with-spring-modulith.md).
+
+## Decision
+Use **Java 25 (LTS)** with **Spring Boot 3.x**:
+- Spring Modulith for boundaries and event-driven integration.
+- Spring Data JPA (persistence), Spring Security (auth), springdoc (OpenAPI).
+- **Gradle (Kotlin DSL)** build.
+- Modern Java (virtual threads, records, sealed types, pattern matching) for concise domain
+  modelling and scalable I/O.
+
+## Consequences
+- **+** First-class Spring Modulith support; virtual threads simplify concurrency; records/sealed
+  types fit DDD value objects and events.
+- **+** Huge ecosystem and talent pool; long-term support.
+- **−** JVM footprint/startup vs. lighter runtimes (mitigate later with AOT/native if needed).
+
+## Alternatives
+- **Kotlin + Spring** — viable; deferred to keep the initial stack conventional (can be adopted
+  per-module later).
+- **Node/NestJS, Go** — weaker modular-monolith tooling for our chosen pattern.

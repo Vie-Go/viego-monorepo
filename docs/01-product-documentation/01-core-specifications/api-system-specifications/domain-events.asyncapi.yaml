@@ -1,0 +1,82 @@
+asyncapi: 3.0.0
+info:
+  title: Vibeat Domain Events
+  version: 1.0.0
+  description: >
+    Asynchronous domain events published between Spring Modulith modules via the transactional
+    event-publication log. On service extraction these become broker topics (Kafka/AMQP) with
+    no change to publishers. Source of truth for the event catalog.
+defaultContentType: application/json
+channels:
+  explorerRegistered:
+    address: vibeat.identity.explorer-registered
+    messages:
+      ExplorerRegistered:
+        $ref: '#/components/messages/ExplorerRegistered'
+  preferencesUpdated:
+    address: vibeat.identity.preferences-updated
+    messages:
+      PreferencesUpdated:
+        $ref: '#/components/messages/PreferencesUpdated'
+  provinceUnlocked:
+    address: vibeat.exploration.province-unlocked
+    messages:
+      ProvinceUnlocked:
+        $ref: '#/components/messages/ProvinceUnlocked'
+  streakAdvanced:
+    address: vibeat.engagement.streak-advanced
+    messages:
+      StreakAdvanced:
+        $ref: '#/components/messages/StreakAdvanced'
+  streakBroken:
+    address: vibeat.engagement.streak-broken
+    messages:
+      StreakBroken:
+        $ref: '#/components/messages/StreakBroken'
+operations:
+  publishProvinceUnlocked:
+    action: send
+    channel:
+      $ref: '#/channels/provinceUnlocked'
+    summary: exploration publishes when a province is unlocked
+  onProvinceUnlocked:
+    action: receive
+    channel:
+      $ref: '#/channels/provinceUnlocked'
+    summary: engagement (advance streak) and content (grant access) consume this
+components:
+  messages:
+    ExplorerRegistered:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          at: { type: string, format: date-time }
+    PreferencesUpdated:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          language: { type: string, enum: [vi, en] }
+          theme: { type: string, enum: [light, dark] }
+    ProvinceUnlocked:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          provinceId: { type: string }
+          at: { type: string, format: date-time }
+    StreakAdvanced:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          newCount: { type: integer }
+          at: { type: string, format: date-time }
+    StreakBroken:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          previousCount: { type: integer }
+          at: { type: string, format: date-time }

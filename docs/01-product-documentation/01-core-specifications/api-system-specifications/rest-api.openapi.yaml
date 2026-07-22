@@ -1,0 +1,171 @@
+openapi: 3.1.0
+info:
+  title: Vibeat API
+  version: 1.0.0
+  description: >
+    REST contract between the Vibeat React Native app and the Spring Boot backend.
+    Source of truth — Swagger UI / Redoc and client models are generated from this file.
+servers:
+  - url: https://api.vibeat.app/api/v1
+    description: Production
+  - url: http://localhost:8080/api/v1
+    description: Local
+tags:
+  - name: identity
+    description: Explorer accounts, auth, preferences
+  - name: exploration
+    description: Map, provinces, unlocking, collection
+  - name: engagement
+    description: Streaks, rituals, rewards
+  - name: content
+    description: Heritage, cultural beats, trivia
+security:
+  - bearerAuth: []
+paths:
+  /explorers/me:
+    get:
+      tags: [identity]
+      summary: Get the authenticated Explorer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Explorer' }
+  /provinces:
+    get:
+      tags: [exploration]
+      summary: List provinces with the Explorer's unlocked status
+      parameters:
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Province' }
+  /provinces/{provinceId}/unlock:
+    post:
+      tags: [exploration]
+      summary: Unlock a province for the authenticated Explorer
+      parameters:
+        - name: provinceId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Unlocked
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Province' }
+        '409':
+          description: Already unlocked
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+  /collection/me:
+    get:
+      tags: [exploration]
+      summary: The Explorer's collection of unlocked provinces
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Province' }
+  /streaks/me:
+    get:
+      tags: [engagement]
+      summary: The Explorer's current streak
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Streak' }
+  /heritage/{provinceId}:
+    get:
+      tags: [content]
+      summary: Regional heritage for a province (requires it to be unlocked)
+      parameters:
+        - name: provinceId
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RegionalHeritage' }
+        '403':
+          description: Province not unlocked
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      schema: { type: string, enum: [vi, en], default: vi }
+  schemas:
+    LocalizedText:
+      type: object
+      properties:
+        vi: { type: string }
+        en: { type: string }
+    Explorer:
+      type: object
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        preferences:
+          type: object
+          properties:
+            language: { type: string, enum: [vi, en] }
+            theme: { type: string, enum: [light, dark] }
+    Province:
+      type: object
+      properties:
+        id: { type: string }
+        name: { $ref: '#/components/schemas/LocalizedText' }
+        unlocked: { type: boolean }
+    Streak:
+      type: object
+      properties:
+        current: { type: integer }
+        longest: { type: integer }
+        lastRitualDate: { type: string, format: date }
+    RegionalHeritage:
+      type: object
+      properties:
+        provinceId: { type: string }
+        beats:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              title: { $ref: '#/components/schemas/LocalizedText' }
+              audioUrl: { type: string, format: uri }
+    Problem:
+      description: RFC 9457 Problem Details
+      type: object
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
