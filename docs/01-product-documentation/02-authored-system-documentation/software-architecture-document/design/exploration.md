@@ -8,6 +8,7 @@ description: "Detailed design of the exploration module: map, provinces/wards, t
 - **Module:** `exploration` · **Core feature:** Province unlocking ·
   **Phase:** [P2 — Core loop: Exploration](../../../../02-process-documentation/plans-estimates-schedules.md)
 - **Spec:** [`province-unlocking.feature`](../../../01-core-specifications/executable-specifications/features/exploration/province-unlocking.feature)
+- **Requirements:** [FR-EX-01…07](../../../01-core-specifications/requirements/functional-requirements.md#fr-ex--exploration-province-unlocking) · constrained by [NFR-PERF-01](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-perf--performance), [NFR-REL-03](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-rel--reliability--data-integrity)
 - **The heart of the product.** Its **`ProvinceUnlocked`** event is the
   [backbone](../../../../02-process-documentation/plans-estimates-schedules.md)
   that Engagement (P3) and Content (P4) both hang off — so this event contract must be right

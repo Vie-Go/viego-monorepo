@@ -43,6 +43,9 @@
       "collapsible": true,
       "children": [
         { "title": "Overview", "path": "/01-product-documentation/01-core-specifications", "icon": "book-open" },
+        { "title": "Requirements (FRD & NFRD)", "path": "/01-product-documentation/01-core-specifications/requirements", "icon": "list-checks" },
+        { "title": "· Functional Requirements", "path": "/01-product-documentation/01-core-specifications/requirements/functional-requirements", "icon": "check-square" },
+        { "title": "· Non-Functional Requirements", "path": "/01-product-documentation/01-core-specifications/requirements/non-functional-requirements", "icon": "gauge" },
         { "title": "API / System Specifications", "path": "/01-product-documentation/01-core-specifications/api-system-specifications", "icon": "plug" },
         { "title": "Canonical Data Schemas", "path": "/01-product-documentation/01-core-specifications/api-system-specifications/data-schemas", "icon": "database" },
         { "title": "Executable Specifications (BDD)", "path": "/01-product-documentation/01-core-specifications/executable-specifications", "icon": "check-circle" }

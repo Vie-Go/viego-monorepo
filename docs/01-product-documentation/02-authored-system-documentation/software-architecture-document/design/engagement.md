@@ -8,6 +8,7 @@ description: "Detailed design of the engagement module: the Streak aggregate, di
 - **Module:** `engagement` · **Core feature:** Daily discovery streak ·
   **Phase:** [P3 — Engagement: Streaks](../../../../02-process-documentation/plans-estimates-schedules.md)
 - **Spec:** [`daily-streak.feature`](../../../01-core-specifications/executable-specifications/features/engagement/daily-streak.feature)
+- **Requirements:** [FR-EN-01…07](../../../01-core-specifications/requirements/functional-requirements.md#fr-en--engagement-daily-streak) · constrained by [NFR-REL-*](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-rel--reliability--data-integrity)
 - **Consumer of the backbone:** listens to `ProvinceUnlocked` (from Exploration, P2) and
   `ExplorerRegistered` (from Identity, P1) — so P2's event contract must be settled first.
 

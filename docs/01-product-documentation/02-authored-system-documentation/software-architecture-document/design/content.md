@@ -8,6 +8,7 @@ description: "Detailed design of the content module: regional heritage, cultural
 - **Module:** `content` · **Core feature:** Regional heritage access ·
   **Phase:** [P4 — Content: Heritage & Beats](../../../../02-process-documentation/plans-estimates-schedules.md)
 - **Spec:** [`heritage-access.feature`](../../../01-core-specifications/executable-specifications/features/content/heritage-access.feature)
+- **Requirements:** [FR-CO-01…05](../../../01-core-specifications/requirements/functional-requirements.md#fr-co--content-heritage-access) · constrained by [NFR-SEC-*](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-sec--security--privacy), [NFR-PERF-03](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-perf--performance)
 - **The cultural payoff.** A pure **consumer** of the backbone `ProvinceUnlocked` event — access
   is granted by unlocking, never requested directly — so it comes after Exploration (P2).
 

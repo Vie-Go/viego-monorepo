@@ -8,6 +8,7 @@ description: "Detailed design of the identity module: Explorer accounts, OIDC au
 - **Module:** `identity` · **Core feature:** Authentication ·
   **Phase:** [P1 — Identity & foundations](../../../../02-process-documentation/plans-estimates-schedules.md)
 - **Spec:** [`authentication.feature`](../../../01-core-specifications/executable-specifications/features/identity/authentication.feature)
+- **Requirements:** [FR-ID-01…08](../../../01-core-specifications/requirements/functional-requirements.md#fr-id--identity-authentication) · constrained by [NFR-SEC-*](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-sec--security--privacy)
 - **Upstream supplier** to every other context — nothing works without an authenticated Explorer,
   which is why this is the first phase and the gate for the whole [critical path](../../../../02-process-documentation/plans-estimates-schedules.md).
 

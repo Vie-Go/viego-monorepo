@@ -16,7 +16,7 @@ This site follows a standard Product / Process documentation taxonomy.
 ## 1. Project Documentation
 
 ### [1.1 Product Documentation](01-product-documentation/)
-- **[1.1.1 Core Specifications](01-product-documentation/01-core-specifications/)** — the source of truth: API/system specs (OpenAPI, AsyncAPI) and executable BDD specs.
+- **[1.1.1 Core Specifications](01-product-documentation/01-core-specifications/)** — the source of truth: [requirements (FRD/NFRD)](01-product-documentation/01-core-specifications/requirements/), API/system specs (OpenAPI, AsyncAPI), and executable BDD specs.
 - **[1.1.2 Authored System Documentation](01-product-documentation/02-authored-system-documentation/)** — Software Architecture Document (C4, DDD, Spring Modulith) and UX design.
 - **[1.1.3 Generated System Artifacts](01-product-documentation/03-generated-system-artifacts/)** — auto-generated API reference, code models, QA reports.
 - **[1.1.4 User Documentation](01-product-documentation/04-user-documentation/)** — end-user, developer integration, and system-admin docs.
