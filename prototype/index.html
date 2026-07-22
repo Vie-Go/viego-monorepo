@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&amp;display=swap" rel="stylesheet">
+<script src="icons.js"></script>
+<script src="vn-map.js"></script>
+<style>
+  body{margin:0;background:#EBE5DC}
+  a{color:#BE382A;text-decoration:none}
+  a:hover{color:#93271D}
+  .vbapp{--bg:#FFFFFF;--sf:#F6F3EE;--card:#FFFFFF;--tx:#0C0507;--sub:#7A716B;--ln:#ECE7E0;--map-prov:#EFE7DB;--map-stroke:#FFFFFF;--map-unlocked:#F3D89F;--navbg:rgba(255,255,255,0.94);--pill:#0C0507;--pilltx:#FFFFFF;--sc:0 12px 32px rgba(12,5,7,0.12);--map-label:#A79C97}
+  .vbapp[data-vtheme="dark"]{--bg:#151011;--sf:#221A1B;--card:#251C1D;--tx:#F8F3EC;--sub:#A79C97;--ln:#342B2C;--map-prov:#2C2324;--map-stroke:#151011;--map-unlocked:#7A5A20;--navbg:rgba(30,23,24,0.94);--pill:#F8F3EC;--pilltx:#151011;--sc:0 12px 32px rgba(0,0,0,0.5);--map-label:#8A7C78}
+  @keyframes vbUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes vbFade{from{opacity:0}to{opacity:1}}
+  @keyframes vbPop{0%{transform:scale(0.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+  @keyframes vbPing{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0.9}100%{transform:translate(-50%,-50%) scale(1.9);opacity:0}}
+  @keyframes vbBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+  @keyframes vbFall{0%{transform:translateY(-40px) rotate(0deg);opacity:1}100%{transform:translateY(760px) rotate(540deg);opacity:0.6}}
+  @keyframes vbSlideUp{from{transform:translateY(110%)}to{transform:translateY(0)}}
+</style>
+</helmet>
+<div style="min-height:100vh;background:#EBE5DC;display:flex;align-items:flex-start;justify-content:center;gap:40px;padding:40px 24px;flex-wrap:wrap;font-family:'Urbanist',sans-serif">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{frameDark}}" hint-size="402px,874px">
+<div class="vbapp" data-vtheme="{{theme}}" style="position:absolute;inset:0;background:var(--bg);overflow:hidden;font-family:'Urbanist',sans-serif;color:var(--tx)">
+
+  <sc-if value="{{isLang}}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Language" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:88px 24px 30px;background:var(--bg);animation:vbFade 0.3s ease">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">vibeat</span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:8px"></span>
+      </div>
+      <div style="font-size:27px;font-weight:800;line-height:1.15;margin-top:26px">Xin chào!<br>Pick your language</div>
+      <div style="font-size:14px;color:var(--sub);margin-top:8px">You can change this any time in your profile.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px">
+        <sc-for list="{{langs}}" as="l" hint-placeholder-count="5">
+          <div onClick="{{l.pick}}" style="display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:16px;border:1.5px solid {{l.bd}};background:{{l.bg}};cursor:pointer;transition:border-color 0.2s,background 0.2s">
+            <div style="width:38px;height:38px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--sub)">{{l.code}}</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+              <span style="font-size:15px;font-weight:700">{{l.label}}</span>
+              <span style="font-size:12px;color:var(--sub)">{{l.sub}}</span>
+            </div>
+            <div style="width:20px;height:20px;border-radius:50%;border:2px solid {{l.dotBd}};background:{{l.dot}};transition:background 0.2s"></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex:1"></div>
+      <div onClick="{{langDone}}" style="height:54px;border-radius:27px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(190,56,42,0.35)">Continue</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isLogin}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Log in" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:88px 26px 30px;background:var(--bg);overflow-y:auto;animation:vbFade 0.3s ease">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">vibeat</span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:8px"></span>
+      </div>
+      <div style="font-size:26px;font-weight:800;margin-top:24px">Welcome back</div>
+      <div style="font-size:14px;color:var(--sub);margin-top:6px">Log in and keep the streak burning.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
+        <input type="email" placeholder="Email" style="height:52px;border-radius:16px;border:1.5px solid var(--ln);background:var(--sf);padding:0 18px;font-size:14.5px;font-weight:600;font-family:'Urbanist',sans-serif;color:var(--tx);outline:none">
+        <input type="password" placeholder="Password" style="height:52px;border-radius:16px;border:1.5px solid var(--ln);background:var(--sf);padding:0 18px;font-size:14.5px;font-weight:600;font-family:'Urbanist',sans-serif;color:var(--tx);outline:none">
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px"><span style="font-size:12.5px;font-weight:700;color:#BE382A;cursor:pointer">Quên mật khẩu?</span></div>
+      <div onClick="{{doLogin}}" style="height:54px;border-radius:27px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(190,56,42,0.35);margin-top:14px">Log in</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:22px">
+        <div style="flex:1;height:1px;background:var(--ln)"></div>
+        <span style="font-size:12px;color:var(--sub);font-weight:600">or continue with</span>
+        <div style="flex:1;height:1px;background:var(--ln)"></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+        <div onClick="{{doLogin}}" style="width:56px;height:56px;border-radius:50%;background:var(--sf);border:1.5px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#DB4437;cursor:pointer">G</div>
+        <div onClick="{{doLogin}}" style="width:56px;height:56px;border-radius:50%;background:var(--sf);border:1.5px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#1877F2;cursor:pointer">f</div>
+        <div onClick="{{doLogin}}" style="width:56px;height:56px;border-radius:50%;background:var(--sf);border:1.5px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#0068FF;cursor:pointer">Zalo</div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="text-align:center;font-size:13.5px;color:var(--sub);font-weight:600;margin-top:20px">New to Vibeat? <span onClick="{{goReg}}" style="color:#BE382A;font-weight:800;cursor:pointer">Create account</span></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isReg}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Register" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:88px 26px 30px;background:var(--bg);overflow-y:auto;animation:vbFade 0.3s ease">
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">vibeat</span>
+        <span style="width:11px;height:11px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:8px"></span>
+      </div>
+      <div style="font-size:26px;font-weight:800;margin-top:24px">Tạo tài khoản</div>
+      <div style="font-size:14px;color:var(--sub);margin-top:6px">Join Vibeat and start unlocking provinces.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
+        <input type="text" placeholder="Full name" style="height:52px;border-radius:16px;border:1.5px solid var(--ln);background:var(--sf);padding:0 18px;font-size:14.5px;font-weight:600;font-family:'Urbanist',sans-serif;color:var(--tx);outline:none">
+        <input type="email" placeholder="Email" style="height:52px;border-radius:16px;border:1.5px solid var(--ln);background:var(--sf);padding:0 18px;font-size:14.5px;font-weight:600;font-family:'Urbanist',sans-serif;color:var(--tx);outline:none">
+        <input type="password" placeholder="Password" style="height:52px;border-radius:16px;border:1.5px solid var(--ln);background:var(--sf);padding:0 18px;font-size:14.5px;font-weight:600;font-family:'Urbanist',sans-serif;color:var(--tx);outline:none">
+      </div>
+      <div onClick="{{doReg}}" style="height:54px;border-radius:27px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgba(190,56,42,0.35);margin-top:18px">Create account</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:22px">
+        <div style="flex:1;height:1px;background:var(--ln)"></div>
+        <span style="font-size:12px;color:var(--sub);font-weight:600">or sign up with</span>
+        <div style="flex:1;height:1px;background:var(--ln)"></div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:16px">
+        <div onClick="{{doReg}}" style="width:56px;height:56px;border-radius:50%;background:var(--sf);border:1.5px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#DB4437;cursor:pointer">G</div>
+        <div onClick="{{doReg}}" style="width:56px;height:56px;border-radius:50%;background:var(--sf);border:1.5px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#1877F2;cursor:pointer">f</div>
+        <div onClick="{{doReg}}" style="width:56px;height:56px;border-radius:50%;background:var(--sf);border:1.5px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#0068FF;cursor:pointer">Zalo</div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="text-align:center;font-size:13.5px;color:var(--sub);font-weight:600;margin-top:20px">Already have an account? <span onClick="{{goLoginScreen}}" style="color:#BE382A;font-weight:800;cursor:pointer">Log in</span></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isNotif}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Notifications" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 40px;animation:vbFade 0.25s ease">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div onClick="{{backToMap}}" style="width:42px;height:42px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx)"><v-icon name="ArrowLeft" size="18"></v-icon></div>
+        <span style="font-size:22px;font-weight:800;letter-spacing:-0.3px">Notifications</span>
+      </div>
+      <div style="display:flex;flex-direction:column;margin-top:12px">
+        <sc-for list="{{notifs}}" as="n" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:13px;padding:14px 2px;border-bottom:1px solid var(--ln)">
+            <div style="width:44px;height:44px;border-radius:50%;background:{{n.bg}};color:{{n.c}};display:flex;align-items:center;justify-content:center;flex-shrink:0"><v-icon name="{{n.icon}}" size="20"></v-icon></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+              <span style="font-size:14px;font-weight:800">{{n.t}}</span>
+              <span style="font-size:12.5px;color:var(--sub);font-weight:500">{{n.s}}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+              <span style="font-size:11px;color:var(--sub);font-weight:600">{{n.time}}</span>
+              <sc-if value="{{n.dot}}" hint-placeholder-val="{{ false }}"><span style="width:8px;height:8px;border-radius:50%;background:#BE382A"></span></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isSearch}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Search" style="position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;padding:72px 20px 30px;animation:vbFade 0.25s ease">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div onClick="{{backToMap}}" style="width:42px;height:42px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx);flex-shrink:0"><v-icon name="ArrowLeft" size="18"></v-icon></div>
+        <div style="flex:1;height:46px;border-radius:15px;background:var(--sf);display:flex;align-items:center;gap:10px;padding:0 16px">
+          <v-icon name="SearchNormalProperty1Linear" size="18" style="color:var(--sub)"></v-icon>
+          <input value="{{q}}" onChange="{{onSearch}}" placeholder="Phở, pagodas, provinces…" style="flex:1;min-width:0;border:none;background:transparent;outline:none;font-size:14.5px;font-weight:600;font-family:'Urbanist',sans-serif;color:var(--tx)">
+        </div>
+      </div>
+      <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub);margin:18px 0 4px">{{searchLabel}}</span>
+      <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
+        <sc-for list="{{searchResults}}" as="r" hint-placeholder-count="5">
+          <div onClick="{{r.pick}}" style="display:flex;align-items:center;gap:13px;padding:13px 2px;border-bottom:1px solid var(--ln);cursor:pointer">
+            <div style="width:40px;height:40px;border-radius:13px;background:var(--sf);display:flex;align-items:center;justify-content:center;color:var(--sub);flex-shrink:0"><v-icon name="{{r.icon}}" size="18"></v-icon></div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+              <span style="font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{r.t}}</span>
+              <span style="font-size:12px;color:var(--sub);font-weight:500">{{r.s}}</span>
+            </div>
+            <span style="font-size:10.5px;font-weight:800;color:var(--sub);background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:3px 8px;flex-shrink:0">{{r.kind}}</span>
+          </div>
+        </sc-for>
+        <sc-if value="{{searchEmpty}}" hint-placeholder-val="{{ false }}">
+          <div style="padding:30px 0;text-align:center;font-size:13px;color:var(--sub);font-weight:600;line-height:1.6">Không tìm thấy — nothing matches yet.<br>Try a province or a dish.</div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isOb}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Onboarding" style="position:absolute;inset:0;animation:vbFade 0.35s ease">
+      <div style="position:absolute;inset:0;background:{{obImg}}"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,6,7,0.35) 0%,rgba(10,6,7,0) 30%,rgba(10,6,7,0.05) 45%,rgba(10,6,7,0.78) 78%,rgba(10,6,7,0.92) 100%)"></div>
+      <div style="position:absolute;left:26px;top:76px;display:flex;align-items:center;gap:6px">
+        <span style="font-size:24px;font-weight:800;color:#FFFFFF;letter-spacing:-0.4px">vibeat</span>
+        <span style="width:9px;height:9px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:7px"></span>
+      </div>
+      <div style="position:absolute;left:26px;right:26px;bottom:36px;display:flex;flex-direction:column;gap:14px">
+        <div style="font-size:38px;font-weight:800;line-height:1.08;color:#FFFFFF;letter-spacing:-0.6px;white-space:pre-line;animation:vbUp 0.4s ease">{{obTitle}}</div>
+        <div style="font-size:15px;line-height:1.55;color:rgba(255,255,255,0.85);max-width:320px;animation:vbUp 0.5s ease">{{obSub}}</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <sc-for list="{{obBars}}" as="b" hint-placeholder-count="3">
+            <div style="height:3px;flex:1;border-radius:2px;background:{{b.c}};transition:background 0.3s"></div>
+          </sc-for>
+        </div>
+        <div onClick="{{obNext}}" style="height:54px;border-radius:27px;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px">{{obBtn}}</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isMap}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Map home" style="position:absolute;inset:0;display:flex;flex-direction:column;padding-top:62px;background:var(--bg);animation:vbFade 0.3s ease">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 20px 0">
+        <div style="width:42px;height:42px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px">M</div>
+        <div style="flex:1;display:flex;flex-direction:column">
+          <span style="font-size:12px;color:var(--sub);font-weight:500">Xin chào, Minh</span>
+          <span style="font-size:19px;font-weight:800;letter-spacing:-0.3px">Where's your next beat?</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;height:36px;padding:0 12px;border-radius:18px;background:{{streakBg}};color:{{streakC}}">
+          <v-icon name="Flame" size="16"></v-icon>
+          <span style="font-size:14px;font-weight:800">{{streak}}</span>
+        </div>
+        <div onClick="{{goNotif}}" style="width:42px;height:42px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;color:var(--tx);cursor:pointer;position:relative">
+          <v-icon name="NotificationBingProperty1Linear" size="20"></v-icon>
+          <sc-if value="{{notifDot}}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:9px;top:9px;width:9px;height:9px;border-radius:50%;background:#BE382A;border:2px solid var(--bg)"></span></sc-if>
+        </div>
+      </div>
+      <div onClick="{{searchOpen}}" style="margin:14px 20px 0;height:46px;border-radius:15px;background:var(--sf);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--sub);cursor:pointer">
+        <v-icon name="SearchNormalProperty1Linear" size="18"></v-icon>
+        <span style="font-size:14px;font-weight:500">Search phở, pagodas, provinces…</span>
+      </div>
+      <sc-if value="{{broken}}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{openCamera}}" style="margin:10px 20px 0;padding:11px 14px;border-radius:14px;background:rgba(190,56,42,0.09);border:1px solid rgba(190,56,42,0.25);display:flex;align-items:center;gap:10px;cursor:pointer">
+          <v-icon name="Flame" size="18" style="color:#B0A69F"></v-icon>
+          <span style="flex:1;font-size:12.5px;font-weight:600;color:var(--tx)">Your streak ended at 12 days. Snap today to relight it.</span>
+          <span style="font-size:12px;font-weight:800;color:#BE382A">Snap</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding:12px 20px 4px;scrollbar-width:none">
+        <sc-for list="{{cats}}" as="c" hint-placeholder-count="6">
+          <div onClick="{{c.pick}}" style="height:36px;padding:0 15px;border-radius:18px;background:{{c.bg}};color:{{c.co}};border:1px solid {{c.bd}};display:flex;align-items:center;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer;flex-shrink:0;transition:background 0.2s">{{c.label}}</div>
+        </sc-for>
+      </div>
+      <div style="flex:1;position:relative;margin:10px 16px 0;border-radius:24px;background:var(--sf);overflow:hidden">
+        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(12,5,7,0.05) 1px,transparent 1px);background-size:18px 18px"></div>
+        <div style="position:absolute;top:12px;bottom:12px;left:50%;transform:translateX(-50%);aspect-ratio:390/690">
+          <vn-map heat="{{heatStr}}" interactive="true" style="position:absolute;inset:0"></vn-map>
+        </div>
+        <div style="position:absolute;right:10px;top:10px;display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:12px;background:var(--navbg);border:1px solid var(--ln)">
+          <span style="font-size:9.5px;font-weight:700;color:var(--sub);margin-right:2px">check-ins</span>
+          <span style="width:10px;height:10px;border-radius:3px;background:#F6E3BC"></span>
+          <span style="width:10px;height:10px;border-radius:3px;background:#F0CF8C"></span>
+          <span style="width:10px;height:10px;border-radius:3px;background:#E9BA55"></span>
+          <span style="width:10px;height:10px;border-radius:3px;background:#DE9B27"></span>
+          <span style="width:10px;height:10px;border-radius:3px;background:#BE382A"></span>
+          <span style="font-size:9.5px;font-weight:700;color:var(--sub)">10k+</span>
+        </div>
+        <sc-if value="{{noProv}}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:8px 14px;border-radius:16px;background:var(--navbg);border:1px solid var(--ln);font-size:11.5px;font-weight:700;color:var(--sub);white-space:nowrap">Chạm vào tỉnh — tap a province</div>
+        </sc-if>
+        <sc-if value="{{hasProv}}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:12px;right:12px;bottom:12px;max-height:80%;overflow-y:auto;border-radius:20px;background:var(--card);box-shadow:var(--sc);padding:16px;display:flex;flex-direction:column;gap:12px;animation:vbSlideUp 0.3s cubic-bezier(0.2,0.9,0.3,1)">
+            <div style="display:flex;align-items:flex-start;gap:10px">
+              <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:18px;font-weight:800;letter-spacing:-0.2px">{{provName}}</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="width:10px;height:10px;border-radius:3px;background:{{provTierC}}"></span>
+                  <span style="font-size:12px;color:var(--sub);font-weight:600">{{provPubTxt}}</span>
+                </div>
+              </div>
+              <div onClick="{{closeProv}}" style="width:32px;height:32px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--sub)"><v-icon name="Close" size="14"></v-icon></div>
+            </div>
+            <sc-if value="{{provMineHas}}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:14px;background:rgba(242,183,47,0.14)">
+                <v-icon name="Flame" size="17" style="color:#C08A10"></v-icon>
+                <span style="font-size:12.5px;font-weight:700">You checked in here — {{provMine}} beats</span>
+              </div>
+            </sc-if>
+            <sc-if value="{{provMineNone}}" hint-placeholder-val="{{ false }}">
+              <div style="padding:10px 13px;border-radius:14px;border:1.5px dashed var(--ln);font-size:12.5px;font-weight:600;color:var(--sub)">No beats from you yet — your first capture unlocks this province.</div>
+            </sc-if>
+            <sc-if value="{{provHasSpots}}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub)">Spots here</span>
+                <sc-for list="{{provSpots}}" as="sp" hint-placeholder-count="2">
+                  <div onClick="{{sp.pick}}" style="display:flex;align-items:center;gap:11px;cursor:pointer">
+                    <div style="width:40px;height:40px;border-radius:12px;background:{{sp.tint}};flex-shrink:0"></div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                      <span style="font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{sp.name}}</span>
+                      <span style="font-size:11.5px;color:var(--sub);font-weight:600">{{sp.cat}} · {{sp.rating}}</span>
+                    </div>
+                    <v-icon name="ChevronRight" size="14" style="color:var(--sub)"></v-icon>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub)">Public beats</span>
+              <sc-if value="{{provHasPub}}" hint-placeholder-val="{{ true }}">
+                <sc-for list="{{provPubList}}" as="pb" hint-placeholder-count="2">
+                  <div style="display:flex;gap:10px;align-items:flex-start">
+                    <div style="width:32px;height:32px;border-radius:50%;background:{{pb.av}};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0">{{pb.ini}}</div>
+                    <div style="flex:1;display:flex;flex-direction:column;gap:1px">
+                      <div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;font-weight:800">{{pb.who}}</span><span style="font-size:10.5px;color:var(--sub)">{{pb.time}}</span></div>
+                      <span style="font-size:12px;line-height:1.45;color:var(--sub)">{{pb.note}}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{provNoPub}}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:12px;color:var(--sub);font-weight:600">No public beats yet — be the first.</span>
+              </sc-if>
+            </div>
+            <div onClick="{{openCamera}}" style="height:46px;border-radius:23px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0">
+              <v-icon name="Camera" size="18"></v-icon><span>Check in here</span>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="height:104px;flex-shrink:0"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isPoi}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="POI detail" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;animation:vbFade 0.3s ease">
+      <div style="height:300px;position:relative;background:{{selHero}}">
+        <span style="position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:10px;color:rgba(12,5,7,0.5)">{{selHeroLabel}}</span>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,6,7,0.35),rgba(10,6,7,0) 40%)"></div>
+        <div onClick="{{backToMap}}" style="position:absolute;left:18px;top:70px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#0C0507">
+          <v-icon name="ArrowLeft" size="19"></v-icon>
+        </div>
+        <div onClick="{{toggleLike}}" style="position:absolute;right:18px;top:70px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer;color:{{likeC}}">
+          <v-icon name="{{likeIcon}}" size="20"></v-icon>
+        </div>
+      </div>
+      <div style="margin-top:-26px;position:relative;border-radius:26px 26px 0 0;background:var(--bg);padding:22px 22px 28px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <span style="flex:1;font-size:24px;font-weight:800;letter-spacing:-0.4px;line-height:1.15">{{selName}}</span>
+            <div style="display:flex;align-items:center;gap:5px;height:32px;padding:0 11px;border-radius:16px;background:rgba(242,183,47,0.16)">
+              <v-icon name="StarFill" size="13" style="color:#D89A15"></v-icon>
+              <span style="font-size:13px;font-weight:800;color:var(--tx)">{{selRating}}</span>
+            </div>
+          </div>
+          <span style="font-size:13.5px;color:var(--sub);font-style:italic">Locals say: “{{selVi}}”</span>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span style="height:28px;padding:0 12px;border-radius:14px;background:rgba(190,56,42,0.1);color:#BE382A;font-size:12px;font-weight:800;display:flex;align-items:center">{{selCatLabel}}</span>
+            <span style="font-size:12.5px;color:var(--sub);font-weight:500">{{selCheckins}} check-ins · {{selFriends}} friends were here</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:15px;font-weight:800">Why it matters</span>
+          <span style="font-size:14px;line-height:1.6;color:var(--sub)">{{selDesc}}</span>
+        </div>
+        <div style="border-radius:18px;background:var(--sf);padding:6px 16px">
+          <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--ln)">
+            <v-icon name="TimerProperty1Linear" size="18" style="color:var(--sub)"></v-icon>
+            <span style="flex:1;font-size:13px;color:var(--sub);font-weight:600">Hours</span>
+            <span style="font-size:13px;font-weight:700">{{selHours}}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--ln)">
+            <v-icon name="LocationProperty1Linear" size="18" style="color:var(--sub)"></v-icon>
+            <span style="flex:1;font-size:13px;color:var(--sub);font-weight:600">Cost</span>
+            <span style="font-size:13px;font-weight:700">{{selPrice}}</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:11px 0">
+            <v-icon name="Bolt" size="18" style="color:#D89A15"></v-icon>
+            <span style="flex:1;font-size:13px;color:var(--sub);font-weight:600">Local tip</span>
+            <span style="font-size:13px;font-weight:700;max-width:200px;text-align:right;line-height:1.45">{{selTip}}</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:baseline;gap:8px">
+            <span style="font-size:15px;font-weight:800">Community beats</span>
+            <span style="font-size:12px;color:var(--sub);font-weight:600">{{selPhotos}} captures</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <div style="aspect-ratio:1;border-radius:14px;background:#E7D8C6 repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 9px,transparent 9px 18px);display:flex;align-items:flex-end;justify-content:center"><span style="font-family:ui-monospace,monospace;font-size:8px;color:rgba(12,5,7,0.45);padding-bottom:5px">user capture</span></div>
+            <div style="aspect-ratio:1;border-radius:14px;background:#DCE2DB repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 9px,transparent 9px 18px);display:flex;align-items:flex-end;justify-content:center"><span style="font-family:ui-monospace,monospace;font-size:8px;color:rgba(12,5,7,0.45);padding-bottom:5px">user capture</span></div>
+            <div style="aspect-ratio:1;border-radius:14px;background:#0C0507;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800">+{{selMore}}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:15px;font-weight:800">Recent from travellers</span>
+          <sc-for list="{{selReviews}}" as="r" hint-placeholder-count="2">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:38px;height:38px;border-radius:50%;background:{{r.av}};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0">{{r.ini}}</div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:13.5px;font-weight:800">{{r.who}}</span>
+                  <span style="font-size:11.5px;color:var(--sub)">{{r.time}}</span>
+                </div>
+                <span style="font-size:13px;line-height:1.5;color:var(--sub)">{{r.note}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <div onClick="{{openCamera}}" style="flex:1;height:52px;border-radius:26px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(190,56,42,0.3)">
+            <v-icon name="Camera" size="19"></v-icon>
+            <span>Capture here</span>
+          </div>
+          <div style="width:52px;height:52px;border-radius:26px;background:var(--sf);display:flex;align-items:center;justify-content:center;color:var(--tx)">
+            <v-icon name="Bookmark" size="20"></v-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isCamera}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Camera" style="position:absolute;inset:0;background:#0D0909;display:flex;flex-direction:column;padding-top:62px;animation:vbFade 0.25s ease">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 18px 4px">
+        <div onClick="{{closeCamera}}" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#FFFFFF">
+          <v-icon name="Close" size="17"></v-icon>
+        </div>
+        <div style="flex:1;display:flex;justify-content:center">
+          <div style="display:flex;align-items:center;gap:7px;height:34px;padding:0 13px;border-radius:17px;background:rgba(242,183,47,0.14);border:1px solid rgba(242,183,47,0.3)">
+            <v-icon name="LocationProperty1Bold" size="14" style="color:#F2B72F"></v-icon>
+            <span style="font-size:12px;font-weight:700;color:#F2B72F">{{camTag}}</span>
+            <span style="font-size:10px;font-weight:600;color:rgba(242,183,47,0.7)">auto-tag</span>
+          </div>
+        </div>
+        <div style="width:42px"></div>
+      </div>
+      <div style="flex:1;margin:14px 18px 0;border-radius:28px;position:relative;overflow:hidden;background:#1B1415 repeating-linear-gradient(45deg,rgba(255,255,255,0.04) 0 12px,transparent 12px 24px)">
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:10px;color:rgba(255,255,255,0.4);text-align:center">camera preview —<br>point it at something delicious</span>
+        <div style="position:absolute;left:16px;top:16px;width:26px;height:26px;border-left:2.5px solid rgba(255,255,255,0.65);border-top:2.5px solid rgba(255,255,255,0.65);border-radius:6px 0 0 0"></div>
+        <div style="position:absolute;right:16px;top:16px;width:26px;height:26px;border-right:2.5px solid rgba(255,255,255,0.65);border-top:2.5px solid rgba(255,255,255,0.65);border-radius:0 6px 0 0"></div>
+        <div style="position:absolute;left:16px;bottom:16px;width:26px;height:26px;border-left:2.5px solid rgba(255,255,255,0.65);border-bottom:2.5px solid rgba(255,255,255,0.65);border-radius:0 0 0 6px"></div>
+        <div style="position:absolute;right:16px;bottom:16px;width:26px;height:26px;border-right:2.5px solid rgba(255,255,255,0.65);border-bottom:2.5px solid rgba(255,255,255,0.65);border-radius:0 0 6px 0"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:7px;padding:14px 0 2px">
+        <v-icon name="Flame" size="15" style="color:#F2B72F"></v-icon>
+        <span style="font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.8)">Day {{nextStreak}} — keep it burning</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 44px 36px">
+        <div style="width:46px;height:46px;border-radius:13px;background:#241C1D repeating-linear-gradient(45deg,rgba(255,255,255,0.06) 0 6px,transparent 6px 12px);border:1px solid rgba(255,255,255,0.15)"></div>
+        <div onClick="{{snap}}" style="width:80px;height:80px;border-radius:50%;border:4px solid #FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <div style="width:62px;height:62px;border-radius:50%;background:#BE382A;transition:transform 0.15s" style-active="transform:scale(0.85)"></div>
+        </div>
+        <div style="width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:#FFFFFF">
+          <v-icon name="Flip" size="20"></v-icon>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isAud}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Send beat" style="position:absolute;inset:0;background:#0D0909;display:flex;flex-direction:column;padding-top:62px;animation:vbFade 0.25s ease">
+      <div style="display:flex;align-items:center;padding:10px 18px 0">
+        <div onClick="{{openCamera}}" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#FFFFFF">
+          <v-icon name="ArrowLeft" size="18"></v-icon>
+        </div>
+        <span style="flex:1;text-align:center;font-size:16px;font-weight:800;color:#FFFFFF">Send your beat</span>
+        <div style="width:42px"></div>
+      </div>
+      <div style="display:flex;justify-content:center;padding:20px 0 6px">
+        <div style="width:250px;aspect-ratio:4/5;border-radius:22px;background:#2A2122 repeating-linear-gradient(45deg,rgba(255,255,255,0.05) 0 10px,transparent 10px 20px);position:relative;transform:rotate(-2deg);box-shadow:0 20px 44px rgba(0,0,0,0.5);animation:vbPop 0.35s ease">
+          <span style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:9px;color:rgba(255,255,255,0.4)">your capture</span>
+          <div style="position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:14px;background:rgba(13,9,9,0.72)">
+            <v-icon name="LocationProperty1Bold" size="12" style="color:#F2B72F"></v-icon>
+            <span style="font-size:10.5px;font-weight:700;color:#FFFFFF">{{camTag}}</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin:16px 24px 0;height:44px;border-radius:22px;background:rgba(255,255,255,0.08);display:flex;align-items:center;padding:0 18px;color:rgba(255,255,255,0.45);font-size:13.5px;font-weight:500">Thêm caption… (optional)</div>
+      <div style="display:flex;margin:14px 24px 0;background:rgba(255,255,255,0.08);border-radius:24px;padding:4px">
+        <div onClick="{{audFriends}}" style="flex:1;height:40px;border-radius:20px;background:{{audFBg}};color:{{audFC}};display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:800;cursor:pointer;transition:background 0.2s">Friends</div>
+        <div onClick="{{audPublic}}" style="flex:1;height:40px;border-radius:20px;background:{{audPBg}};color:{{audPC}};display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:800;cursor:pointer;transition:background 0.2s">Public</div>
+      </div>
+      <sc-if value="{{isFriendsAud}}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:14px;justify-content:center;padding:18px 24px 0">
+          <sc-for list="{{friends}}" as="f" hint-placeholder-count="5">
+            <div onClick="{{f.pick}}" style="display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer">
+              <div style="width:52px;height:52px;border-radius:50%;background:{{f.av}};display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-weight:800;font-size:17px;border:2.5px solid {{f.ring}};position:relative;transition:border-color 0.2s">
+                {{f.ini}}
+                <sc-if value="{{f.on}}" hint-placeholder-val="{{ true }}">
+                  <div style="position:absolute;right:-4px;bottom:-4px;width:19px;height:19px;border-radius:50%;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center">
+                    <v-icon name="Check" size="10"></v-icon>
+                  </div>
+                </sc-if>
+              </div>
+              <span style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.7)">{{f.n}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{isPublicAud}}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;padding:22px 40px 0;color:rgba(255,255,255,0.6)">
+          <v-icon name="Globe" size="18"></v-icon>
+          <span style="font-size:12.5px;font-weight:600;line-height:1.5;max-width:250px">Everyone exploring this spot will see your beat as social proof.</span>
+        </div>
+      </sc-if>
+      <div style="flex:1"></div>
+      <div onClick="{{sendBeat}}" style="margin:0 24px 34px;height:54px;border-radius:27px;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 12px 28px rgba(242,183,47,0.3)">
+        <v-icon name="Send" size="18"></v-icon>
+        <span>{{sendLabel}}</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isSent}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Beat sent" style="position:absolute;inset:0;background:#0D0909;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;gap:16px;animation:vbFade 0.3s ease">
+      <div style="width:96px;height:96px;border-radius:50%;background:#F2B72F;display:flex;align-items:center;justify-content:center;color:#231A08;animation:vbPop 0.45s cubic-bezier(0.2,1.2,0.4,1)">
+        <v-icon name="Check" size="44"></v-icon>
+      </div>
+      <div style="font-size:28px;font-weight:800;color:#FFFFFF;letter-spacing:-0.4px;animation:vbUp 0.4s ease">Beat sent!</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.65);text-align:center;line-height:1.55;animation:vbUp 0.45s ease">{{sentSummary}}<br>{{camTag}}</div>
+      <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-radius:20px;background:rgba(255,255,255,0.07);margin-top:8px;animation:vbUp 0.55s ease">
+        <v-icon name="Flame" size="30" style="color:#F2B72F"></v-icon>
+        <div style="display:flex;flex-direction:column">
+          <span style="font-size:20px;font-weight:800;color:#FFFFFF">Day {{streak}}</span>
+          <span style="font-size:12px;color:rgba(255,255,255,0.55);font-weight:600">{{streakNote}}</span>
+        </div>
+      </div>
+      <div onClick="{{sentContinue}}" style="margin-top:18px;height:50px;padding:0 36px;border-radius:25px;border:1.5px solid rgba(255,255,255,0.25);color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;cursor:pointer">Keep exploring</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isCelebrate}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Milestone" style="position:absolute;inset:0;background:radial-gradient(120% 100% at 50% 0%,#F7C64B 0%,#E9A81F 55%,#CF8C0E 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;gap:10px;overflow:hidden;animation:vbFade 0.3s ease">
+      <sc-for list="{{confetti}}" as="cf" hint-placeholder-count="8">
+        <div style="position:absolute;left:{{cf.l}};top:-30px;width:{{cf.s}};height:{{cf.s}};border-radius:{{cf.r}};background:{{cf.c}};animation:vbFall {{cf.d}} linear infinite;animation-delay:{{cf.dl}}"></div>
+      </sc-for>
+      <div style="width:120px;height:120px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;color:#BE382A;box-shadow:0 20px 50px rgba(120,75,0,0.35);animation:vbPop 0.5s cubic-bezier(0.2,1.3,0.4,1)">
+        <v-icon name="Flame" size="58"></v-icon>
+      </div>
+      <div style="font-size:76px;font-weight:800;color:#231A08;line-height:1;margin-top:10px;letter-spacing:-2px;animation:vbUp 0.45s ease">{{streak}}</div>
+      <div style="font-size:25px;font-weight:800;color:#231A08;animation:vbUp 0.5s ease">day streak!</div>
+      <div style="font-size:14px;font-weight:600;color:rgba(35,26,8,0.75);animation:vbUp 0.55s ease">Bạn đỉnh quá — một tuần liền!</div>
+      <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.92);border-radius:18px;padding:13px 18px;margin-top:14px;animation:vbUp 0.6s ease">
+        <div style="width:40px;height:40px;border-radius:12px;background:rgba(190,56,42,0.1);display:flex;align-items:center;justify-content:center;color:#BE382A">
+          <v-icon name="Bolt" size="20"></v-icon>
+        </div>
+        <div style="display:flex;flex-direction:column">
+          <span style="font-size:13.5px;font-weight:800;color:#0C0507">Badge unlocked: “Tuần Rực Lửa”</span>
+          <span style="font-size:11.5px;color:#7A716B;font-weight:600">One full week of beats</span>
+        </div>
+      </div>
+      <div onClick="{{celebrateDone}}" style="margin-top:20px;height:52px;padding:0 44px;border-radius:26px;background:#231A08;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;cursor:pointer">Tiếp tục</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isFeed}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Friend feed" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="flex:1;font-size:27px;font-weight:800;letter-spacing:-0.5px">Beats</span>
+        <div style="display:flex;align-items:center;gap:5px;height:36px;padding:0 12px;border-radius:18px;background:{{streakBg}};color:{{streakC}}">
+          <v-icon name="Flame" size="16"></v-icon>
+          <span style="font-size:14px;font-weight:800">{{streak}}</span>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--sub);font-weight:500;margin-top:2px">Fresh from your bạn bè, as it happens</div>
+      <sc-if value="{{broken}}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px;padding:16px;border-radius:18px;background:var(--sf);border:1px dashed var(--ln);display:flex;align-items:center;gap:13px">
+          <div style="width:44px;height:44px;border-radius:50%;background:var(--ln);display:flex;align-items:center;justify-content:center;color:#A79C97">
+            <v-icon name="Flame" size="22"></v-icon>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:14px;font-weight:800">Streak lost at day 12</span>
+            <span style="font-size:12px;color:var(--sub);font-weight:500">Chuỗi đứt rồi… one snap relights it.</span>
+          </div>
+          <div onClick="{{openCamera}}" style="height:36px;padding:0 15px;border-radius:18px;background:#BE382A;color:#FFFFFF;font-size:12.5px;font-weight:800;display:flex;align-items:center;cursor:pointer">Relight</div>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">
+        <sc-for list="{{momentsBig}}" as="m" hint-placeholder-count="1">
+          <div style="border-radius:26px;position:relative;aspect-ratio:4/4.6;background:{{m.tint}} repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 11px,transparent 11px 22px);overflow:hidden;box-shadow:var(--sc)">
+            <span style="position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:9px;color:rgba(12,5,7,0.45)">{{m.label}}</span>
+            <div style="position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:9px">
+              <div style="width:40px;height:40px;border-radius:50%;background:{{m.av}};border:2.5px solid {{m.ring}};display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-weight:800;font-size:15px">{{m.ini}}</div>
+              <div style="display:flex;flex-direction:column;gap:0">
+                <span style="font-size:14px;font-weight:800;color:#0C0507">{{m.who}}</span>
+                <span style="font-size:11.5px;font-weight:600;color:rgba(12,5,7,0.55)">{{m.time}} ago</span>
+              </div>
+            </div>
+            <div style="position:absolute;left:14px;bottom:14px;display:flex;align-items:center;gap:5px;height:30px;padding:0 11px;border-radius:15px;background:rgba(13,9,9,0.72)">
+              <v-icon name="LocationProperty1Bold" size="12" style="color:#F2B72F"></v-icon>
+              <span style="font-size:11px;font-weight:700;color:#FFFFFF">{{m.place}}</span>
+            </div>
+            <div style="position:absolute;right:14px;bottom:14px;display:flex;gap:8px">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;color:#D89A15;cursor:pointer">
+                <v-icon name="Bolt" size="17"></v-icon>
+              </div>
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;color:#BE382A;cursor:pointer">
+                <v-icon name="Heart" size="17"></v-icon>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{momentsSmall}}" as="m" hint-placeholder-count="4">
+            <div style="border-radius:20px;position:relative;aspect-ratio:1/1.25;background:{{m.tint}} repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 9px,transparent 9px 18px);overflow:hidden">
+              <span style="position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:8px;color:rgba(12,5,7,0.45);white-space:nowrap">{{m.label}}</span>
+              <div style="position:absolute;left:10px;top:10px;width:30px;height:30px;border-radius:50%;background:{{m.av}};border:2px solid {{m.ring}};display:flex;align-items:center;justify-content:center;color:#FFFFFF;font-weight:800;font-size:12px">{{m.ini}}</div>
+              <div style="position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-direction:column;gap:1px">
+                <span style="font-size:12px;font-weight:800;color:#0C0507">{{m.who}} · {{m.time}}</span>
+                <span style="font-size:10.5px;font-weight:600;color:rgba(12,5,7,0.6)">{{m.place}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isDiscover}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Discovery" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
+      <span style="font-size:27px;font-weight:800;letter-spacing:-0.5px">Explore</span>
+      <div style="font-size:13px;color:var(--sub);font-weight:500;margin-top:2px">Real beats from real travellers — not a travel blog</div>
+      <div onClick="{{searchOpen}}" style="margin-top:14px;height:46px;border-radius:15px;background:var(--sf);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--sub);cursor:pointer">
+        <v-icon name="SearchNormalProperty1Linear" size="18"></v-icon>
+        <span style="font-size:14px;font-weight:500">Try “bún chả”, “Hội An”, “rooftop”…</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;overflow-x:auto;scrollbar-width:none">
+        <div style="height:34px;padding:0 14px;border-radius:17px;background:var(--pill);color:var(--pilltx);font-size:12.5px;font-weight:700;display:flex;align-items:center;white-space:nowrap;flex-shrink:0">Near Hội An</div>
+        <div style="height:34px;padding:0 14px;border-radius:17px;background:var(--sf);color:var(--sub);font-size:12.5px;font-weight:700;display:flex;align-items:center;white-space:nowrap;flex-shrink:0">Trending</div>
+        <div style="height:34px;padding:0 14px;border-radius:17px;background:var(--sf);color:var(--sub);font-size:12.5px;font-weight:700;display:flex;align-items:center;white-space:nowrap;flex-shrink:0">Local guides</div>
+        <div style="height:34px;padding:0 14px;border-radius:17px;background:var(--sf);color:var(--sub);font-size:12.5px;font-weight:700;display:flex;align-items:center;white-space:nowrap;flex-shrink:0">This week</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px">
+        <sc-for list="{{discover}}" as="d" hint-placeholder-count="3">
+          <div style="border-radius:22px;background:var(--card);box-shadow:var(--sc);overflow:hidden">
+            <div style="height:150px;position:relative;background:{{d.tint}} repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 10px,transparent 10px 20px)">
+              <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:9px;color:rgba(12,5,7,0.45)">{{d.label}}</span>
+              <div style="position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:5px;height:28px;padding:0 10px;border-radius:14px;background:rgba(13,9,9,0.72)">
+                <v-icon name="LocationProperty1Bold" size="11" style="color:#F2B72F"></v-icon>
+                <span style="font-size:10.5px;font-weight:700;color:#FFFFFF">{{d.place}}</span>
+              </div>
+            </div>
+            <div style="padding:13px 15px;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="width:30px;height:30px;border-radius:50%;background:{{d.av}};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px">{{d.ini}}</div>
+                <span style="font-size:13px;font-weight:800">{{d.who}}</span>
+                <sc-if value="{{d.v}}" hint-placeholder-val="{{ false }}">
+                  <div style="width:16px;height:16px;border-radius:50%;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center">
+                    <v-icon name="Check" size="9"></v-icon>
+                  </div>
+                </sc-if>
+                <span style="flex:1"></span>
+                <span style="font-size:11.5px;color:var(--sub);font-weight:600">{{d.time}} ago</span>
+              </div>
+              <span style="font-size:13.5px;line-height:1.5;color:var(--tx)">{{d.note}}</span>
+              <div style="display:flex;align-items:center;gap:5px">
+                <v-icon name="StarFill" size="12" style="color:#F2B72F"></v-icon>
+                <span style="font-size:12px;font-weight:800">{{d.stars}}</span>
+                <span style="font-size:12px;color:var(--sub);font-weight:500">· was here, verified by location</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isProfile}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Profile" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:76px 20px 120px;animation:vbFade 0.3s ease">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div style="width:92px;height:92px;border-radius:50%;border:3px solid #F2B72F;padding:3px">
+          <div style="width:100%;height:100%;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:32px">M</div>
+        </div>
+        <span style="font-size:22px;font-weight:800;letter-spacing:-0.3px">Minh Đinh</span>
+        <span style="font-size:13px;color:var(--sub);font-weight:600;margin-top:-6px">@minh.dq · Hà Nội</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <div style="flex:1;border-radius:18px;background:var(--sf);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:2px">
+          <div style="display:flex;align-items:center;gap:4px;color:{{streakDeepC}}">
+            <v-icon name="Flame" size="16"></v-icon>
+            <span style="font-size:20px;font-weight:800;color:var(--tx)">{{streak}}</span>
+          </div>
+          <span style="font-size:11px;color:var(--sub);font-weight:700">day streak</span>
+        </div>
+        <div style="flex:1;border-radius:18px;background:var(--sf);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span style="font-size:20px;font-weight:800">21</span>
+          <span style="font-size:11px;color:var(--sub);font-weight:700">best streak</span>
+        </div>
+        <div style="flex:1;border-radius:18px;background:var(--sf);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:2px">
+          <span style="font-size:20px;font-weight:800">132</span>
+          <span style="font-size:11px;color:var(--sub);font-weight:700">beats sent</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;border-radius:22px;background:var(--sf);padding:16px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:baseline;gap:8px">
+          <span style="font-size:15px;font-weight:800">Your Vietnam</span>
+          <span style="font-size:12px;color:var(--sub);font-weight:600">9 / 34 provinces unlocked</span>
+        </div>
+        <div style="height:290px;position:relative">
+          <vn-map unlocked="{{unlockedStr}}" style="position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);aspect-ratio:390/690"></vn-map>
+        </div>
+      </div>
+      <div style="margin-top:14px;border-radius:22px;background:var(--sf);padding:16px;display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:15px;font-weight:800">This week</span>
+        <div style="display:flex;justify-content:space-between">
+          <sc-for list="{{week}}" as="w" hint-placeholder-count="7">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+              <div style="width:36px;height:36px;border-radius:50%;background:{{w.bg}};color:{{w.co}};display:flex;align-items:center;justify-content:center">
+                <v-icon name="Flame" size="16"></v-icon>
+              </div>
+              <span style="font-size:10.5px;font-weight:700;color:var(--sub)">{{w.d}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="margin-top:14px;border-radius:22px;background:var(--sf);padding:4px 16px">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--ln)">
+          <v-icon name="Bookmark" size="19" style="color:var(--sub)"></v-icon>
+          <span style="flex:1;font-size:14px;font-weight:700">Saved places</span>
+          <span style="font-size:13px;color:var(--sub);font-weight:600">14</span>
+          <v-icon name="ChevronRight" size="15" style="color:var(--sub)"></v-icon>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--ln)">
+          <v-icon name="Globe" size="19" style="color:var(--sub)"></v-icon>
+          <span style="flex:1;font-size:14px;font-weight:700">Language</span>
+          <span style="font-size:13px;color:var(--sub);font-weight:600">{{langLabel}}</span>
+          <v-icon name="ChevronRight" size="15" style="color:var(--sub)"></v-icon>
+        </div>
+        <div onClick="{{toggleTheme}}" style="display:flex;align-items:center;gap:12px;padding:13px 0;cursor:pointer">
+          <v-icon name="MoonProperty1Linear" size="19" style="color:var(--sub)"></v-icon>
+          <span style="flex:1;font-size:14px;font-weight:700">Dark mode</span>
+          <div style="width:46px;height:28px;border-radius:14px;background:{{swBg}};position:relative;transition:background 0.25s">
+            <div style="position:absolute;top:3px;left:{{swL}};width:22px;height:22px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:left 0.25s"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:18px;right:18px;bottom:26px;height:66px;border-radius:33px;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--sc);border:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:30">
+      <div onClick="{{goMap}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navMapBg}};color:{{navMapCo}};transition:background 0.2s">
+        <v-icon name="{{navMapIcon}}" size="21"></v-icon>
+        <sc-if value="{{isMap}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Map</span></sc-if>
+      </div>
+      <div onClick="{{goFeed}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navFeedBg}};color:{{navFeedCo}};transition:background 0.2s">
+        <v-icon name="Bolt" size="21"></v-icon>
+        <sc-if value="{{isFeed}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Beats</span></sc-if>
+      </div>
+      <div onClick="{{openCamera}}" style="width:56px;height:56px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 22px rgba(190,56,42,0.45);transform:translateY(-10px);border:4px solid var(--bg)">
+        <v-icon name="CameraFill" size="24"></v-icon>
+      </div>
+      <div onClick="{{goDiscover}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navDiscBg}};color:{{navDiscCo}};transition:background 0.2s">
+        <v-icon name="{{navDiscIcon}}" size="21"></v-icon>
+        <sc-if value="{{isDiscover}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Explore</span></sc-if>
+      </div>
+      <div onClick="{{goProfile}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navProfBg}};color:{{navProfCo}};transition:background 0.2s">
+        <v-icon name="{{navProfIcon}}" size="21"></v-icon>
+        <sc-if value="{{isProfile}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Me</span></sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-import>
+
+<aside class="vbapp" style="width:372px;background:#FFFFFF;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:20px;box-shadow:0 12px 32px rgba(12,5,7,0.08);color:#0C0507">
+  <div style="display:flex;flex-direction:column;gap:2px">
+    <div style="display:flex;align-items:center;gap:6px">
+      <span style="font-size:19px;font-weight:800;letter-spacing:-0.3px">vibeat</span>
+      <span style="width:8px;height:8px;border-radius:50%;background:#F2B72F;margin-top:5px"></span>
+      <span style="font-size:12px;font-weight:700;color:#7A716B;margin-left:6px">component set</span>
+    </div>
+    <span style="font-size:11.5px;color:#7A716B;font-weight:500">Urbanist · lacquer red #BE382A · gold #F2B72F · ink #0C0507</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7A716B;text-transform:uppercase">Streak badge</span>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:5px;height:36px;padding:0 12px;border-radius:18px;background:rgba(242,183,47,0.16);color:#B8860B"><v-icon name="Flame" size="16"></v-icon><span style="font-size:14px;font-weight:800;color:#0C0507">7</span></div>
+      <div style="display:flex;align-items:center;gap:5px;height:36px;padding:0 12px;border-radius:18px;background:#F6F3EE;color:#B0A69F"><v-icon name="Flame" size="16"></v-icon><span style="font-size:14px;font-weight:800;color:#7A716B">0</span></div>
+      <div style="display:flex;align-items:center;gap:6px;height:36px;padding:0 13px;border-radius:18px;background:#F2B72F;color:#231A08"><v-icon name="Flame" size="16"></v-icon><span style="font-size:13px;font-weight:800">Milestone · 7</span></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7A716B;text-transform:uppercase">Map pins &amp; cluster</span>
+    <div style="display:flex;gap:22px;align-items:center;padding:10px 4px 0">
+      <div style="width:22px;height:22px;background:#BE382A;border:2px solid #FFFFFF;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(12,5,7,0.3);display:flex;align-items:center;justify-content:center"><div style="width:7px;height:7px;border-radius:50%;background:#FFFFFF"></div></div>
+      <div style="width:22px;height:22px;background:#F2B72F;border:2px solid #FFFFFF;border-radius:50% 50% 50% 0;transform:rotate(-45deg) scale(1.2);box-shadow:0 3px 8px rgba(12,5,7,0.3);display:flex;align-items:center;justify-content:center"><div style="width:7px;height:7px;border-radius:50%;background:#FFFFFF"></div></div>
+      <div style="width:38px;height:38px;border-radius:50%;background:#BE382A;border:3px solid #FFFFFF;color:#FFFFFF;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(190,56,42,0.45)">3</div>
+      <span style="font-size:11px;color:#7A716B;font-weight:600">default · selected · cluster</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7A716B;text-transform:uppercase">Category chips</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="height:36px;padding:0 15px;border-radius:18px;background:#0C0507;color:#FFFFFF;display:flex;align-items:center;font-size:13px;font-weight:700">All</div>
+      <div style="height:36px;padding:0 15px;border-radius:18px;background:#F6F3EE;color:#7A716B;border:1px solid #ECE7E0;display:flex;align-items:center;font-size:13px;font-weight:700">Cà phê</div>
+      <div style="height:36px;padding:0 15px;border-radius:18px;background:#F6F3EE;color:#7A716B;border:1px solid #ECE7E0;display:flex;align-items:center;font-size:13px;font-weight:700">Food</div>
+      <div style="height:36px;padding:0 15px;border-radius:18px;background:#F6F3EE;color:#7A716B;border:1px solid #ECE7E0;display:flex;align-items:center;font-size:13px;font-weight:700">Heritage</div>
+      <div style="height:36px;padding:0 15px;border-radius:18px;background:#F6F3EE;color:#7A716B;border:1px solid #ECE7E0;display:flex;align-items:center;font-size:13px;font-weight:700">Hidden gems</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7A716B;text-transform:uppercase">Buttons</span>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div style="flex:1;height:48px;border-radius:24px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Primary</div>
+      <div style="flex:1;height:48px;border-radius:24px;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Action</div>
+      <div style="flex:1;height:48px;border-radius:24px;border:1.5px solid #ECE7E0;color:#0C0507;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800">Ghost</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7A716B;text-transform:uppercase">Nav bar</span>
+    <div style="height:66px;border-radius:33px;background:rgba(255,255,255,0.94);box-shadow:0 12px 32px rgba(12,5,7,0.12);border:1px solid #ECE7E0;display:flex;align-items:center;justify-content:space-between;padding:0 12px">
+      <div style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;background:#0C0507;color:#FFFFFF"><v-icon name="LocationProperty1Bold" size="20"></v-icon><span style="font-size:13px;font-weight:800">Map</span></div>
+      <div style="height:44px;padding:0 12px;display:flex;align-items:center;color:#7A716B"><v-icon name="Bolt" size="20"></v-icon></div>
+      <div style="width:52px;height:52px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(190,56,42,0.45);transform:translateY(-8px);border:4px solid #FFFFFF"><v-icon name="CameraFill" size="22"></v-icon></div>
+      <div style="height:44px;padding:0 12px;display:flex;align-items:center;color:#7A716B"><v-icon name="SearchNormalProperty1Linear" size="20"></v-icon></div>
+      <div style="height:44px;padding:0 12px;display:flex;align-items:center;color:#7A716B"><v-icon name="UserProperty1Linear" size="20"></v-icon></div>
+    </div>
+  </div>
+</aside>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:960},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;,&quot;section&quot;:&quot;Appearance&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;language&quot;,&quot;login&quot;,&quot;register&quot;,&quot;onboarding&quot;,&quot;map&quot;,&quot;search&quot;,&quot;notifications&quot;,&quot;camera&quot;,&quot;feed&quot;,&quot;discover&quot;,&quot;profile&quot;],&quot;default&quot;:&quot;login&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;streakBroken&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const startMap = { language: 'lang', login: 'login', register: 'register', onboarding: 'onboard', map: 'map', search: 'search', notifications: 'notif', camera: 'camera', feed: 'feed', discover: 'discover', profile: 'profile' };
+    this.state = {
+      screen: startMap[props.startScreen] || 'lang',
+      ob: 0, lang: 'en', cat: 'all', sel: null, provSel: null, q: '', notifRead: false,
+      streakDelta: 0, aud: 'friends', sentTo: ['Linh', 'Đức', 'Mai', 'Khoa'],
+      themeOv: null, liked: false
+    };
+    this.POIS = [
+      { id: 'giang', name: 'Giảng Café', place: 'Hoàn Kiếm, Hà Nội', vi: 'cà phê trứng gốc', cat: 'coffee', x: 163, y: 123, rating: '4.8', checkins: '2.1k', friends: 4, desc: 'Egg coffee was invented here in 1946, when milk was scarce and Mr. Giảng — a bartender at the Metropole — whipped egg yolk into robusta instead. The family still makes it the same way, up a narrow alley off Nguyễn Hữu Huân.', hours: '7:00 – 22:00', price: '35–50k ₫', tip: 'Order “một trứng nóng” and head upstairs — locals never sit street-level.', photos: '312', tint: '#E9DEC8', hero: '' },
+      { id: 'tahien', name: 'Tạ Hiện Beer Street', place: 'Old Quarter, Hà Nội', vi: 'ngã tư quốc tế', cat: 'night', x: 166, y: 119, rating: '4.6', checkins: '5.4k', friends: 7, desc: 'The “international crossroads” — plastic stools, 15k bia hơi poured from kegs that run out by midnight, and the whole street singing over each other. Chaos, but the friendly kind.', hours: '18:00 – 02:00', price: '15k ₫ / bia hơi', tip: 'Stools facing the intersection are prime seats. Order nem chua rán with round one.', photos: '891', tint: '#DED0C0', hero: '' },
+      { id: 'train', name: 'Train Street', place: 'Phùng Hưng, Hà Nội', vi: 'phố đường tàu', cat: 'hidden', x: 160, y: 121, rating: '4.5', checkins: '1.8k', friends: 2, desc: 'Cafés squeezed a metre from live rails. Twice a day the train barrels through and everyone flattens against the wall, coffee in hand. Check the timetable chalkboards.', hours: 'Trains ~15:30 &amp; 19:30', price: 'coffee 30k ₫', tip: 'Arrive 30 min before the train. Baristas will wave you to a safe spot.', photos: '640', tint: '#D8D3CB', hero: '' },
+      { id: 'halong', name: 'Hạ Long Bay', place: 'Quảng Ninh', vi: 'vịnh rồng đáp', cat: 'nature', x: 227, y: 121, rating: '4.9', checkins: '9.7k', friends: 5, desc: 'Nearly 2,000 limestone karsts rising from jade water — the legend says a dragon family spat them out to shield Việt Nam from invaders. UNESCO-listed since 1994.', hours: 'Cruises 8:00 – 18:00', price: 'day cruise ~650k ₫', tip: 'Book a kayak add-on and skip the crowded Sửng Sốt cave hour (11–13h).', photos: '2.3k', tint: '#C9D6DC', hero: 'url(assets/photos/scenery-2.jpg) center / cover no-repeat' },
+      { id: 'sapa', name: 'Sa Pa Terraces', place: 'Lào Cai', vi: 'ruộng bậc thang', cat: 'nature', x: 99, y: 77, rating: '4.7', checkins: '3.2k', friends: 3, desc: 'Rice terraces carved over centuries by H’Mông and Dao families. Green in June, gold in September — locals will tell you the harvest week matters more than the season.', hours: 'Best light 6–9h', price: 'homestay ~300k ₫', tip: 'Skip the cable car once — walk Lao Chải to Tả Van with a local guide instead.', photos: '1.6k', tint: '#CBD6CE', hero: '' },
+      { id: 'hagiang', name: 'Hà Giang Loop', place: 'Tuyên Quang', vi: 'cung đèo huyền thoại', cat: 'hidden', x: 140, y: 44, rating: '4.9', checkins: '1.1k', friends: 1, desc: 'Three days of switchbacks over the Mã Pí Lèng pass, buckwheat fields, and H’Mông markets. The far north most tourists never reach — riders call it the best road in Southeast Asia.', hours: '3–4 day loop', price: 'bike rental 250k ₫/day', tip: 'Hire an “easy rider” if you have never ridden mountain passes. Seriously.', photos: '420', tint: '#C9D2DC', hero: '' },
+      { id: 'trangan', name: 'Tràng An', place: 'Ninh Bình', vi: 'Hạ Long trên cạn', cat: 'heritage', x: 177, y: 155, rating: '4.8', checkins: '2.8k', friends: 3, desc: '“Hạ Long on land” — sampan boats rowed (often by foot!) through caves threading limestone valleys and 1,000-year-old temples of the old capital Hoa Lư.', hours: '7:00 – 17:00', price: 'boat 250k ₫', tip: 'Route 3 has the fewest boats. Bring a hat — no shade for 3 hours.', photos: '980', tint: '#D5DCCB', hero: '' },
+      { id: 'hue', name: 'Đại Nội — Imperial City', place: 'Huế', vi: 'kinh thành Huế', cat: 'heritage', x: 240, y: 321, rating: '4.7', checkins: '4.1k', friends: 2, desc: 'Walled citadel of the Nguyễn emperors (1802–1945), modelled on Beijing’s Forbidden City but softened with Vietnamese geomancy. Half-ruined by war, being restored gate by gate.', hours: '6:30 – 17:30', price: '200k ₫', tip: 'Enter at 6:30 sharp — you get the Thái Hòa palace to yourself.', photos: '1.2k', tint: '#DCCFC2', hero: '' },
+      { id: 'goldenbridge', name: 'Cầu Vàng — Golden Bridge', place: 'Bà Nà, Đà Nẵng', vi: 'cầu bàn tay', cat: 'nature', x: 250, y: 342, rating: '4.6', checkins: '6.3k', friends: 6, desc: 'The giant stone hands lifting a golden ribbon 1,400 m above sea level. Built in 2018 and instantly the most photographed spot in central Việt Nam.', hours: '8:00 – 17:00', price: 'cable car 900k ₫', tip: 'Fog burns off ~9:30. Weekday mornings only, trust us.', photos: '3.1k', tint: '#E3CDB8', hero: '' },
+      { id: 'banhmi', name: 'Bánh Mì Phượng', place: 'Hội An', vi: 'bánh mì ngon nhất thế giới', cat: 'food', x: 259, y: 353, rating: '4.8', checkins: '7.9k', friends: 8, desc: 'Anthony Bourdain called it “a symphony in a sandwich”. Wood-fired baguettes, house pâté, and a queue that moves faster than it looks.', hours: '6:30 – 21:30', price: '25–35k ₫', tip: 'Order #5 (thịt nướng) with extra rau răm. Eat it hot, standing, like everyone else.', photos: '2.7k', tint: '#E9D8C8', hero: '' },
+      { id: 'nhatrang', name: 'Hòn Mun Reef', place: 'Nha Trang, Khánh Hòa', vi: 'đảo yến', cat: 'nature', x: 301, y: 505, rating: '4.5', checkins: '1.9k', friends: 2, desc: 'Protected marine reserve with the clearest water on the south-central coast. Snorkel boats leave the harbour every morning; afternoons get choppy.', hours: 'Boats 8:00 – 14:00', price: 'snorkel trip ~500k ₫', tip: 'Go with the 7:30 boat — visibility drops after the crowds churn the bay.', photos: '760', tint: '#C9DCD9', hero: 'url(assets/photos/scenery-3.jpg) center / cover no-repeat' },
+      { id: 'buivien', name: 'Bùi Viện Walking St.', place: 'Q.1, TP. Hồ Chí Minh', vi: 'phố Tây không ngủ', cat: 'night', x: 210, y: 548, rating: '4.3', checkins: '8.8k', friends: 9, desc: 'Sài Gòn’s sleepless street — neon, street food carts, live acoustic sets, and locals and backpackers sharing the same plastic tables until 4am.', hours: '19:00 – 04:00', price: 'beer 25k ₫', tip: 'The side alleys (hẻm) have better food than the main strip. Follow the office workers.', photos: '1.9k', tint: '#D8C8DC', hero: '' },
+      { id: 'apartment', name: 'Café Apartment', place: '42 Nguyễn Huệ, TP.HCM', vi: 'chung cư cà phê', cat: 'coffee', x: 218, y: 556, rating: '4.6', checkins: '3.5k', friends: 5, desc: 'A 1960s apartment block where every flat became a café or studio. Nine floors of balconies over Nguyễn Huệ — pick your floor by the view you want.', hours: '8:00 – 22:30', price: 'lift 3k ₫, coffee ~60k ₫', tip: 'Floor 5, balcony seats, sunset. Pay the lift lady — the stairs are 9 floors.', photos: '1.4k', tint: '#D8DFE4', hero: '' },
+      { id: 'cairang', name: 'Chợ nổi Cái Răng', place: 'Cần Thơ', vi: 'chợ trên sông', cat: 'hidden', x: 167, y: 594, rating: '4.6', checkins: '890', friends: 1, desc: 'The Mekong’s floating wholesale market. Boats advertise their produce by hanging it from a pole — pineapples, taro, watermelon — and the coffee boat finds YOU.', hours: '5:00 – 9:00', price: 'boat 200k ₫', tip: 'Leave the pier at 5:30. By 8 it is souvenir boats only.', photos: '530', tint: '#DCE2DB', hero: '' }
+    ];
+    this.CATS = [
+      { id: 'all', label: 'All' }, { id: 'coffee', label: 'Cà phê' }, { id: 'food', label: 'Food' },
+      { id: 'heritage', label: 'Heritage' }, { id: 'night', label: 'Nightlife' }, { id: 'nature', label: 'Nature' }, { id: 'hidden', label: 'Hidden gems' }
+    ];
+    this.FRIENDS = [
+      { n: 'Linh', av: '#BE382A' }, { n: 'Đức', av: '#8A5B2B' }, { n: 'Mai', av: '#4E6E58' },
+      { n: 'Khoa', av: '#3E5A74' }, { n: 'Trang', av: '#7A4E6E' }
+    ];
+    this.MOMENTS = [
+      { who: 'Linh', place: 'Cầu Vàng, Đà Nẵng', time: '12 min', tint: '#E3CDB8', label: 'capture — golden bridge', fresh: true, av: '#BE382A' },
+      { who: 'Đức', place: 'Tạ Hiện, Hà Nội', time: '1 h', tint: '#DED0C0', label: 'capture — beer street', fresh: true, av: '#8A5B2B' },
+      { who: 'Mai', place: 'Chợ Bến Thành', time: '3 h', tint: '#CBD6CE', label: 'capture — market haul', fresh: false, av: '#4E6E58' },
+      { who: 'Khoa', place: 'Đèo Mã Pí Lèng', time: '6 h', tint: '#C9D2DC', label: 'capture — mountain pass', fresh: false, av: '#3E5A74' },
+      { who: 'Trang', place: 'Hồ Tây sunset', time: '9 h', tint: '#E0D3DC', label: 'capture — sunset ride', fresh: false, av: '#7A4E6E' }
+    ];
+    this.DISCOVER = [
+      { who: '@nomadngan', v: true, note: '“The lantern alley glows at 18:30 — go before the tour groups, leave before the boats.”', place: 'Hội An Old Town', time: '2 h', stars: '5.0', tint: '#E4D2C4', label: 'capture — lantern alley', av: '#B8641F', ini: 'N' },
+      { who: '@bunchahunter', v: false, note: '“Ordered like a local: một trứng nóng, upstairs seat. Life-changing 40k.”', place: 'Giảng Café, Hà Nội', time: '5 h', stars: '4.9', tint: '#E9DEC8', label: 'capture — egg coffee', av: '#8A5B2B', ini: 'B' },
+      { who: '@saigonwalks', v: true, note: '“Nine floors of cafés hidden in a 60s apartment block. Floor 5 for sunset.”', place: '42 Nguyễn Huệ, TP.HCM', time: '1 d', stars: '4.7', tint: '#D8DFE4', label: 'capture — café apartment', av: '#3E5A74', ini: 'S' }
+    ];
+    this.LANGS = [
+      { code: 'VI', id: 'vi', label: 'Tiếng Việt', sub: 'Vietnamese' },
+      { code: 'EN', id: 'en', label: 'English', sub: 'English (US)' },
+      { code: 'KO', id: 'ko', label: '한국어', sub: 'Korean' },
+      { code: 'JA', id: 'ja', label: '日本語', sub: 'Japanese' },
+      { code: 'FR', id: 'fr', label: 'Français', sub: 'French' }
+    ];
+    this.OB = [
+      { img: 'url(assets/photos/scenery-2.jpg) center / cover no-repeat', title: 'Your Vietnam,\none beat at a time', sub: 'A living map of every province — phở stalls, pagodas, and corners only locals know.', btn: 'Next' },
+      { img: 'url(assets/photos/scenery-1.png) center / cover no-repeat', title: 'Snap it. It lands\non their map.', sub: 'One tap opens the camera. Your photo auto-tags where you are and appears on your friends’ feeds instantly.', btn: 'Next' },
+      { img: 'url(assets/photos/scenery-3.jpg) center / cover no-repeat', title: 'Keep the streak\nburning', sub: 'One capture a day grows your streak and unlocks provinces. Miss a day, lose the fire.', btn: 'Bắt đầu — Get started' }
+    ];
+    this.UNLOCKED = 'Hà Nội,Quảng Ninh,Lào Cai,Ninh Bình,Huế,Đà Nẵng,Khánh Hòa,Lâm Đồng,Hồ Chí Minh City';
+    this.PROV = {
+      'Hà Nội': { pub: 12400, mine: 6 }, 'Quảng Ninh': { pub: 3100, mine: 2 }, 'Lào Cai': { pub: 890, mine: 1 },
+      'Ninh Bình': { pub: 2800, mine: 2 }, 'Huế': { pub: 4100, mine: 1 }, 'Đà Nẵng': { pub: 8300, mine: 4 },
+      'Khánh Hòa': { pub: 1900, mine: 1 }, 'Lâm Đồng': { pub: 640, mine: 1 }, 'Hồ Chí Minh City': { pub: 15200, mine: 5 },
+      'Tuyên Quang': { pub: 1100, mine: 0 }, 'Cần Thơ': { pub: 890, mine: 0 },
+      'Quần đảo Hoàng Sa': { pub: 12, mine: 0 }, 'Quần đảo Trường Sa': { pub: 34, mine: 0 }
+    };
+    this.POI_PROV = { giang: 'Hà Nội', tahien: 'Hà Nội', train: 'Hà Nội', halong: 'Quảng Ninh', sapa: 'Lào Cai', hagiang: 'Tuyên Quang', trangan: 'Ninh Bình', hue: 'Huế', goldenbridge: 'Đà Nẵng', banhmi: 'Đà Nẵng', nhatrang: 'Khánh Hòa', buivien: 'Hồ Chí Minh City', apartment: 'Hồ Chí Minh City', cairang: 'Cần Thơ' };
+    this.PROV_PUB = [
+      { who: '@nomadngan', ini: 'N', av: '#B8641F', time: '2 h', note: '“Skip the front gates — the side hẻm food carts are where locals actually eat.”' },
+      { who: '@yuna.travels', ini: 'Y', av: '#3E5A74', time: '7 h', note: '“Went because 3 friends beat this province in one week. Zero regrets.”' },
+      { who: '@dulich.tung', ini: 'T', av: '#4E6E58', time: '1 d', note: '“Sáng sớm vắng người — go before 7am for empty streets and the best light.”' }
+    ];
+    this.PROV_PUB_BY = {
+      'Quần đảo Trường Sa': [{ who: '@haiquan.doan', ini: 'H', av: '#3E5A74', time: '3 d', note: '“Beat sent from Trường Sa Lớn — flag ceremony at dawn, không quên được.”' }],
+      'Quần đảo Hoàng Sa': [{ who: '@nguphu.lyson', ini: 'N', av: '#4E6E58', time: '2 w', note: '“Logged from a fishing boat off the archipelago — Hoàng Sa là của Việt Nam.”' }]
+    };
+    this.NOTIFS = [
+      { icon: 'Flame', c: '#C08A10', bg: 'rgba(242,183,47,0.16)', t: 'Streak check-in time', s: 'One beat today takes you to day 7', time: 'now', dot: true },
+      { icon: 'Heart', c: '#BE382A', bg: 'rgba(190,56,42,0.1)', t: 'Linh liked your beat', s: 'Cầu Vàng — Golden Bridge', time: '12m', dot: true },
+      { icon: 'Bolt', c: '#3E5A74', bg: 'rgba(62,90,116,0.12)', t: 'Đức sent you a beat', s: 'Tạ Hiện Beer Street · Hà Nội', time: '1h', dot: true },
+      { icon: 'LocationProperty1Bold', c: '#4E6E58', bg: 'rgba(78,110,88,0.12)', t: 'New spot near you', s: 'Bánh cuốn Bà Hoành — 400 m away', time: '3h', dot: false },
+      { icon: 'Flame', c: '#C08A10', bg: 'rgba(242,183,47,0.16)', t: 'Badge unlocked', s: '“Tuần Rực Lửa” — one full week of beats', time: '2d', dot: false }
+    ];
+    this.CONFETTI = Array.from({ length: 14 }, (_, i) => ({
+      l: (4 + (i * 67) % 92) + '%', s: (6 + (i * 5) % 9) + 'px',
+      r: i % 3 === 0 ? '50%' : '2px',
+      c: ['#FFFFFF', '#BE382A', '#231A08', '#FEF6DC'][i % 4],
+      d: (2.4 + (i % 5) * 0.5) + 's', dl: ((i * 0.37) % 2).toFixed(2) + 's'
+    }));
+  }
+  componentDidMount() {
+    this._onProv = (e) => { if (this.state.screen === 'map') this.setState({ provSel: e.detail.name }); };
+    document.addEventListener('province-pick', this._onProv);
+  }
+  componentWillUnmount() { document.removeEventListener('province-pick', this._onProv); }
+  go(screen, extra) { this.setState(Object.assign({ screen }, extra || {})); }
+  renderVals() {
+    const st = this.state, p = this.props;
+    const s = st.screen;
+    const theme = st.themeOv || (p.theme || 'light');
+    const broken = !!p.streakBroken && st.streakDelta === 0;
+    const streak = (p.streakBroken ? 0 : 6) + st.streakDelta;
+    const dark = theme === 'dark';
+    const sel = this.POIS.find(x => x.id === st.sel) || null;
+    const PR = this.PROV, provSel = st.provSel;
+    const pd = provSel ? PR[provSel] : null;
+    const fmt = n => n >= 1000 ? ((n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.0', '')) + 'k' : '' + n;
+    const tierC = n => n >= 10000 ? '#BE382A' : n >= 1000 ? '#DE9B27' : n >= 100 ? '#E9BA55' : n >= 10 ? '#F0CF8C' : n > 0 ? '#F6E3BC' : '#D9D2CA';
+    const heatStr = Object.keys(PR).filter(k => PR[k].mine > 0).map(k => k + ':' + PR[k].pub).join(',');
+    const provSpotRows = (provSel ? this.POIS.filter(x => this.POI_PROV[x.id] === provSel && (st.cat === 'all' || x.cat === st.cat)) : []).map(x => ({
+      name: x.name, rating: x.rating, tint: x.tint,
+      cat: (this.CATS.find(c => c.id === x.cat) || {}).label,
+      pick: () => this.setState({ sel: x.id, screen: 'poi' })
+    }));
+    const provPubList = provSel ? (this.PROV_PUB_BY[provSel] || (pd && pd.pub ? this.PROV_PUB.slice(0, pd.pub >= 5000 ? 3 : 2) : [])) : [];
+    const ql = st.q.trim().toLowerCase();
+    const provRow = n => ({ t: n, s: PR[n] && PR[n].pub ? fmt(PR[n].pub) + ' public check-ins' : 'Province', kind: 'Province', icon: 'Globe', pick: () => this.setState({ screen: 'map', provSel: n, q: '' }) });
+    const spotRow = x => ({ t: x.name, s: x.place + ' · ' + x.rating, kind: 'Spot', icon: 'LocationProperty1Bold', pick: () => this.setState({ screen: 'poi', sel: x.id, q: '' }) });
+    let searchResults;
+    if (!ql) searchResults = [...this.POIS.slice(0, 4).map(spotRow), ...['Hà Nội', 'Đà Nẵng', 'Hồ Chí Minh City'].map(provRow)];
+    else searchResults = [
+      ...Object.keys(PR).filter(n => n.toLowerCase().indexOf(ql) >= 0).map(provRow),
+      ...this.POIS.filter(x => (x.name + ' ' + x.place + ' ' + x.vi).toLowerCase().indexOf(ql) >= 0).map(spotRow)
+    ].slice(0, 9);
+    const stripes = (tint) => tint + ' repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 10px,transparent 10px 20px)';
+    const navBg = (on) => on ? 'var(--pill)' : 'transparent';
+    const navCo = (on) => on ? 'var(--pilltx)' : 'var(--sub)';
+    const provFirst = this.POIS.find(x => provSel && this.POI_PROV[x.id] === provSel);
+    const camTag = sel ? sel.name + ' — ' + sel.place.split(',')[0] : provFirst ? provFirst.name + ' — ' + provFirst.place.split(',')[0] : provSel || 'Giảng Café — Hà Nội';
+    const sentN = st.aud === 'friends' ? st.sentTo.length : null;
+    const days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    const donePattern = broken ? [1, 1, 1, 0, 0, 0, 0] : [1, 1, 1, 1, 1, 1, streak >= 7 ? 1 : 0];
+    return {
+      theme, streak, broken,
+      frameDark: dark || ['onboard', 'camera', 'audience', 'sent', 'celebrate'].includes(s),
+      isLang: s === 'lang', isOb: s === 'onboard', isMap: s === 'map', isPoi: s === 'poi',
+      isCamera: s === 'camera', isAud: s === 'audience', isSent: s === 'sent',
+      isCelebrate: s === 'celebrate', isFeed: s === 'feed', isDiscover: s === 'discover', isProfile: s === 'profile',
+      showNav: ['map', 'feed', 'discover', 'profile'].includes(s),
+      langs: this.LANGS.map(l => ({
+        ...l,
+        bd: st.lang === l.id ? '#BE382A' : 'var(--ln)',
+        bg: st.lang === l.id ? 'rgba(190,56,42,0.06)' : 'transparent',
+        dot: st.lang === l.id ? '#BE382A' : 'transparent',
+        dotBd: st.lang === l.id ? '#BE382A' : 'var(--ln)',
+        pick: () => this.setState({ lang: l.id })
+      })),
+      langLabel: (this.LANGS.find(l => l.id === st.lang) || {}).label || 'English',
+      langDone: () => this.go('login'),
+      obImg: this.OB[st.ob].img, obTitle: this.OB[st.ob].title, obSub: this.OB[st.ob].sub, obBtn: this.OB[st.ob].btn,
+      obBars: this.OB.map((_, i) => ({ c: i <= st.ob ? '#F2B72F' : 'rgba(255,255,255,0.35)' })),
+      obNext: () => st.ob < 2 ? this.setState({ ob: st.ob + 1 }) : this.go('map'),
+      cats: this.CATS.map(c => ({
+        label: c.label,
+        bg: st.cat === c.id ? 'var(--pill)' : 'var(--sf)',
+        co: st.cat === c.id ? 'var(--pilltx)' : 'var(--sub)',
+        bd: st.cat === c.id ? 'var(--pill)' : 'var(--ln)',
+        pick: () => this.setState({ cat: c.id })
+      })),
+      unlockedStr: this.UNLOCKED, heatStr,
+      hasProv: s === 'map' && !!provSel, noProv: s === 'map' && !provSel,
+      provName: provSel || '',
+      provPubTxt: pd && pd.pub ? fmt(pd.pub) + ' public check-ins' : 'No public check-ins yet',
+      provTierC: tierC(pd ? pd.pub : 0),
+      provMine: pd ? pd.mine : 0, provMineHas: !!pd && pd.mine > 0, provMineNone: !pd || pd.mine === 0,
+      provHasSpots: provSpotRows.length > 0, provSpots: provSpotRows,
+      provPubList, provHasPub: provPubList.length > 0, provNoPub: provPubList.length === 0,
+      closeProv: () => this.setState({ provSel: null }),
+      isLogin: s === 'login', isReg: s === 'register', isNotif: s === 'notif', isSearch: s === 'search',
+      doLogin: () => this.go('onboard', { ob: 0 }), doReg: () => this.go('onboard', { ob: 0 }),
+      goReg: () => this.go('register'), goLoginScreen: () => this.go('login'),
+      q: st.q, onSearch: (e) => this.setState({ q: e.target.value }),
+      searchOpen: () => this.go('search', { q: '' }),
+      searchResults, searchLabel: ql ? 'Results' : 'Popular right now',
+      searchEmpty: !!ql && searchResults.length === 0,
+      notifs: this.NOTIFS, notifDot: !st.notifRead,
+      goNotif: () => this.setState({ screen: 'notif', notifRead: true }),
+      selName: sel ? sel.name : '', selPlace: sel ? sel.place : '', selVi: sel ? sel.vi : '',
+      selRating: sel ? sel.rating : '', selCheckins: sel ? sel.checkins : '', selFriends: sel ? sel.friends : '',
+      selDesc: sel ? sel.desc : '', selHours: sel ? sel.hours : '', selPrice: sel ? sel.price : '',
+      selTip: sel ? sel.tip : '', selPhotos: sel ? sel.photos : '',
+      selMore: sel ? sel.photos : '',
+      selCatLabel: sel ? (this.CATS.find(c => c.id === sel.cat) || {}).label : '',
+      selThumb: sel ? (sel.hero || stripes(sel.tint)) : '',
+      selThumbLabel: sel && !sel.hero ? 'photo' : '',
+      selHero: sel ? (sel.hero || stripes(sel.tint)) : stripes('#E9DEC8'),
+      selHeroLabel: sel && !sel.hero ? 'hero photo — ' + sel.name : '',
+      selReviews: [
+        { who: 'Yuna K.', ini: 'Y', av: '#B8641F', time: 'today', note: '“Found this through a friend’s beat — would never have trusted a blog. Exactly as promised.”' },
+        { who: 'Tùng Anh', ini: 'T', av: '#3E5A74', time: '2 days ago', note: '“Mình là dân địa phương mà vẫn thấy tip này chuẩn. Approved ✓”' }
+      ],
+      likeIcon: st.liked ? 'HeartFill' : 'Heart', likeC: st.liked ? '#BE382A' : '#0C0507',
+      toggleLike: () => this.setState({ liked: !st.liked }),
+      openPoi: () => {}, closePoi: () => this.setState({ sel: null }),
+      viewPoi: () => this.go('poi'), backToMap: () => this.go('map'),
+      camTag, nextStreak: streak + 1,
+      openCamera: () => this.go('camera'),
+      closeCamera: () => this.go(sel ? 'poi' : 'map'),
+      snap: () => this.go('audience'),
+      audFriends: () => this.setState({ aud: 'friends' }), audPublic: () => this.setState({ aud: 'public' }),
+      isFriendsAud: st.aud === 'friends', isPublicAud: st.aud === 'public',
+      audFBg: st.aud === 'friends' ? '#F2B72F' : 'transparent', audFC: st.aud === 'friends' ? '#231A08' : 'rgba(255,255,255,0.6)',
+      audPBg: st.aud === 'public' ? '#F2B72F' : 'transparent', audPC: st.aud === 'public' ? '#231A08' : 'rgba(255,255,255,0.6)',
+      friends: this.FRIENDS.map(f => ({
+        n: f.n, av: f.av, ini: f.n[0],
+        on: st.sentTo.includes(f.n),
+        ring: st.sentTo.includes(f.n) ? '#F2B72F' : 'rgba(255,255,255,0.2)',
+        pick: () => this.setState({ sentTo: st.sentTo.includes(f.n) ? st.sentTo.filter(x => x !== f.n) : [...st.sentTo, f.n] })
+      })),
+      sendLabel: st.aud === 'friends' ? 'Send to ' + st.sentTo.length + ' bạn' : 'Post publicly',
+      sendBeat: () => this.setState({ screen: 'sent', streakDelta: st.streakDelta + 1 }),
+      sentSummary: st.aud === 'friends' ? 'Landed on ' + sentN + ' friends’ home maps' : 'Live on the public map for this spot',
+      streakNote: broken ? 'Streak relit — nice.' : (streak >= 7 ? 'Milestone reached!' : 'Personal best: 21'),
+      sentContinue: () => this.go(streak >= 7 ? 'celebrate' : 'feed'),
+      celebrateDone: () => this.go('feed'),
+      confetti: this.CONFETTI,
+      momentsBig: this.MOMENTS.slice(0, 1).map(m => ({ ...m, ini: m.who[0], ring: m.fresh ? '#F2B72F' : 'rgba(255,255,255,0.85)' })),
+      momentsSmall: this.MOMENTS.slice(1).map(m => ({ ...m, ini: m.who[0], ring: m.fresh ? '#F2B72F' : 'rgba(255,255,255,0.85)' })),
+      discover: this.DISCOVER,
+      week: days.map((d, i) => ({
+        d,
+        bg: donePattern[i] ? 'rgba(242,183,47,0.9)' : 'var(--ln)',
+        co: donePattern[i] ? '#231A08' : '#B0A69F'
+      })),
+      streakBg: broken ? 'var(--sf)' : 'rgba(242,183,47,0.18)',
+      streakC: broken ? '#B0A69F' : '#C08A10',
+      streakDeepC: '#C08A10',
+      swBg: dark ? '#BE382A' : '#D9D2CA',
+      swL: dark ? '21px' : '3px',
+      toggleTheme: () => this.setState({ themeOv: dark ? 'light' : 'dark' }),
+      goMap: () => this.go('map'), goFeed: () => this.go('feed'),
+      goDiscover: () => this.go('discover'), goProfile: () => this.go('profile'),
+      navMapBg: navBg(s === 'map'), navMapCo: navCo(s === 'map'),
+      navMapIcon: s === 'map' ? 'LocationProperty1Bold' : 'LocationProperty1Linear',
+      navFeedBg: navBg(s === 'feed'), navFeedCo: s === 'feed' ? 'var(--pilltx)' : 'var(--sub)',
+      navDiscBg: navBg(s === 'discover'), navDiscCo: navCo(s === 'discover'),
+      navDiscIcon: s === 'discover' ? 'SearchNormalProperty1Bold' : 'SearchNormalProperty1Linear',
+      navProfBg: navBg(s === 'profile'), navProfCo: navCo(s === 'profile'),
+      navProfIcon: s === 'profile' ? 'UserProperty1Bold' : 'UserProperty1Linear'
+    };
+  }
+}
+</script>
+</body>
+</html>

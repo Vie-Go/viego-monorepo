@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-22T15:23:30Z",
+  "title": "Design System: Vibeat",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Heritage Crimson",
+        "canonical": "#BE382A",
+        "tonalRamp": ["#420f0a", "#6b1810", "#93271d", "#be382a", "#ce5e52", "#de8479", "#edaaa1", "#fcd0ca"]
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Golden Vibe",
+        "canonical": "#F2B72F",
+        "tonalRamp": ["#4d3700", "#7d5900", "#b38000", "#f2b72f", "#f5c659", "#f8d583", "#fbe4ad", "#fef3d7"]
+      },
+      "neutral-surface": {
+        "role": "neutral",
+        "displayName": "Surface Cream",
+        "canonical": "#F6F3EE",
+        "tonalRamp": ["#1a1816", "#3b3834", "#615c56", "#8b857d", "#b5afaa", "#d7d3cd", "#f6f3ee", "#fcfbfa"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Title", "purpose": "App branding & major section titles." },
+      "headline": { "displayName": "Headline", "purpose": "Modal dialogs & screen headers." },
+      "title": { "displayName": "Card Title", "purpose": "Province titles & list headers." },
+      "body": { "displayName": "Body Text", "purpose": "Form fields & descriptive text." },
+      "label": { "displayName": "Micro Label", "purpose": "Captions & status badges." }
+    },
+    "shadows": [
+      { "name": "cta-glow", "value": "0 10px 24px rgba(190,56,42,0.35)", "purpose": "Glow on primary crimson call to action." },
+      { "name": "card-ambient", "value": "0 12px 32px rgba(12,5,7,0.12)", "purpose": "Ambient depth for light cards." },
+      { "name": "dark-ambient", "value": "0 12px 32px rgba(0,0,0,0.5)", "purpose": "Ambient depth for dark cards." }
+    ],
+    "motion": [
+      { "name": "vbUp", "value": "translateY(18px) to translateY(0), 0.3s ease", "purpose": "Slide up reveal for list cards." },
+      { "name": "vbPop", "value": "scale(0.4) to scale(1.12) to scale(1), 0.35s ease", "purpose": "Pop entrance for badges and unlock alerts." },
+      { "name": "vbBeat", "value": "scale(1) to scale(1.35), 1.6s ease infinite", "purpose": "Rhythmic pulsing dot marker." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "402px" },
+      { "name": "tablet", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Pill-shaped main CTA button with crimson glow shadow.",
+      "html": "<button class=\"ds-btn-primary\">Continue</button>",
+      "css": ".ds-btn-primary { width: 100%; height: 54px; border-radius: 27px; background: #BE382A; color: #FFFFFF; font-family: 'Urbanist', sans-serif; font-size: 16px; font-weight: 700; border: none; cursor: pointer; box-shadow: 0 10px 24px rgba(190,56,42,0.35); transition: background 0.2s, transform 0.2s; display: flex; align-items: center; justify-content: center; } .ds-btn-primary:hover { background: #93271D; transform: translateY(-1px); }"
+    },
+    {
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Rounded input text field with subtle cream background.",
+      "html": "<input type=\"text\" placeholder=\"Email or Full Name\" class=\"ds-input-field\" />",
+      "css": ".ds-input-field { width: 100%; height: 52px; border-radius: 16px; border: 1.5px solid #ECE7E0; background: #F6F3EE; padding: 0 18px; font-size: 14.5px; font-weight: 600; font-family: 'Urbanist', sans-serif; color: #0C0507; outline: none; box-sizing: border-box; transition: border-color 0.2s; } .ds-input-field:focus { border-color: #BE382A; }"
+    },
+    {
+      "name": "Language / Selection Card",
+      "kind": "card",
+      "refersTo": "card-container",
+      "description": "Interactive rounded card option with indicator badge.",
+      "html": "<div class=\"ds-select-card\"><div class=\"ds-select-badge\">VN</div><div class=\"ds-select-text\"><span>Tiếng Việt</span><span class=\"ds-select-sub\">Vietnamese</span></div><div class=\"ds-select-dot\"></div></div>",
+      "css": ".ds-select-card { display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 16px; border: 1.5px solid #BE382A; background: #FFF5F4; cursor: pointer; font-family: 'Urbanist', sans-serif; } .ds-select-badge { width: 38px; height: 38px; border-radius: 50%; background: #F6F3EE; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #7A716B; } .ds-select-text { flex: 1; display: flex; flex-direction: column; font-size: 15px; font-weight: 700; color: #0C0507; } .ds-select-sub { font-size: 12px; color: #7A716B; font-weight: 500; } .ds-select-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #BE382A; background: #BE382A; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Crimson Heritage Map",
+    "overview": "Vibeat is a vibrant, tactile mobile journal celebrating Vietnam's cultural treasures. Built around an interactive SVG map of Vietnam's 63/64 provinces, the interface pairs deep heritage crimson (#BE382A) with warm golden accents (#F2B72F) and soft organic surfaces (#F6F3EE).",
+    "keyCharacteristics": [
+      "Crimson & Gold Anchor: Primary CTA red (#BE382A) paired with glowing heritage yellow (#F2B72F).",
+      "Organic Tactility: Softly rounded corners (16px cards, 27px full pill CTA buttons).",
+      "Mobile-First Rhythm: Compact single-handed viewport layout optimized for touch interaction."
+    ],
+    "rules": [
+      { "name": "The Single Accent Rule", "body": "Crimson (#BE382A) is reserved for primary actions and active states.", "section": "colors" },
+      { "name": "The Tight Geometry Rule", "body": "All titles and brand marks use heavy weights (700-800) with negative letter-spacing.", "section": "typography" },
+      { "name": "The Elevated Action Rule", "body": "Only primary crimson actions carry glowing colored shadows.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do maintain exact 27px radius for primary CTA buttons.",
+      "Do use Urbanist font family across all components with strict 800/700/600 weight hierarchy.",
+      "Do include glowing primary shadow 0 10px 24px rgba(190,56,42,0.35) on main action buttons."
+    ],
+    "donts": [
+      "Don't use sharp 0px corners on interactive cards or buttons.",
+      "Don't apply primary crimson glowing shadows to non-primary buttons or containers.",
+      "Don't introduce cold blues or stark neon colors into Vibeat's warm cultural palette."
+    ]
+  }
+}
