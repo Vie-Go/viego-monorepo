@@ -59,6 +59,11 @@ reach content for a province it hasn't unlocked.
 - No FK to `exploration` — the grant is created from the `ProvinceUnlocked` listener using id
   values.
 - Flyway: `db/migration/content/V1__init.sql` (+ seed migration for launch-province content).
+- **Cache** (Redis namespace `content:*`, [ADR 0007](../decisions/0007-redis-cache-and-token-rotation.md)):
+  heritage metadata (beats + trivia + `LocalizedText`) is read-heavy and changes only on editorial
+  updates — cached per `{provinceId, locale}` with a long TTL, evicted when content is republished.
+  Only the **metadata** is cached; media stays behind signed CDN URLs, and the `HeritageAccess` grant
+  is **always checked against the source of truth** so gating is never served stale from cache.
 
 ## Backend flow — access is granted by unlocking
 

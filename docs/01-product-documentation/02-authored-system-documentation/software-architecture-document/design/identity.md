@@ -52,7 +52,7 @@ Contract: [OpenAPI](../../../01-core-specifications/api-system-specifications/re
 | Method & path | Purpose | Notes |
 |---------------|---------|-------|
 | `POST /api/v1/auth/{provider}` | Exchange a provider token for a VieGo session | Returns access + refresh JWT; provider ∈ `email\|google` at P1 |
-| `POST /api/v1/auth/refresh` | Rotate the access token | Refresh-token rotation |
+| `POST /api/v1/auth/refresh` | Rotate the access token | Refresh-token rotation with **reuse detection** (rotation family in [Redis](../decisions/0007-redis-cache-and-token-rotation.md)); a replayed token revokes the family |
 | `GET /api/v1/me` | Current Explorer + preferences | Bearer JWT |
 | `PUT /api/v1/me/preferences` | Update language/theme | Emits `PreferencesUpdated` |
 
@@ -64,6 +64,12 @@ Auth is **Bearer JWT**; errors are RFC-7807 Problem Details, mapped to typed err
 - Tables: `explorer`, `explorer_auth_provider` (1-N), preferences embedded on `explorer`.
 - Flyway: `db/migration/identity/V1__init.sql`.
 - Secrets: no passwords stored; only OIDC provider subject refs + rotating refresh-token handles.
+- **Redis** (namespace `identity:*`, [ADR 0007](../decisions/0007-redis-cache-and-token-rotation.md))
+  holds the auth hot-path state — the **refresh-token rotation family** (with reuse detection), a
+  short-lived **revoked-`jti` denylist**, and auth **rate-limit** counters. Access JWTs stay
+  self-validating (signature + `exp`), so Redis is only consulted for *rotation* and *revocation*,
+  not basic authentication. The token namespace is configured **not to evict** so rotation lineage
+  is never silently dropped.
 
 ## Backend flow — first sign-in
 

@@ -10,6 +10,10 @@ description: "Authentication, secrets, and data protection."
   ([Identity context](../../02-authored-system-documentation/software-architecture-document/ddd-and-domain-model.md)).
 - Backend issues short-lived **JWT** access tokens + refresh tokens; Spring Security enforces auth
   on all non-public endpoints.
+- **Refresh-token rotation** with reuse detection and a revoked-token denylist are held in **Redis**
+  ([ADR 0007](../../02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md));
+  a replayed refresh token revokes the whole rotation family. Access JWTs stay self-validating, so
+  Redis is consulted only for rotation/revocation.
 - Authorization: an Explorer can only access **their own** resources (`me` scoping).
 
 ## Secrets & config

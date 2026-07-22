@@ -16,5 +16,6 @@ change a decision, add a new ADR that supersedes the old one.
 | [0004](0004-java-and-spring-boot.md) | Java 25 + Spring Boot as backend platform | Accepted |
 | [0005](0005-postgresql-and-event-driven-integration.md) | PostgreSQL + event-driven module integration | Proposed |
 | [0006](0006-monorepo-source-control.md) | Single monorepo for backend and mobile | Accepted |
+| [0007](0007-redis-cache-and-token-rotation.md) | Redis for caching and token rotation | Proposed |
 
 Filename pattern: `NNNN-short-kebab-title.md`. Statuses: Proposed · Accepted · Superseded · Deprecated.

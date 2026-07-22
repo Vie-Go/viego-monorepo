@@ -109,6 +109,11 @@ POST /api/v1/provinces/{id}/unlock
 - **Cross-context reads:** maintain a local projection from events (preferred) or call the
   owning module's `api`. Example: an Explorer dashboard subscribes to `ProvinceUnlocked` +
   `StreakAdvanced`.
+- **Redis cache/token store** ([ADR 0007](decisions/0007-redis-cache-and-token-rotation.md)) is
+  **partitioned by module** the same way — each module uses its own key namespace (`identity:*`,
+  `exploration:*`, …) and **never reads another module's keys**. It is a non-authoritative
+  accelerator (cache-aside via `@Cacheable`, evicted by domain events) plus Identity's
+  refresh-token rotation store; Postgres remains the source of truth.
 
 ## Boundary verification (CI gate)
 

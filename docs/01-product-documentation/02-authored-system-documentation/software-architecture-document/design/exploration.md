@@ -61,6 +61,11 @@ Idempotency: a second unlock of the same province is rejected with Problem Detai
 - No FK to `identity` — `explorer_id` is a value; the empty Collection is created from the
   `ExplorerRegistered` listener.
 - Flyway: `db/migration/exploration/V1__init.sql` (+ seed migration for canonical data).
+- **Cache** (Redis namespace `exploration:*`, [ADR 0007](../decisions/0007-redis-cache-and-token-rotation.md)):
+  the province/ward list + geometry is read on nearly every session but changes rarely — an ideal
+  cache-aside entry (long TTL). Per-Explorer collection reads are cached too. Invalidation is
+  **event-driven**: the `UnlockProvince` handler evicts that Explorer's collection/map keys as part
+  of the same flow that emits `ProvinceUnlocked`, so a miss re-reads Postgres (the source of truth).
 
 ## Backend flow — unlock a province
 

@@ -60,7 +60,7 @@ Source: [infrastructure](../../02-authored-system-documentation/software-archite
 | ID | Requirement | Priority | Verify |
 |----|-------------|----------|--------|
 | NFR-PERF-01 | The **map renders smoothly on low-end devices** (target ~60fps interaction; profile early, simplify/virtualize SVG). | MUST | Profiling on target devices |
-| NFR-PERF-02 | Interactive read endpoints (map, collection, streak, heritage) respond within a target latency budget (**p95 ≤ 500ms** server-side, excl. network). | SHOULD | Load test · APM |
+| NFR-PERF-02 | Interactive read endpoints (map, collection, streak, heritage) respond within a target latency budget (**p95 ≤ 500ms** server-side, excl. network); hot, slow-changing reads are served from the **Redis cache** ([ADR 0007](../../02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md)). | SHOULD | Load test · APM |
 | NFR-PERF-03 | Beat audio starts via a **signed/CDN URL**; media is never proxied through the app server. | MUST | Design review · [FR-CO-04](functional-requirements.md#fr-co--content-heritage-access) |
 
 ## NFR-SEC — Security & Privacy
@@ -86,6 +86,7 @@ Source: module designs · [Architecture Principles → Backend non-negotiables](
 |----|-------------|----------|--------|
 | NFR-REL-01 | State-changing operations that emit events do so **transactionally** with the state change (event log, same tx). | MUST | `@ApplicationModuleTest` |
 | NFR-REL-02 | Event consumers are **idempotent** — reprocessing an event causes no duplicate side effects (e.g. duplicate `ProvinceUnlocked` grants once). | MUST | Module integration test |
+| NFR-REL-04 | The **cache is non-authoritative** — a Redis miss or outage falls back to Postgres; reads stay correct (only slower), and gating/entitlement checks always hit the source of truth. | MUST | Failover test · [ADR 0007](../../02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md) |
 | NFR-REL-03 | Idempotent commands (unlock, daily ritual) are **safe to retry** — matches offline queue/reconcile behaviour. | MUST | Contract test · [FR-EX-03](functional-requirements.md#fr-ex--exploration-province-unlocking) |
 
 ## NFR-MOD — Modularity & Maintainability

@@ -32,6 +32,7 @@ services.
 | Build | Maven (backend) · npm/EAS (mobile) | — |
 | Source control | Single monorepo, path-scoped CI | [0006](decisions/0006-monorepo-source-control.md) |
 | Datastore | PostgreSQL, schema-per-module | [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
+| Cache / token store | Redis — hot & slow-changing read cache + refresh-token rotation | [0007](decisions/0007-redis-cache-and-token-rotation.md) |
 | Module integration | Domain events (transactional outbox) → broker on extraction | [0002](decisions/0002-modular-monolith-with-spring-modulith.md) / [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
 | Mobile | React Native + TypeScript (iOS/Android) | [0003](decisions/0003-react-native-for-mobile.md) |
 | API | REST + OpenAPI; async events + AsyncAPI | — |
@@ -44,6 +45,7 @@ flowchart TD
   App -->|REST/JSON over HTTPS| API[VieGo Backend\nSpring Boot · Java 25]
   App -.->|OIDC/OAuth2| IdP[(Identity Providers\nGoogle · Facebook · Zalo)]
   API --> DB[(PostgreSQL)]
+  API --> Cache[(Redis\ncache · token rotation)]
   API --> Media[(Object Storage / CDN\nCultural Beats media)]
 ```
 
@@ -53,7 +55,8 @@ flowchart TD
 |-----------|------|----------------|
 | Mobile App | React Native (TS) | Map, unlocking, streaks, content playback, theming, i18n |
 | Backend API | Spring Boot · Java 25 · Spring Modulith | Domain logic across four modules; REST API; event log |
-| PostgreSQL | Postgres | Persistence, schema-per-module |
+| PostgreSQL | Postgres | Persistence, schema-per-module (source of truth) |
+| Redis | Redis | Non-authoritative cache for hot/slow-changing reads; refresh-token rotation & revocation ([ADR 0007](decisions/0007-redis-cache-and-token-rotation.md)) |
 | Object storage/CDN | TBD | Cultural Beats audio/images |
 | Identity Providers | External | Auth (Google, Facebook, Zalo, email) |
 
