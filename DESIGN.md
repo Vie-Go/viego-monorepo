@@ -125,7 +125,7 @@ VieGo's color identity relies on a bold primary crimson accent, energetic golden
 **Character:** Urbanist brings geometric clarity, friendly warmth, and high readability to mobile displays. Heavy weights (800 and 700) create bold, confident headers, while medium weights (600) maintain legibility at smaller text sizes.
 
 ### Hierarchy
-- **Display** (800, 30px, 1.15 line-height, -0.5px letter-spacing): App brand title ("vibeat") and welcome greetings.
+- **Display** (800, 30px, 1.15 line-height, -0.5px letter-spacing): App brand title ("viego") and welcome greetings.
 - **Headline** (800, 26px, 1.2 line-height): Screen titles and major modal headers ("Xin chào!", "Tạo tài khoản").
 - **Title** (700, 18px, 1.3 line-height): Card headers, province names, and section titles.
 - **Body** (600, 14.5px, 1.4 line-height): Form inputs, list items, description copy.

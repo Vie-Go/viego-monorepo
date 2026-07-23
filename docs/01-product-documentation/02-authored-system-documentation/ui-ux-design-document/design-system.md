@@ -7,7 +7,7 @@ description: "Design tokens (color, type, spacing, radius), component rules, and
 
 The single source of visual truth is [`DESIGN.md`](../../../../DESIGN.md) ("The Crimson
 Heritage Map"). The interactive reference is [`prototype/`](../../../../prototype/) — a
-Do-Component ("vibeat") build in HTML/CSS. This document encodes both as **React Native**
+Do-Component ("viego") build in HTML/CSS. This document encodes both as **React Native**
 design tokens and component contracts. Every screen spec in [`screens/`](screens/) and every
 component spec in [`components/`](components/) draws from the tokens below.
 

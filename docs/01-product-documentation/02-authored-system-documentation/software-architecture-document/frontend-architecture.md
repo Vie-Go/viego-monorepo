@@ -58,7 +58,7 @@ RootNavigator
     └── ProfileTab    preferences, account                 [identity]
 ```
 Content surfaces (heritage, beat player, trivia) open from a province detail. Deep link:
-`vibeat://province/{id}`.
+`viego://province/{id}`.
 
 ## Cross-cutting rules
 - No hard-coded colors/spacing/type — use [design tokens](../ui-ux-design-document/design-system.md).

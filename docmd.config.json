@@ -1,6 +1,6 @@
 {
   "title": "VieGo — Project Documentation",
-  "url": "https://docs.vibeat.app",
+  "url": "https://docs.viego.app",
   "src": "docs",
   "out": "site",
   "engine": "js",
@@ -126,7 +126,7 @@
         { "title": "Reports", "path": "/02-process-documentation/reports", "icon": "bar-chart" }
       ]
     },
-    { "title": "GitHub", "path": "https://github.com/vie-go/vibeat", "icon": "github", "external": true }
+    { "title": "GitHub", "path": "https://github.com/vie-go/viego-docs", "icon": "github", "external": true }
   ],
   "plugins": {
     "git": {

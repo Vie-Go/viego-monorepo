@@ -34,7 +34,7 @@
   <sc-if value="{{isLang}}" hint-placeholder-val="{{ true }}">
     <div data-screen-label="Language" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:88px 24px 30px;background:var(--bg);animation:vbFade 0.3s ease">
       <div style="display:flex;align-items:center;gap:7px">
-        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">vibeat</span>
+        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">viego</span>
         <span style="width:11px;height:11px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:8px"></span>
       </div>
       <div style="font-size:27px;font-weight:800;line-height:1.15;margin-top:26px">Xin chào!<br>Pick your language</div>
@@ -59,7 +59,7 @@
   <sc-if value="{{isLogin}}" hint-placeholder-val="{{ false }}">
     <div data-screen-label="Log in" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:88px 26px 30px;background:var(--bg);overflow-y:auto;animation:vbFade 0.3s ease">
       <div style="display:flex;align-items:center;gap:7px">
-        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">vibeat</span>
+        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">viego</span>
         <span style="width:11px;height:11px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:8px"></span>
       </div>
       <div style="font-size:26px;font-weight:800;margin-top:24px">Welcome back</div>
@@ -88,7 +88,7 @@
   <sc-if value="{{isReg}}" hint-placeholder-val="{{ false }}">
     <div data-screen-label="Register" style="position:absolute;inset:0;display:flex;flex-direction:column;padding:88px 26px 30px;background:var(--bg);overflow-y:auto;animation:vbFade 0.3s ease">
       <div style="display:flex;align-items:center;gap:7px">
-        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">vibeat</span>
+        <span style="font-size:30px;font-weight:800;letter-spacing:-0.5px">viego</span>
         <span style="width:11px;height:11px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:8px"></span>
       </div>
       <div style="font-size:26px;font-weight:800;margin-top:24px">Tạo tài khoản</div>
@@ -115,7 +115,7 @@
   </sc-if>
 
   <sc-if value="{{isNotif}}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Notifications" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 40px;animation:vbFade 0.25s ease">
+    <div data-screen-label="Notifications" onScroll="{{onScroll}}" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 40px;animation:vbFade 0.25s ease">
       <div style="display:flex;align-items:center;gap:12px">
         <div onClick="{{backToMap}}" style="width:42px;height:42px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tx)"><v-icon name="ArrowLeft" size="18"></v-icon></div>
         <span style="font-size:22px;font-weight:800;letter-spacing:-0.3px">Notifications</span>
@@ -171,9 +171,10 @@
       <div style="position:absolute;inset:0;background:{{obImg}}"></div>
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,6,7,0.35) 0%,rgba(10,6,7,0) 30%,rgba(10,6,7,0.05) 45%,rgba(10,6,7,0.78) 78%,rgba(10,6,7,0.92) 100%)"></div>
       <div style="position:absolute;left:26px;top:76px;display:flex;align-items:center;gap:6px">
-        <span style="font-size:24px;font-weight:800;color:#FFFFFF;letter-spacing:-0.4px">vibeat</span>
+        <span style="font-size:24px;font-weight:800;color:#FFFFFF;letter-spacing:-0.4px">viego</span>
         <span style="width:9px;height:9px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:7px"></span>
       </div>
+      <div onClick="{{obSkip}}" style="position:absolute;right:22px;top:74px;height:34px;padding:0 15px;border-radius:17px;background:rgba(255,255,255,0.16);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#FFFFFF;font-size:13px;font-weight:800;display:flex;align-items:center;cursor:pointer">Skip</div>
       <div style="position:absolute;left:26px;right:26px;bottom:36px;display:flex;flex-direction:column;gap:14px">
         <div style="font-size:38px;font-weight:800;line-height:1.08;color:#FFFFFF;letter-spacing:-0.6px;white-space:pre-line;animation:vbUp 0.4s ease">{{obTitle}}</div>
         <div style="font-size:15px;line-height:1.55;color:rgba(255,255,255,0.85);max-width:320px;animation:vbUp 0.5s ease">{{obSub}}</div>
@@ -183,6 +184,149 @@
           </sc-for>
         </div>
         <div onClick="{{obNext}}" style="height:54px;border-radius:27px;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px">{{obBtn}}</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isSnap}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Snap home" style="position:absolute;inset:0;background:#0D0909;display:flex;flex-direction:column;padding-top:60px;animation:vbFade 0.25s ease">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 20px 0">
+        <div onClick="{{goNotif}}" style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:#FFFFFF;cursor:pointer;position:relative">
+          <v-icon name="NotificationBingProperty1Linear" size="20"></v-icon>
+          <sc-if value="{{notifDot}}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:10px;top:10px;width:9px;height:9px;border-radius:50%;background:#F2B72F;border:2px solid #0D0909"></span></sc-if>
+        </div>
+        <div onClick="{{goFeed}}" style="flex:1;display:flex;justify-content:center">
+          <div style="display:flex;align-items:center;gap:7px;height:40px;padding:0 16px;border-radius:20px;background:rgba(255,255,255,0.1);cursor:pointer">
+            <v-icon name="UserProperty1Bold" size="15" style="color:#FFFFFF"></v-icon>
+            <span style="font-size:14px;font-weight:800;color:#FFFFFF">4 bạn bè</span>
+          </div>
+        </div>
+        <div onClick="{{goProfile}}" style="width:44px;height:44px;border-radius:50%;border:2px solid #F2B72F;padding:2px;cursor:pointer">
+          <div style="width:100%;height:100%;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px">M</div>
+        </div>
+      </div>
+      <div style="margin:20px 18px 0;aspect-ratio:1/1;border-radius:34px;position:relative;overflow:hidden;background:#1B1415 repeating-linear-gradient(45deg,rgba(255,255,255,0.04) 0 12px,transparent 12px 24px)">
+        <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:ui-monospace,monospace;font-size:10px;color:rgba(255,255,255,0.4);text-align:center">camera preview —<br>point it at something delicious</span>
+        <div style="position:absolute;left:14px;top:14px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;color:#FFFFFF"><v-icon name="Bolt" size="17"></v-icon></div>
+        <div style="position:absolute;right:14px;top:14px;height:38px;padding:0 13px;border-radius:19px;background:rgba(0,0,0,0.35);display:flex;align-items:center;color:#FFFFFF;font-size:13px;font-weight:800">1x</div>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;height:32px;padding:0 13px;border-radius:16px;background:rgba(242,183,47,0.16);border:1px solid rgba(242,183,47,0.35);white-space:nowrap">
+          <v-icon name="LocationProperty1Bold" size="13" style="color:#F2B72F"></v-icon>
+          <span style="font-size:11.5px;font-weight:800;color:#F2B72F">{{snapTag}}</span>
+          <span style="font-size:9.5px;font-weight:600;color:rgba(242,183,47,0.7)">auto-tag</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:7px;padding:16px 0 2px">
+        <v-icon name="Flame" size="15" style="color:#F2B72F"></v-icon>
+        <span style="font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.8)">Day {{streak}} — chụp một tấm để giữ lửa</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 46px 6px">
+        <div onClick="{{goHistory}}" style="width:52px;height:52px;border-radius:15px;background:#241C1D repeating-linear-gradient(45deg,rgba(255,255,255,0.06) 0 6px,transparent 6px 12px);border:1px solid rgba(255,255,255,0.15);cursor:pointer"></div>
+        <div onClick="{{snapShutter}}" style="width:84px;height:84px;border-radius:50%;border:4px solid #F2B72F;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <div style="width:66px;height:66px;border-radius:50%;background:#FFFFFF;transition:transform 0.15s" style-active="transform:scale(0.85)"></div>
+        </div>
+        <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:#FFFFFF"><v-icon name="Flip" size="20"></v-icon></div>
+      </div>
+      <div onClick="{{goHistory}}" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:6px 0;color:rgba(255,255,255,0.85);cursor:pointer">
+        <span style="font-size:14px;font-weight:800">History</span>
+        <v-icon name="ChevronRight" size="15" style="transform:rotate(90deg)"></v-icon>
+      </div>
+      <div style="height:96px;flex-shrink:0"></div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{isHistory}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Memories" style="position:absolute;inset:0;background:var(--bg);color:var(--tx);display:flex;flex-direction:column;padding-top:54px;overflow-y:auto;animation:vbFade 0.25s ease;scrollbar-width:none">
+      
+      <!-- Top Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px 6px;position:relative;z-index:10">
+        <div onClick="{{goSnap}}" style="width:38px;height:38px;border-radius:50%;background:var(--sf);border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;color:var(--tx);cursor:pointer">
+          <v-icon name="ArrowLeft" size="18"></v-icon>
+        </div>
+        <span style="font-size:20px;font-weight:800;color:var(--tx);letter-spacing:-0.4px">Memories</span>
+        <div onClick="{{goProfile}}" style="width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid var(--ln);cursor:pointer">
+          <img src="uploads/6585672e2dafacf1f5be1.jpg" style="width:100%;height:100%;object-fit:cover" />
+        </div>
+      </div>
+
+      <!-- Memories content container -->
+      <div style="padding:10px 18px 120px;display:flex;flex-direction:column;align-items:center">
+        
+        <!-- Section 1: Previous Month (Faded top card) -->
+        <div style="width:100%;border-radius:28px;background:var(--sf);border:1px solid var(--ln);box-shadow:var(--sc);padding:14px 12px;opacity:0.75;box-sizing:border-box">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px 4px;align-items:center;justify-items:center">
+            <sc-for list="{{juneItems}}" as="m" hint-placeholder-count="20">
+              <sc-if value="{{m.hasImg}}" hint-placeholder-val="{{ true }}">
+                <div onClick="{{m.pick}}" style="width:38px;height:38px;border-radius:11px;overflow:hidden;cursor:pointer">
+                  <img src="{{m.img}}" style="width:100%;height:100%;object-fit:cover" />
+                </div>
+              </sc-if>
+              <sc-if value="{{m.isDot}}" hint-placeholder-val="{{ false }}">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--sub);opacity:0.4;margin:16px 0"></div>
+              </sc-if>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Vertical Dotted Connector Line 1 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;margin:10px 0;opacity:0.4">
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--sub)"></div>
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--sub)"></div>
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--sub)"></div>
+        </div>
+
+        <!-- Section 2: July 2026 Card -->
+        <div style="width:100%;border-radius:28px;background:var(--card);border:1px solid var(--ln);box-shadow:var(--sc);padding:16px 14px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box">
+          <div style="font-size:19px;font-weight:800;color:var(--tx);letter-spacing:-0.3px;padding-left:2px">July 2026</div>
+
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px 4px;align-items:center;justify-items:center">
+            <sc-for list="{{julyItems}}" as="m" hint-placeholder-count="35">
+              <sc-if value="{{m.hasImg}}" hint-placeholder-val="{{ true }}">
+                <div onClick="{{m.pick}}" style="position:relative;width:38px;height:38px;border-radius:11px;overflow:hidden;box-sizing:border-box;border:{{m.borderStyle}};cursor:pointer">
+                  <img src="{{m.img}}" style="width:100%;height:100%;object-fit:cover" />
+                  <sc-if value="{{m.hasFlame}}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:3px;background:rgba(242,183,47,0.95);display:flex;align-items:center;justify-content:center">
+                      <v-icon name="Flame" size="8" style="color:#231A08"></v-icon>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{m.count}}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;bottom:2px;right:2px;padding:0 3px;height:11px;border-radius:5px;background:#F2B72F;color:#231A08;font-size:8px;font-weight:900;display:flex;align-items:center;justify-content:center">
+                      {{m.count}}
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{m.isDot}}" hint-placeholder-val="{{ false }}">
+                <div style="width:6px;height:6px;border-radius:50%;background:var(--sub);opacity:0.35;margin:16px 0"></div>
+              </sc-if>
+
+              <sc-if value="{{m.isEmpty}}" hint-placeholder-val="{{ false }}">
+                <div style="width:38px;height:38px;border-radius:11px;background:var(--sf);border:1px solid var(--ln)"></div>
+              </sc-if>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Vertical Dotted Connector Line 2 -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;margin:10px 0;opacity:0.4">
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--sub)"></div>
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--sub)"></div>
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--sub)"></div>
+        </div>
+
+        <!-- Bottom Stats Pill -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:14px;height:46px;padding:0 22px;border-radius:23px;background:var(--card);border:1px solid var(--ln);box-shadow:var(--sc);margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--tx)">
+            <span style="font-size:15px;color:#F2B72F">💛</span>
+            <span>310 Beats</span>
+          </div>
+          <span style="color:var(--sub);opacity:0.5;font-size:13px">|</span>
+          <div style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--tx)">
+            <v-icon name="Flame" size="16" style="color:#F2B72F"></v-icon>
+            <span>{{streak}}d streak</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </sc-if>
@@ -224,6 +368,17 @@
         <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(12,5,7,0.05) 1px,transparent 1px);background-size:18px 18px"></div>
         <div style="position:absolute;top:12px;bottom:12px;left:50%;transform:translateX(-50%);aspect-ratio:390/690">
           <vn-map heat="{{heatStr}}" interactive="true" style="position:absolute;inset:0"></vn-map>
+          <sc-if value="{{userInVN}}" hint-placeholder-val="{{ true }}">
+            <div style="position:absolute;left:41.8%;top:17.4%;transform:translate(-50%,-50%);pointer-events:none">
+              <span style="position:absolute;left:50%;top:50%;width:36px;height:36px;border-radius:50%;background:rgba(47,109,246,0.32);animation:vbPing 1.8s ease-out infinite"></span>
+              <span style="position:relative;display:block;width:16px;height:16px;border-radius:50%;background:#2F6DF6;border:3px solid #FFFFFF;box-shadow:0 2px 6px rgba(0,0,0,0.35)"></span>
+            </div>
+          </sc-if>
+          <sc-if value="{{userOutVN}}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;left:10px;top:10px;display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:13px;background:var(--navbg);border:1px solid var(--ln);font-size:10.5px;font-weight:700;color:var(--sub);max-width:60%">
+              <v-icon name="LocationProperty1Linear" size="12"></v-icon><span>Ngoài Việt Nam — vị trí ẩn</span>
+            </div>
+          </sc-if>
         </div>
         <div style="position:absolute;right:10px;top:10px;display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:12px;background:var(--navbg);border:1px solid var(--ln)">
           <span style="font-size:9.5px;font-weight:700;color:var(--sub);margin-right:2px">check-ins</span>
@@ -289,9 +444,6 @@
               <sc-if value="{{provNoPub}}" hint-placeholder-val="{{ false }}">
                 <span style="font-size:12px;color:var(--sub);font-weight:600">No public beats yet — be the first.</span>
               </sc-if>
-            </div>
-            <div onClick="{{openCamera}}" style="height:46px;border-radius:23px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0">
-              <v-icon name="Camera" size="18"></v-icon><span>Check in here</span>
             </div>
           </div>
         </sc-if>
@@ -431,7 +583,7 @@
         <div onClick="{{openCamera}}" style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#FFFFFF">
           <v-icon name="ArrowLeft" size="18"></v-icon>
         </div>
-        <span style="flex:1;text-align:center;font-size:16px;font-weight:800;color:#FFFFFF">Send your beat</span>
+        <span style="flex:1;text-align:center;font-size:16px;font-weight:800;color:#FFFFFF">Send to…</span>
         <div style="width:42px"></div>
       </div>
       <div style="display:flex;justify-content:center;padding:20px 0 6px">
@@ -522,7 +674,7 @@
   </sc-if>
 
   <sc-if value="{{isFeed}}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Friend feed" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
+    <div data-screen-label="Friend feed" onScroll="{{onScroll}}" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
       <div style="display:flex;align-items:center;gap:10px">
         <span style="flex:1;font-size:27px;font-weight:800;letter-spacing:-0.5px">Beats</span>
         <div style="display:flex;align-items:center;gap:5px;height:36px;padding:0 12px;border-radius:18px;background:{{streakBg}};color:{{streakC}}">
@@ -585,7 +737,7 @@
   </sc-if>
 
   <sc-if value="{{isDiscover}}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Discovery" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
+    <div data-screen-label="Discovery" onScroll="{{onScroll}}" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
       <span style="font-size:27px;font-weight:800;letter-spacing:-0.5px">Explore</span>
       <div style="font-size:13px;color:var(--sub);font-weight:500;margin-top:2px">Real beats from real travellers — not a travel blog</div>
       <div onClick="{{searchOpen}}" style="margin-top:14px;height:46px;border-radius:15px;background:var(--sf);display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--sub);cursor:pointer">
@@ -634,7 +786,7 @@
   </sc-if>
 
   <sc-if value="{{isProfile}}" hint-placeholder-val="{{ false }}">
-    <div data-screen-label="Profile" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:76px 20px 120px;animation:vbFade 0.3s ease">
+    <div data-screen-label="Profile" onScroll="{{onScroll}}" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:76px 20px 120px;animation:vbFade 0.3s ease">
       <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
         <div style="width:92px;height:92px;border-radius:50%;border:3px solid #F2B72F;padding:3px">
           <div style="width:100%;height:100%;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:32px">M</div>
@@ -706,25 +858,13 @@
   </sc-if>
 
   <sc-if value="{{showNav}}" hint-placeholder-val="{{ false }}">
-    <div style="position:absolute;left:18px;right:18px;bottom:26px;height:66px;border-radius:33px;background:var(--navbg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--sc);border:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:30">
-      <div onClick="{{goMap}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navMapBg}};color:{{navMapCo}};transition:background 0.2s">
-        <v-icon name="{{navMapIcon}}" size="21"></v-icon>
-        <sc-if value="{{isMap}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Map</span></sc-if>
-      </div>
-      <div onClick="{{goFeed}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navFeedBg}};color:{{navFeedCo}};transition:background 0.2s">
-        <v-icon name="Bolt" size="21"></v-icon>
-        <sc-if value="{{isFeed}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Beats</span></sc-if>
-      </div>
-      <div onClick="{{openCamera}}" style="width:56px;height:56px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 22px rgba(190,56,42,0.45);transform:translateY(-10px);border:4px solid var(--bg)">
-        <v-icon name="CameraFill" size="24"></v-icon>
-      </div>
-      <div onClick="{{goDiscover}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navDiscBg}};color:{{navDiscCo}};transition:background 0.2s">
-        <v-icon name="{{navDiscIcon}}" size="21"></v-icon>
-        <sc-if value="{{isDiscover}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Explore</span></sc-if>
-      </div>
-      <div onClick="{{goProfile}}" style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;cursor:pointer;background:{{navProfBg}};color:{{navProfCo}};transition:background 0.2s">
-        <v-icon name="{{navProfIcon}}" size="21"></v-icon>
-        <sc-if value="{{isProfile}}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;font-weight:800">Me</span></sc-if>
+    <div style="position:absolute;left:0;right:0;bottom:{{navBottom}};display:flex;justify-content:center;z-index:30;pointer-events:none">
+      <div style="display:flex;align-items:center;gap:{{navGap}};height:{{navH}};padding:0 {{navPadX}};border-radius:33px;background:{{navBg}};backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--sc);border:1px solid {{navBorder}};pointer-events:auto;transition:height 0.22s ease,padding 0.22s ease,gap 0.22s ease">
+        <div onClick="{{goMap}}" style="width:{{navItemSz}};height:{{navItemSz}};border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{navMapBg}};color:{{navMapCo}};transition:background 0.2s,width 0.22s ease,height 0.22s ease"><v-icon name="{{navMapIcon}}" size="{{navIconSz}}"></v-icon></div>
+        <div onClick="{{goFeed}}" style="width:{{navItemSz}};height:{{navItemSz}};border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{navFeedBg}};color:{{navFeedCo}};transition:background 0.2s,width 0.22s ease,height 0.22s ease"><v-icon name="Bolt" size="{{navIconSz}}"></v-icon></div>
+        <div onClick="{{goSnap}}" style="width:{{navCenterSz}};height:{{navCenterSz}};border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 10px 22px rgba(190,56,42,0.45);transform:translateY({{navCenterLift}});border:4px solid {{navBg}};transition:width 0.22s ease,height 0.22s ease,transform 0.22s ease"><v-icon name="CameraFill" size="{{navCenterIcon}}"></v-icon></div>
+        <div onClick="{{goDiscover}}" style="width:{{navItemSz}};height:{{navItemSz}};border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{navDiscBg}};color:{{navDiscCo}};transition:background 0.2s,width 0.22s ease,height 0.22s ease"><v-icon name="{{navDiscIcon}}" size="{{navIconSz}}"></v-icon></div>
+        <div onClick="{{goProfile}}" style="width:{{navItemSz}};height:{{navItemSz}};border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;background:{{navProfBg}};color:{{navProfCo}};transition:background 0.2s,width 0.22s ease,height 0.22s ease"><v-icon name="{{navProfIcon}}" size="{{navIconSz}}"></v-icon></div>
       </div>
     </div>
   </sc-if>
@@ -735,7 +875,7 @@
 <aside class="vbapp" style="width:372px;background:#FFFFFF;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:20px;box-shadow:0 12px 32px rgba(12,5,7,0.08);color:#0C0507">
   <div style="display:flex;flex-direction:column;gap:2px">
     <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-size:19px;font-weight:800;letter-spacing:-0.3px">vibeat</span>
+      <span style="font-size:19px;font-weight:800;letter-spacing:-0.3px">viego</span>
       <span style="width:8px;height:8px;border-radius:50%;background:#F2B72F;margin-top:5px"></span>
       <span style="font-size:12px;font-weight:700;color:#7A716B;margin-left:6px">component set</span>
     </div>
@@ -778,28 +918,86 @@
   </div>
   <div style="display:flex;flex-direction:column;gap:8px">
     <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;color:#7A716B;text-transform:uppercase">Nav bar</span>
-    <div style="height:66px;border-radius:33px;background:rgba(255,255,255,0.94);box-shadow:0 12px 32px rgba(12,5,7,0.12);border:1px solid #ECE7E0;display:flex;align-items:center;justify-content:space-between;padding:0 12px">
-      <div style="height:44px;padding:0 14px;border-radius:22px;display:flex;align-items:center;gap:7px;background:#0C0507;color:#FFFFFF"><v-icon name="LocationProperty1Bold" size="20"></v-icon><span style="font-size:13px;font-weight:800">Map</span></div>
-      <div style="height:44px;padding:0 12px;display:flex;align-items:center;color:#7A716B"><v-icon name="Bolt" size="20"></v-icon></div>
-      <div style="width:52px;height:52px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(190,56,42,0.45);transform:translateY(-8px);border:4px solid #FFFFFF"><v-icon name="CameraFill" size="22"></v-icon></div>
-      <div style="height:44px;padding:0 12px;display:flex;align-items:center;color:#7A716B"><v-icon name="SearchNormalProperty1Linear" size="20"></v-icon></div>
-      <div style="height:44px;padding:0 12px;display:flex;align-items:center;color:#7A716B"><v-icon name="UserProperty1Linear" size="20"></v-icon></div>
+    <div style="height:64px;border-radius:33px;background:rgba(255,255,255,0.94);box-shadow:0 12px 32px rgba(12,5,7,0.12);border:1px solid #ECE7E0;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 11px">
+      <div style="width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#0C0507;color:#FFFFFF"><v-icon name="LocationProperty1Bold" size="22"></v-icon></div>
+      <div style="width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#7A716B"><v-icon name="Bolt" size="22"></v-icon></div>
+      <div style="width:56px;height:56px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(190,56,42,0.45);transform:translateY(-10px);border:4px solid #FFFFFF"><v-icon name="CameraFill" size="24"></v-icon></div>
+      <div style="width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#7A716B"><v-icon name="SearchNormalProperty1Linear" size="22"></v-icon></div>
+      <div style="width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#7A716B"><v-icon name="UserProperty1Linear" size="22"></v-icon></div>
     </div>
   </div>
 </aside>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:960},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;,&quot;section&quot;:&quot;Appearance&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;language&quot;,&quot;login&quot;,&quot;register&quot;,&quot;onboarding&quot;,&quot;map&quot;,&quot;search&quot;,&quot;notifications&quot;,&quot;camera&quot;,&quot;feed&quot;,&quot;discover&quot;,&quot;profile&quot;],&quot;default&quot;:&quot;login&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;streakBroken&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:960},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;,&quot;section&quot;:&quot;Appearance&quot;},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;language&quot;,&quot;login&quot;,&quot;register&quot;,&quot;onboarding&quot;,&quot;snap&quot;,&quot;history&quot;,&quot;map&quot;,&quot;search&quot;,&quot;notifications&quot;,&quot;camera&quot;,&quot;feed&quot;,&quot;discover&quot;,&quot;profile&quot;],&quot;default&quot;:&quot;language&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;streakBroken&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;},&quot;userInVietnam&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;States&quot;}}">
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    const startMap = { language: 'lang', login: 'login', register: 'register', onboarding: 'onboard', map: 'map', search: 'search', notifications: 'notif', camera: 'camera', feed: 'feed', discover: 'discover', profile: 'profile' };
+    const startMap = { language: 'lang', login: 'login', register: 'register', onboarding: 'onboard', snap: 'snap', history: 'history', map: 'map', search: 'search', notifications: 'notif', camera: 'camera', feed: 'feed', discover: 'discover', profile: 'profile' };
     this.state = {
       screen: startMap[props.startScreen] || 'lang',
-      ob: 0, lang: 'en', cat: 'all', sel: null, provSel: null, q: '', notifRead: false,
+      ob: 0, lang: 'en', cat: 'all', sel: null, provSel: null, q: '', notifRead: false, scrolled: false,
       streakDelta: 0, aud: 'friends', sentTo: ['Linh', 'Đức', 'Mai', 'Khoa'],
       themeOv: null, liked: false
     };
+    this.JUNE_MEMORIES = [
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg' },
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg' },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg' },
+      { hasImg: true, img: 'uploads/ed22f189bb083a5663193.jpg' },
+      { hasImg: true, img: 'uploads/e5f9f852b2d3338d6ac22.jpg' },
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/ed22f189bb083a5663193.jpg' },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg' },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg' },
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg' },
+      { hasImg: true, img: 'uploads/e5f9f852b2d3338d6ac22.jpg' },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg' },
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg' },
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg' },
+      { hasImg: true, img: 'uploads/ed22f189bb083a5663193.jpg' },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg' },
+      { hasImg: false, isDot: true },
+      { hasImg: false, isDot: true },
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg' },
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg' }
+    ];
+    this.JULY_MEMORIES = [
+      { hasImg: false, isDot: true }, { hasImg: false, isDot: true }, { hasImg: false, isDot: true }, { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg' },
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg' },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg' },
+      
+      { hasImg: false, isDot: true }, { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/ed22f189bb083a5663193.jpg' },
+      { hasImg: true, img: 'uploads/e5f9f852b2d3338d6ac22.jpg' },
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg' },
+      { hasImg: false, isDot: true },
+      
+      { hasImg: false, isDot: true }, { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg' },
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg' },
+      { hasImg: false, isDot: true },
+      { hasImg: true, img: 'uploads/ed22f189bb083a5663193.jpg' },
+      { hasImg: false, isDot: true },
+      
+      { hasImg: true, img: 'uploads/6585672e2dafacf1f5be1.jpg', borderStyle: '2.5px solid #F2B72F', hasFlame: true },
+      { hasImg: true, img: 'uploads/e5f9f852b2d3338d6ac22.jpg', borderStyle: '2.5px solid #F2B72F' },
+      { hasImg: true, img: 'uploads/5f5799ffd37e52200b6f4.jpg', borderStyle: '2.5px solid #F2B72F' },
+      { hasImg: true, img: 'uploads/8550c58c8f0d0e53571c.jpg', borderStyle: '2.5px solid #F2B72F' },
+      { hasImg: true, img: 'uploads/ed22f189bb083a5663193.jpg', borderStyle: '2.5px solid #F2B72F', count: '5' },
+      { hasImg: false, isEmpty: true },
+      { hasImg: false, isEmpty: true },
+      
+      { hasImg: false, isEmpty: true }, { hasImg: false, isEmpty: true }, { hasImg: false, isEmpty: true },
+      { hasImg: false, isEmpty: true }, { hasImg: false, isEmpty: true }, { hasImg: false, isEmpty: true },
+      { hasImg: false, isEmpty: true }
+    ];
     this.POIS = [
       { id: 'giang', name: 'Giảng Café', place: 'Hoàn Kiếm, Hà Nội', vi: 'cà phê trứng gốc', cat: 'coffee', x: 163, y: 123, rating: '4.8', checkins: '2.1k', friends: 4, desc: 'Egg coffee was invented here in 1946, when milk was scarce and Mr. Giảng — a bartender at the Metropole — whipped egg yolk into robusta instead. The family still makes it the same way, up a narrow alley off Nguyễn Hữu Huân.', hours: '7:00 – 22:00', price: '35–50k ₫', tip: 'Order “một trứng nóng” and head upstairs — locals never sit street-level.', photos: '312', tint: '#E9DEC8', hero: '' },
       { id: 'tahien', name: 'Tạ Hiện Beer Street', place: 'Old Quarter, Hà Nội', vi: 'ngã tư quốc tế', cat: 'night', x: 166, y: 119, rating: '4.6', checkins: '5.4k', friends: 7, desc: 'The “international crossroads” — plastic stools, 15k bia hơi poured from kegs that run out by midnight, and the whole street singing over each other. Chaos, but the friendly kind.', hours: '18:00 – 02:00', price: '15k ₫ / bia hơi', tip: 'Stools facing the intersection are prime seats. Order nem chua rán with round one.', photos: '891', tint: '#DED0C0', hero: '' },
@@ -885,7 +1083,7 @@ class Component extends DCLogic {
     document.addEventListener('province-pick', this._onProv);
   }
   componentWillUnmount() { document.removeEventListener('province-pick', this._onProv); }
-  go(screen, extra) { this.setState(Object.assign({ screen }, extra || {})); }
+  go(screen, extra) { this.setState(Object.assign({ screen, scrolled: false }, extra || {})); }
   renderVals() {
     const st = this.state, p = this.props;
     const s = st.screen;
@@ -893,6 +1091,8 @@ class Component extends DCLogic {
     const broken = !!p.streakBroken && st.streakDelta === 0;
     const streak = (p.streakBroken ? 0 : 6) + st.streakDelta;
     const dark = theme === 'dark';
+    const userInVN = p.userInVietnam !== false;
+    const navDark = s === 'snap' || (dark && s === 'history');
     const sel = this.POIS.find(x => x.id === st.sel) || null;
     const PR = this.PROV, provSel = st.provSel;
     const pd = provSel ? PR[provSel] : null;
@@ -915,8 +1115,8 @@ class Component extends DCLogic {
       ...this.POIS.filter(x => (x.name + ' ' + x.place + ' ' + x.vi).toLowerCase().indexOf(ql) >= 0).map(spotRow)
     ].slice(0, 9);
     const stripes = (tint) => tint + ' repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 10px,transparent 10px 20px)';
-    const navBg = (on) => on ? 'var(--pill)' : 'transparent';
-    const navCo = (on) => on ? 'var(--pilltx)' : 'var(--sub)';
+    const navBg = (on) => on ? (navDark ? '#FFFFFF' : 'var(--pill)') : 'transparent';
+    const navCo = (on) => on ? (navDark ? '#0D0909' : 'var(--pilltx)') : (navDark ? 'rgba(255,255,255,0.6)' : 'var(--sub)');
     const provFirst = this.POIS.find(x => provSel && this.POI_PROV[x.id] === provSel);
     const camTag = sel ? sel.name + ' — ' + sel.place.split(',')[0] : provFirst ? provFirst.name + ' — ' + provFirst.place.split(',')[0] : provSel || 'Giảng Café — Hà Nội';
     const sentN = st.aud === 'friends' ? st.sentTo.length : null;
@@ -924,11 +1124,23 @@ class Component extends DCLogic {
     const donePattern = broken ? [1, 1, 1, 0, 0, 0, 0] : [1, 1, 1, 1, 1, 1, streak >= 7 ? 1 : 0];
     return {
       theme, streak, broken,
-      frameDark: dark || ['onboard', 'camera', 'audience', 'sent', 'celebrate'].includes(s),
-      isLang: s === 'lang', isOb: s === 'onboard', isMap: s === 'map', isPoi: s === 'poi',
+      frameDark: dark || ['onboard', 'snap', 'camera', 'audience', 'sent', 'celebrate'].includes(s),
+      isLang: s === 'lang', isOb: s === 'onboard', isSnap: s === 'snap', isHistory: s === 'history', isMap: s === 'map', isPoi: s === 'poi',
       isCamera: s === 'camera', isAud: s === 'audience', isSent: s === 'sent',
       isCelebrate: s === 'celebrate', isFeed: s === 'feed', isDiscover: s === 'discover', isProfile: s === 'profile',
-      showNav: ['map', 'feed', 'discover', 'profile'].includes(s),
+      showNav: ['snap', 'history', 'map', 'feed', 'discover', 'profile'].includes(s),
+      juneItems: this.JUNE_MEMORIES.map(x => ({ ...x, borderStyle: x.borderStyle || 'none', pick: () => this.go('feed') })),
+      julyItems: this.JULY_MEMORIES.map(x => ({ ...x, borderStyle: x.borderStyle || 'none', pick: () => this.go('feed') })),
+      goHistory: () => this.go('history'),
+      userInVN, userOutVN: !userInVN,
+      snapTag: userInVN ? 'Hà Nội · Hoàn Kiếm' : 'Vị trí ngoài Việt Nam',
+      goSnap: () => this.go('snap'), snapShutter: () => this.go('audience'),
+      onScroll: (e) => { const v = e.target.scrollTop > 36; if (v !== st.scrolled) this.setState({ scrolled: v }); },
+      navBottom: st.scrolled ? '20px' : '26px', navH: st.scrolled ? '54px' : '64px',
+      navGap: st.scrolled ? '4px' : '7px', navPadX: st.scrolled ? '8px' : '11px',
+      navItemSz: st.scrolled ? '40px' : '46px', navIconSz: st.scrolled ? 20 : 22,
+      navCenterSz: st.scrolled ? '48px' : '56px', navCenterLift: st.scrolled ? '-6px' : '-10px', navCenterIcon: st.scrolled ? 22 : 24,
+      navBg: navDark ? 'rgba(28,22,23,0.82)' : 'var(--navbg)', navBorder: navDark ? 'rgba(255,255,255,0.12)' : 'var(--ln)',
       langs: this.LANGS.map(l => ({
         ...l,
         bd: st.lang === l.id ? '#BE382A' : 'var(--ln)',
@@ -938,10 +1150,11 @@ class Component extends DCLogic {
         pick: () => this.setState({ lang: l.id })
       })),
       langLabel: (this.LANGS.find(l => l.id === st.lang) || {}).label || 'English',
-      langDone: () => this.go('login'),
+      langDone: () => this.go('register'),
       obImg: this.OB[st.ob].img, obTitle: this.OB[st.ob].title, obSub: this.OB[st.ob].sub, obBtn: this.OB[st.ob].btn,
       obBars: this.OB.map((_, i) => ({ c: i <= st.ob ? '#F2B72F' : 'rgba(255,255,255,0.35)' })),
-      obNext: () => st.ob < 2 ? this.setState({ ob: st.ob + 1 }) : this.go('map'),
+      obNext: () => st.ob < 2 ? this.setState({ ob: st.ob + 1 }) : this.go('snap'),
+      obSkip: () => this.go('snap'),
       cats: this.CATS.map(c => ({
         label: c.label,
         bg: st.cat === c.id ? 'var(--pill)' : 'var(--sf)',
@@ -1024,7 +1237,7 @@ class Component extends DCLogic {
       goDiscover: () => this.go('discover'), goProfile: () => this.go('profile'),
       navMapBg: navBg(s === 'map'), navMapCo: navCo(s === 'map'),
       navMapIcon: s === 'map' ? 'LocationProperty1Bold' : 'LocationProperty1Linear',
-      navFeedBg: navBg(s === 'feed'), navFeedCo: s === 'feed' ? 'var(--pilltx)' : 'var(--sub)',
+      navFeedBg: navBg(s === 'feed'), navFeedCo: navCo(s === 'feed'),
       navDiscBg: navBg(s === 'discover'), navDiscCo: navCo(s === 'discover'),
       navDiscIcon: s === 'discover' ? 'SearchNormalProperty1Bold' : 'SearchNormalProperty1Linear',
       navProfBg: navBg(s === 'profile'), navProfCo: navCo(s === 'profile'),

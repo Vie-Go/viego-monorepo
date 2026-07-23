@@ -87,7 +87,7 @@ POST /api/v1/provinces/HANOI/unlock
   [risk](../../../../02-process-documentation/plans-estimates-schedules.md) —
   profile early, simplify/virtualize SVG.
 - **Navigation:** `MapTab` (map + province detail + unlock flow) and `CollectionTab` (unlocked
-  provinces); deep link `vibeat://province/{id}`.
+  provinces); deep link `viego://province/{id}`.
 - **Unlock flow:** province detail → unlock action → **celebratory animation** (reduced-motion
   aware) → map fill + collection update.
 - **State:** React Query `['exploration','collection']` and `['exploration','provinces']`; the

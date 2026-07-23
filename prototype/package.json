@@ -1,10 +1,9 @@
 {
-  "name": "vietnam-map",
+  "name": "viego-prototype",
   "version": "1.0.0",
-  "private": true,
-  "description": "VieGo - Vietnam Cultural Map",
+  "description": "VieGo Interactive Prototype",
+  "main": "index.html",
   "scripts": {
-    "build": "node -e \"require('fs').copyFileSync('VieGo.dc.html', 'index.html')\"",
-    "start": "npx serve ."
+    "start": "npx -y serve ."
   }
 }

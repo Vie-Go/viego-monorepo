@@ -11,7 +11,7 @@ notifications. Built in `features/identity/screens`. Delivered in
 [Phase 1](../../../../02-process-documentation/plans-estimates-schedules.md#phase-1--identity--foundations-weeks-35).
 
 Shared design language: `bg` canvas, 88px top inset (safe-area), 24–26px horizontal padding,
-the **vibeat** wordmark + pulsing gold dot lockup, primary crimson pill CTA.
+the **viego** wordmark + pulsing gold dot lockup, primary crimson pill CTA.
 
 ---
 
@@ -22,7 +22,7 @@ choose UI language before anything else; re-openable later from
 [Profile → Language](#profile--preferences). Continue → [Log in](#log-in).
 
 **Anatomy** (top → bottom):
-1. Brand lockup — `vibeat` wordmark (display 30/800) + 11px gold dot with the beat-pulse.
+1. Brand lockup — `viego` wordmark (display 30/800) + 11px gold dot with the beat-pulse.
 2. Bilingual headline — "Xin chào! / Pick your language" (headline 26/800).
 3. Helper — "You can change this any time in your profile." (`sub`).
 4. Language list — 5 selectable rows (`vi`, `en`, `ko`, `ja`, `fr`), each a

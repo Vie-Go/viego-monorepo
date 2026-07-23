@@ -7,7 +7,7 @@ description: "Screen-by-screen and component-by-component design specifications 
 
 How VieGo looks, feels, and behaves — specified for build. The canonical visual source is
 [`DESIGN.md`](../../../../DESIGN.md) ("The Crimson Heritage Map") and the interactive
-reference is [`prototype/`](../../../../prototype/) (a "vibeat" HTML/CSS build). This
+reference is [`prototype/`](../../../../prototype/) (a "viego" HTML/CSS build). This
 document translates both into **React Native** design specifications: every screen and every
 component, with layout anatomy, tokens, states, animations, i18n, and accessibility notes.
 
@@ -73,7 +73,7 @@ Each screen section follows the same shape so it's build-ready:
 5. **Tokens** — the design-system values in play.
 6. **i18n & a11y** — translation keys and accessibility requirements.
 
-> Prototype note: the reference build is branded "vibeat" and models a photo "beat" capture
+> Prototype note: the reference build is branded "viego" and models a photo "beat" capture
 > ritual. VieGo keeps the same visual language and interaction model; product naming
 > (Explorer, province **unlock**, Cultural Beats) follows the
 > [domain model](../software-architecture-document/ddd-and-domain-model.md). Each spec calls
