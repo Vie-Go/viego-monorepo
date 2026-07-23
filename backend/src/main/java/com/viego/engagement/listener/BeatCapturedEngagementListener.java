@@ -1,6 +1,6 @@
 package com.viego.engagement.listener;
 
-import com.viego.content.domain.event.BeatCapturedEvent;
+import com.viego.content.api.BeatCapturedEvent;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.viego.content;
 
 import com.viego.content.domain.Beat;
-import com.viego.content.domain.event.BeatCapturedEvent;
+import com.viego.content.api.BeatCapturedEvent;
 import com.viego.content.service.BeatCaptureService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

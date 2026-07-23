@@ -12,7 +12,7 @@ public class ApplicationModulesTest {
 
     @Test
     void verifyModuleStructure() {
-        ApplicationModules modules = ApplicationModules.of(ApplicationModulesTest.class);
+        ApplicationModules modules = ApplicationModules.of(VieGoApplication.class);
         modules.verify();
     }
 }

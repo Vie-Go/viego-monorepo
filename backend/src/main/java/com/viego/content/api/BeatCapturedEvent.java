@@ -1,4 +1,4 @@
-package com.viego.content.domain.event;
+package com.viego.content.api;
 
 import java.io.Serializable;
 import java.time.Instant;

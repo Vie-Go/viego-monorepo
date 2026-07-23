@@ -1,7 +1,7 @@
 package com.viego.content.service;
 
 import com.viego.content.domain.Beat;
-import com.viego.content.domain.event.BeatCapturedEvent;
+import com.viego.content.api.BeatCapturedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
