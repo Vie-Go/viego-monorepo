@@ -7,7 +7,7 @@ walking skeleton**, so don't let UI-library work grow into an unscoped redesign.
 
 ## Stack (current)
 
-Expo SDK 57 (managed workflow, no committed `ios/`/`android/`), React Native 0.86, React 19,
+Expo SDK 54 (managed workflow, no committed `ios/`/`android/`), React Native 0.81, React 19.1,
 TypeScript. No native folders are checked in — native config lives in `app.json` / config plugins,
 not hand-edited Xcode/Gradle files.
 
