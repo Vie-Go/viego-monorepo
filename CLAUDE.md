@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-`specs/001-phase-0-walking-skeleton/plan.md`
+`specs/002-theme-components-identity/plan.md`
 <!-- SPECKIT END -->

@@ -200,6 +200,11 @@ Task: "Mobile API client skeleton + getStatus in mobile/app/shared/api/client.ts
 - The exit for this phase is **milestone M0** — skeleton runs in dev, CI green both sides, `verify()` green ([plans-estimates-schedules](../../docs/02-process-documentation/plans-estimates-schedules.md)).
 - **Post-P0 stack update**: T030 (navigation shell) and T028 (UI primitives) were built before
   [ADR-0011](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md)
-  (Expo Router, Zustand, Maestro). Checkmarks above reflect what actually shipped in P0 and are left
-  as-is; migrating `mobile/app/navigation/` to Expo Router and the UI primitives to `@expo/ui` is
-  unstarted follow-up work for a later phase, not retroactively marked done here.
+  (Expo Router, Zustand, Maestro) and
+  [ADR-0012](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md)
+  (NativeWind + React Native Reusables, not `@expo/ui` — this corrects an earlier version of this
+  note, which named `@expo/ui` as the migration target before ADR-0012 superseded that default).
+  Checkmarks above reflect what actually shipped in P0 and are left as-is; migrating
+  `mobile/app/navigation/` to Expo Router and the UI primitives to NativeWind/React Native Reusables
+  is [002-theme-components-identity](../002-theme-components-identity/plan.md)'s job, not
+  retroactively marked done here.
