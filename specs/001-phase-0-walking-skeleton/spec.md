@@ -30,7 +30,7 @@ delivered alone, proves the foundation works. Everything else in Phase 0 exists 
 
 **Independent Test**: Deploy the backend to dev, open the app pointed at the dev API, trigger the
 health/ping call, and confirm a healthy response is displayed. Fully testable without any of the
-four product features existing.
+five product features existing.
 
 **Acceptance Scenarios**:
 
@@ -45,10 +45,10 @@ four product features existing.
 
 ### User Story 2 - Module boundaries verified from day one (Priority: P2)
 
-As an engineer, I have the four empty bounded-context modules (`identity`, `exploration`,
-`engagement`, `content`) plus a thin `shared` module in place, with automated **module-boundary
-verification** running on every backend build — so architectural drift is caught from the very
-first commit, not retrofitted later.
+As an engineer, I have the five empty bounded-context modules (`identity`, `exploration`,
+`content`, `engagement`, `social`) plus a thin `shared` module in place, with automated
+**module-boundary verification** running on every backend build — so architectural drift is caught
+from the very first commit, not retrofitted later.
 
 **Why this priority**: The modular-monolith extractability guarantee ([architecture principles](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/architecture-principles.md),
 [module boundary rules](../../docs/02-process-documentation/sdd-standards/module-boundary-rules.md))
@@ -153,8 +153,8 @@ and API documentation is generated for the trivial endpoint.
 #### Backend scaffold
 - **FR-003**: The backend MUST build as a single deployable unit (the modular monolith) via its
   build tool.
-- **FR-004**: The backend MUST define the five modules — `identity`, `exploration`, `engagement`,
-  `content`, and a thin `shared` — as empty bounded-context skeletons.
+- **FR-004**: The backend MUST define the six modules — `identity`, `exploration`, `content`,
+  `engagement`, `social`, and a thin `shared` — as empty bounded-context skeletons.
 - **FR-005**: The backend MUST include an automated **module-boundary verification** test that runs
   on every build and **fails the build** on any boundary violation.
 - **FR-006**: The backend MUST expose a **health/ping** endpoint suitable for readiness/liveness
@@ -198,8 +198,8 @@ and API documentation is generated for the trivial endpoint.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Module skeleton**: one of the five Spring-Modulith modules (`identity`, `exploration`,
-  `engagement`, `content`, `shared`). At this phase they carry no domain logic — only the boundary
+- **Module skeleton**: one of the six Spring-Modulith modules (`identity`, `exploration`, `content`,
+  `engagement`, `social`, `shared`). At this phase they carry no domain logic — only the boundary
   each later phase fills. `shared` holds only stable primitives (ids, localized text), never business
   logic.
 - **Health/Ping resource**: the trivial, unauthenticated status the app reads to prove end-to-end
@@ -230,7 +230,7 @@ and API documentation is generated for the trivial endpoint.
   [CI/CD doc](../../docs/01-product-documentation/04-user-documentation/system-admin-documentation/ci-cd.md)
   names GitHub Actions, "confirm via ADR"). Choice of provider does not change these requirements.
 - **Dev target**: a lightweight managed container platform + managed database is sufficient for dev;
-  the production hosting/observability platform is a **Phase 5** decision and is out of scope here.
+  the production hosting/observability platform is a **Phase 6** decision and is out of scope here.
 - **Datasets & design system already exist**: the province datasets and `DESIGN.md` design system are
   available (per the plan's assumptions), so tokens/primitives are ported, not designed from scratch.
 - **Branch/trunk strategy**: trunk-based development with short-lived branches (per the plan's "ways
@@ -239,8 +239,8 @@ and API documentation is generated for the trivial endpoint.
   ([ADR 0007](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md))
   is introduced when its first consumer arrives (Phase 1 token rotation / Phase 2 caching), keeping
   the skeleton to the app + backend + database only.
-- **No real authentication or product features**: auth flows, unlocking, streaks, and heritage are
-  explicitly deferred to Phases 1–4; Phase 0 ships only placeholders.
+- **No real authentication or product features**: auth flows, map/places, beat capture, streaks, and
+  the social feed are explicitly deferred to Phases 1–5; Phase 0 ships only placeholders.
 
 ## Dependencies & Open Decisions
 

@@ -1,31 +1,30 @@
-@exploration @draft
+@exploration
 Feature: Province unlocking
   As an Explorer
-  I want to unlock a province I have discovered
-  So that its heritage becomes available and my collection grows
+  I want a province to unlock when I capture my first Beat there
+  So that my collection grows from where I have actually been
 
   Background:
     Given I am an authenticated Explorer
     And the province "HANOI" is locked in my collection
 
   @ready
-  Scenario: Unlock an eligible province
-    When I unlock the province "HANOI"
+  Scenario: Capturing the first Beat in a province unlocks it
+    When a "BeatCaptured" event for a Beat in "HANOI" is processed
     Then "HANOI" appears in my collection
     And "HANOI" is shown with the unlocked map fill
     And a "ProvinceUnlocked" event is published
 
   @ready
-  Scenario: A province cannot be unlocked twice
+  Scenario: A further Beat in an unlocked province does not unlock again
     Given the province "HANOI" is already unlocked
-    When I unlock the province "HANOI"
-    Then the request is rejected with "Province already unlocked"
-    And my collection is unchanged
+    When a "BeatCaptured" event for another Beat in "HANOI" is processed
+    Then my collection is unchanged
+    And no second "ProvinceUnlocked" event is published
 
-  @draft
-  Scenario: Unlock condition must be met
-    # TODO(product): define the actual unlock condition (proximity / trivia / tap / purchase)
-    Given the unlock condition for "HANOI" is not yet met
-    When I attempt to unlock the province "HANOI"
-    Then the unlock is refused
-    And I am told what is required to unlock it
+  @ready
+  Scenario: The map distinguishes unlocked provinces and public check-in heat
+    Given the province "HANOI" is unlocked with public check-ins
+    When I view the map
+    Then "HANOI" is filled gold
+    And its shade reflects its public check-in volume

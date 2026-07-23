@@ -49,9 +49,11 @@ group labeled by the headline.
 
 ## Onboarding
 
-**Purpose & entry.** 3 full-bleed photo slides shown after first successful auth, selling the
-core loop (living map → snap → streak). Reached from [Log in](#log-in)/[Register](#register);
-Next×3 → [Map Home](exploration.md#map-home). Not shown again after completion.
+**Purpose & entry.** 3 full-bleed photo slides shown after first successful auth (following the
+post-signup [Add friends](social.md#add-friends) step), selling the core loop (living map → snap →
+streak). Reached from [Log in](#log-in)/[Register](#register) → Add friends; Next×3 →
+[Snap home](content.md#camera-capture) / [Map Home](exploration.md#map-home). Not shown again after
+completion.
 
 **Anatomy.** Full-screen scenery image + dark bottom-up gradient scrim; brand lockup top-left
 (white); bottom block: large title (38/800, `\n` line breaks preserved), subtitle
@@ -139,7 +141,9 @@ controls (saved places, language, theme). Persistent bottom tab.
 **Anatomy** (scroll):
 1. **Avatar block** — 92px [Avatar](../components/core.md#avatar) ringed gold, display name,
    `@handle · city`.
-2. **Stat row** — 3 [StatTile](../components/core.md#stattile)s: day streak (flame,
+2. **Invite card** — gold-tint "Share link to add friends" (`viego.app/@handle`) with **Copy** +
+   **Share** actions → the [Share Link Modal](social.md#share-link-modal).
+3. **Stat row** — 3 [StatTile](../components/core.md#stattile)s: day streak (flame,
    `goldDeep`), best streak, beats sent.
 3. **"Your Vietnam" card** — unlocked-province count + the
    [Collection map](exploration.md#collection-your-vietnam) (`<VnMap unlocked>`).
@@ -168,25 +172,5 @@ unlock the first); streak-broken (streak shows 0, muted flame).
 
 ## Notifications
 
-**Purpose & entry.** Chronological activity list (streak reminders, social likes/beats, nearby
-spots, badges). Reached from the [Map Home](exploration.md#map-home) bell; the bell shows a
-crimson unread dot. Opening marks all read.
-
-**Anatomy.** Header — 42px circular [BackButton](../components/navigation.md#backbutton) +
-"Notifications" title. List of rows: 44px tinted icon circle (per type), title (label/800) +
-subtitle (`sub`), right-aligned relative time + optional unread dot.
-
-**React Native notes.** `FlatList`. Icon/tint per notification type (flame=gold, heart=crimson,
-bolt=blue-slate, location=green). Tapping a row deep-links to its target (POI, province,
-profile). Mark-read is a mutation that clears the Map bell dot
-(`['identity','notifications','unread']`). Pull-to-refresh.
-
-**States.** Loading skeleton rows; empty ("Chưa có thông báo — nothing yet"); unread vs. read
-(dot + subtle bg tint on unread).
-
-**Tokens.** Row divider `line`; unread dot `palette.primary`; type tints use translucent
-brand/utility colors.
-
-**i18n & a11y.** Keys `identity.notifications.title`, `.empty`, plus server-localized content
-via [`LocalizedText`](../localization.md). Rows `accessibilityRole="button"`; unread conveyed
-by label ("unread"), not color alone.
+> **Moved.** Notifications are owned by the Engagement module — see
+> [Engagement → Notifications](engagement.md#notifications). The Map/Snap-home bell still opens it.

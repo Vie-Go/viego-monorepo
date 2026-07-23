@@ -11,7 +11,7 @@ in CI — a violation fails the build. Design rationale:
 
 ## Must
 - One module per [bounded context](../../01-product-documentation/02-authored-system-documentation/software-architecture-document/ddd-and-domain-model.md):
-  `identity`, `exploration`, `engagement`, `content`.
+  `identity`, `exploration`, `content`, `engagement`, `social`.
 - Expose only the `api` **named interface**; keep `domain`/`application`/`infrastructure` internal.
 - Integrate via **published events**; use a peer's `::api` only when a synchronous read is
   unavoidable (treat as an anti-corruption boundary).
@@ -25,7 +25,7 @@ in CI — a violation fails the build. Design rationale:
 - Put business logic in `shared`.
 
 ## Naming
-- Events: past tense in `api/events` (`ProvinceUnlocked`).
-- Use-case services: `<Verb><Noun>Service` (`UnlockProvinceService`).
+- Events: past tense in `api/events` (`BeatCaptured`, `ProvinceUnlocked`).
+- Use-case services: `<Verb><Noun>Service` (`CaptureBeatService`).
 - Ports (interfaces) in `domain`; adapters in `infrastructure`.
 - One aggregate root per transaction.

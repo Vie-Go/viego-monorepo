@@ -16,10 +16,11 @@ renders per the Explorer's language and theme.
 src/
 ├── app/                 ← entry, providers (query client, theme, i18n), root navigator
 ├── features/
-│   ├── identity/        ← auth screens, session, preferences
-│   ├── exploration/     ← map, province detail, unlock flow, collection
-│   ├── engagement/      ← streak UI, daily ritual, rewards
-│   └── content/         ← heritage, beat player, trivia
+│   ├── identity/        ← auth screens, handle, session, preferences
+│   ├── exploration/     ← map, province sheet, place detail, search, collection
+│   ├── content/         ← camera, capture/send flow, beat detail, memories
+│   ├── engagement/      ← streak UI, milestones/celebration, notifications
+│   └── social/          ← friend feed, discover, add-friends, reactions
 │       ├── api/         ← endpoints + React Query hooks
 │       ├── components/  ← feature-scoped UI
 │       ├── screens/     ← navigable screens
@@ -41,24 +42,27 @@ prototype's `<vn-map>`.
   interceptor with refresh, `Accept-Language` from the active locale, Problem-Details → typed
   errors. Types mirror the OpenAPI contract.
 - **Server state:** React Query hooks per feature; keys namespaced (`['exploration','collection']`).
-  Mutations (unlock) invalidate affected queries so map + collection + streak refresh together.
+  The **capture** mutation invalidates collection + map + streak + friend feed so an unlock, a streak
+  advance, and a friend's Beat all refresh together.
 - **UI state:** component state or a light store (Zustand/Context) for UI-only concerns; never
   mirror server data.
-- **Offline (proposed):** cache collection/streak; queue unlock actions and reconcile on
-  reconnect (aligns with backend idempotency).
+- **Offline (proposed):** queue a capture (photo + audience) and reconcile on reconnect; the
+  optimistic "Beat sent!" state aligns with backend idempotency.
 
 ## Navigation (proposed)
 ```
 RootNavigator
-├── AuthStack       welcome, sign-in, register            [identity]
-└── AppTabs
-    ├── MapTab        interactive map, province, unlock    [exploration]
-    ├── CollectionTab unlocked provinces                   [exploration]
-    ├── StreakTab     streak, ritual, rewards              [engagement]
-    └── ProfileTab    preferences, account                 [identity]
+├── AuthStack       language, sign-in, register, add-friends   [identity + social]
+└── AppTabs (center camera button)
+    ├── MapTab        interactive map, province sheet, place    [exploration]
+    ├── FeedTab       friend feed (Beats)                       [social]
+    ├── CameraTab     capture → send → beat sent (center)       [content]
+    ├── DiscoverTab   public discover + search                  [social + exploration]
+    └── ProfileTab    handle, invite link, streak, preferences  [identity]
 ```
-Content surfaces (heritage, beat player, trivia) open from a province detail. Deep link:
-`viego://province/{id}`.
+The **camera** is the centre of the bottom nav; capture opens the send/audience sheet, then the
+"Beat sent!" confirmation. **Memories** opens from the camera home. Deep links:
+`viego://province/{id}`, `viego://place/{id}`, and the invite link `viego.app/add/@handle`.
 
 ## Cross-cutting rules
 - No hard-coded colors/spacing/type — use [design tokens](../ui-ux-design-document/design-system.md).

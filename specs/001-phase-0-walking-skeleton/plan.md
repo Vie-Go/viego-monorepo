@@ -13,7 +13,7 @@ health/ping) runs in the **dev** environment, **path-scoped CI** is green on bot
 feature ships; the deliverable is a proven platform every later phase (P1–P6) builds on.
 
 Technical approach (from [research.md](research.md)): **Expo + EAS** for the mobile toolchain
-(resolves the spec's open decision), Spring Modulith with five empty modules, springdoc for
+(resolves the spec's open decision), Spring Modulith with six empty modules, springdoc for
 auto-generated API docs, Flyway wired with zero migrations, Docker Compose Postgres for local, and
 GitHub Actions with `paths:` filters for path-scoped pipelines.
 
@@ -45,9 +45,9 @@ running locally in **≤30 min** (SC-001). Dev backend health endpoint returns h
 never runs mobile pipeline and vice-versa; `contracts/**` triggers both); no secrets in source; API
 versioned under `/api/v1` from the start.
 
-**Scale/Scope**: 2 full-stack engineers; 5 empty modules (`identity`, `exploration`, `engagement`,
-`content`, `shared`); 1 trivial documented endpoint + Actuator health; app shell = auth stack + 4
-tab placeholders, VI/EN i18n, light/dark theme, API client skeleton.
+**Scale/Scope**: 2 full-stack engineers; 6 empty modules (`identity`, `exploration`, `content`,
+`engagement`, `social`, `shared`); 1 trivial documented endpoint + Actuator health; app shell = auth
+stack + 4 tab placeholders, VI/EN i18n, light/dark theme, API client skeleton.
 
 ## Constitution Check
 
@@ -59,8 +59,8 @@ Verified against the VieGo Documentation Constitution v1.0.0 (`.specify/memory/c
   (health/ping + a trivial status) is infrastructure, and its interface contract is placed under
   `contracts/` establishing the contract-first seam. No behaviour is inferred from code. **PASS.**
 - [x] **II. Ubiquitous language** — uses the exact module/domain terms (`identity`, `exploration`,
-  `engagement`, `content`, `shared`, Explorer); introduces **no new domain terms**, so no glossary
-  change is required. **PASS.**
+  `content`, `engagement`, `social`, `shared`, Explorer); introduces **no new domain terms**, so no
+  glossary change is required. **PASS.**
 - [x] **III. Architecture & module boundaries** — the phase's core purpose is to wire
   `ApplicationModules.verify()` and the five-module layout per the [Module Boundary Rules](../../docs/02-process-documentation/sdd-standards/module-boundary-rules.md); no boundary is crossed. **PASS.**
 - [x] **IV. Documentation conventions** — SDD working artifacts live under `specs/` (not the docmd
@@ -105,7 +105,7 @@ backend/                         # Spring Boot (Java 25) modular monolith — pa
 │   └── platform/                # trivial status endpoint (health/ping wiring, non-domain)
 ├── src/main/resources/
 │   ├── application.yml
-│   └── db/migration/{identity,exploration,engagement,content}/   # Flyway paths, no migrations yet
+│   └── db/migration/{identity,exploration,content,engagement,social}/   # Flyway paths, no migrations yet
 ├── src/test/java/com/viego/
 │   └── ModulithVerificationTest.java   # ApplicationModules.verify()
 ├── compose.yaml                 # local Postgres

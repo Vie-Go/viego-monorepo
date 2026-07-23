@@ -12,9 +12,9 @@ description: "Roadmap themes and the prioritized backlog of features."
 ## Roadmap themes
 | Horizon | Focus |
 |---------|-------|
-| **Now** | Core loop: authentication, province unlocking, collection |
-| **Next** | Engagement: streaks & discovery ritual; heritage content & beat player |
-| **Later** | Rewards/milestones, social sharing, offline, more languages |
+| **Now** | Foundations + the core loop: authentication, map & places, **capture a Beat** → unlock + memories |
+| **Next** | Engagement: daily streaks & milestones; Social: friends, feeds, Discover, reactions |
+| **Later** | Richer notifications, offline capture queue, more languages, place bookmarks/reviews depth |
 
 ## Backlog (feature specs)
 Each item becomes an [executable spec](../01-product-documentation/01-core-specifications/executable-specifications/)
@@ -22,18 +22,25 @@ plus the API/system contract before build.
 
 | Item | Context | Status |
 |------|---------|--------|
-| Authentication (Email/Google/Facebook/Zalo) | Identity | draft |
-| Province unlocking | Exploration | draft — unlock condition **TBD** |
+| Authentication (Email/Google/Facebook/Zalo) + handle | Identity | draft |
+| Map, places (POIs), search | Exploration | draft |
+| Province unlocking (via first capture) | Exploration | draft |
 | Collection view | Exploration | draft |
-| Daily streak & discovery ritual | Engagement | draft — ritual definition **TBD** |
-| Regional heritage access & beat player | Content | draft |
-| Trivia | Content | backlog |
+| **Beat capture** (photo, audience, memories) | Content | draft |
+| Reviews (verified by location) | Content | backlog |
+| Daily capture streak & milestones/badges | Engagement | draft |
+| Notifications | Engagement | draft |
+| Friends, invite links, friend feed & Discover | Social | draft |
+| Reactions (like/bolt) | Social | draft |
 | Language & theme preferences | Identity | draft |
-| Rewards & milestones | Engagement | backlog |
 
 ## Open product decisions (block "ready")
-- The **unlock condition** for provinces.
-- What completes the **discovery ritual** (and the day/timezone rule).
+- The **day/timezone rule** for the streak day boundary.
+- **Review** eligibility + moderation.
+- **Friend-request vs. auto-accept** on invite links.
 - **Account linking** across providers.
+
+> **Resolved from the prototype:** unlock = capture your first Beat in the province; the daily ritual
+> = capturing a Beat.
 
 > Keep this in sync with the executable specs and the API/system specifications.

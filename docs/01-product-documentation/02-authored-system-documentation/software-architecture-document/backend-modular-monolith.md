@@ -15,10 +15,11 @@ module**, built to be [extracted into a service](service-extraction-playbook.md)
 com.viego
 ├── VieGoApplication.java
 ├── shared/        ← open kernel: ids, LocalizedText (no business logic)
-├── identity/      ← Explorer accounts, auth, preferences
-├── exploration/   ← map, provinces, unlocking, collection
-├── engagement/    ← streaks, rituals, rewards
-└── content/       ← heritage, cultural beats, trivia
+├── identity/      ← Explorer accounts, handles, auth, preferences
+├── exploration/   ← map, provinces, places (POIs), unlocking, collection, search
+├── content/       ← beats (photo check-ins), reviews, memories, media
+├── engagement/    ← streaks, milestones/badges, notifications
+└── social/        ← friendships, invite links, feeds, reactions
 ```
 
 - **`shared`** is an **open** module (`@ApplicationModule(type = OPEN)`): anyone may depend on it.
@@ -74,41 +75,45 @@ Modules integrate through **domain events** — the backbone of loose coupling n
 later. Catalog: [AsyncAPI spec](../../../01-core-specifications/api-system-specifications/domain-events.asyncapi.yaml).
 
 ```java
-// publish (exploration.application) — recorded in the transactional event log
-events.publishEvent(new ProvinceUnlocked(explorerId, provinceId, Instant.now()));
+// publish (content.application) — recorded in the transactional event log
+events.publishEvent(new BeatCaptured(beatId, explorerId, provinceId, placeId, audience, Instant.now()));
 
 // consume (engagement.infrastructure.listener) — async, transactional, retried
 @ApplicationModuleListener
-void on(ProvinceUnlocked e) { streaks.advanceFor(e.explorerId(), e.at()); }
+void on(BeatCaptured e) { streaks.advanceFor(e.explorerId(), e.at()); }
 ```
+
+`BeatCaptured` is the backbone: `exploration` (unlock the province of the first Beat), `engagement`
+(advance the daily streak), and `social` (fan out to friend feeds / discover) each consume it.
 
 Rules: events are immutable records in `api/events`, past-tense, carrying **ids/primitives only**.
 
-## Request flow — unlock a province
+## Request flow — capture a Beat
 
 ```
-POST /api/v1/provinces/{id}/unlock
-  → exploration.infrastructure.web.ProvinceController
-  → exploration.application.UnlockProvinceService (tx)
-      → Collection aggregate enforces invariants
-      → publishes ProvinceUnlocked (recorded in event log, same tx)
-  → engagement listener advances Streak      (separate tx, async)
-  → content listener grants heritage access  (separate tx, async)
+POST /api/v1/beats
+  → content.infrastructure.web.BeatController
+  → content.application.CaptureBeatService (tx)
+      → Beat aggregate enforces invariants (immutable, resolved province)
+      → publishes BeatCaptured (recorded in event log, same tx)
+  → exploration listener unlocks the province (first Beat there)   (separate tx, async)
+  → engagement listener advances the Streak                        (separate tx, async)
+  → social listener fans the Beat out to friend feeds / discover   (separate tx, async)
 ```
 
 ## Persistence & data ownership
 
-- **One schema per module** (`identity`, `exploration`, `engagement`, `content`).
+- **One schema per module** (`identity`, `exploration`, `content`, `engagement`, `social`).
 - **No cross-module foreign keys or joins.** Reference peers by id value.
 - Domain talks to **ports**; JPA lives only in `infrastructure.persistence`.
 - **Flyway per module:**
   ```
-  db/migration/{identity,exploration,engagement,content}/V1__*.sql
+  db/migration/{identity,exploration,content,engagement,social}/V1__*.sql
   ```
 - **Event-publication log** (Spring Modulith JPA outbox) guarantees at-least-once delivery.
 - **Cross-context reads:** maintain a local projection from events (preferred) or call the
-  owning module's `api`. Example: an Explorer dashboard subscribes to `ProvinceUnlocked` +
-  `StreakAdvanced`.
+  owning module's `api`. Example: the `social` friend-feed projection is built from `BeatCaptured`;
+  a profile view subscribes to `StreakAdvanced` + `ProvinceUnlocked`.
 - **Redis cache/token store** ([ADR 0007](decisions/0007-redis-cache-and-token-rotation.md)) is
   **partitioned by module** the same way — each module uses its own key namespace (`identity:*`,
   `exploration:*`, …) and **never reads another module's keys**. It is a non-authoritative

@@ -1,125 +1,155 @@
 ---
-title: "Screens — Content"
-description: "POI / heritage detail, Cultural Beats playback, and trivia — the Content module screens."
+title: "Screens — Content (Beats)"
+description: "The capture flow (camera → send → sent), the beat detail modal, and memories — the Content module screens."
 ---
 
-# Screens — Content
+# Screens — Content (Beats)
 
-The [Content module](../../software-architecture-document/design/content.md) screens: the
-cultural payoff behind an unlocked province — heritage stories, **Cultural Beats** (audio), and
-trivia. Built in `features/content/screens`. Delivered in
-[Phase 4](../../../../02-process-documentation/plans-estimates-schedules.md#phase-4--content-heritage--beats-weeks-1214).
+The [Content module](../../software-architecture-document/design/content.md) screens — the heart
+of the product: capturing a **Beat** (a photo check-in) and reliving it. The capture flow (Camera →
+Send → Sent) publishes `BeatCaptured`, which unlocks the province, advances the streak, and fans the
+Beat out to feeds. Built in `features/content/screens`. Delivered in
+[Phase 3](../../../../02-process-documentation/plans-estimates-schedules.md).
 
-The [POI / Heritage Detail](#poi--heritage-detail) screen exists in the prototype as the
-`POI detail` surface. **Cultural Beats** and **Trivia** are product features the prototype does
-not yet render as standalone screens; their specs below are **prototype-consistent** (same
-visual language) and forward-looking — flagged accordingly.
-
----
-
-## POI / Heritage Detail
-
-**Purpose & entry.** Deep detail for a spot / heritage place: hero image, "why it matters"
-story, practical info, community captures, reviews, and a **Capture here** CTA. Reached from the
-[Province Sheet](exploration.md#province-sheet), [Discover](exploration.md#discover--explore),
-or [Search](exploration.md#search). Capture → [Camera](engagement.md#camera-capture).
-
-**Anatomy** (scroll):
-1. **Hero** — 300px image; back + like [IconButton](../components/core.md#iconbutton)s float
-   over a top gradient; content sheet overlaps the hero by ~26px (rounded top).
-2. **Title block** — name (headline 24/800); rating pill (gold-tint star); "Locals say: '{vi}'"
-   italic; a category tag + "{checkins} check-ins · {friends} friends were here".
-3. **Why it matters** — heritage narrative paragraph (`sub`).
-4. **Info card** — [ListRow](../components/core.md#listrow)s: Hours, Cost, and a gold **Local
-   tip**.
-5. **Community beats** — "N captures" + a 3-up grid (2 captures + a "+N" more tile).
-6. **Recent from travellers** — review items (avatar, name, time, note).
-7. **Action row** — crimson **Capture here** pill (glow) + a `surface` bookmark
-   [IconButton](../components/core.md#iconbutton).
-
-**React Native notes.** `ScrollView` with a parallax/collapsing hero (Reanimated
-`useAnimatedScrollHandler`) — optional; static hero acceptable. Hero + gallery images via
-`expo-image`. Like/bookmark are optimistic mutations. Content (`whyItMatters`, `tip`, hours,
-cost) is server [`LocalizedText`](../localization.md) gated by province unlock — a **locked**
-province returns 403 and the screen shows a locked state (see below). "Friends were here" and
-reviews come from social/exploration queries.
-
-**States.** Unlocked (full content) vs. **locked** (blurred/omitted heritage body + "Unlock
-{province} to read its story" prompt → Province Sheet). Liked/bookmarked toggles. Loading
-skeleton (hero + text lines). Image-less spot → striped placeholder.
-
-**Tokens.** Hero overlay gradient; rating pill `rgba(242,183,47,0.16)`; info card `surface`
-`radius.lg`; Capture CTA `shadow.glow`.
-
-**i18n & a11y.** Keys `content.poi.whyItMatters`, `.hours`, `.cost`, `.localTip`,
-`.communityBeats`, `.captures`, `.recentTravellers`, `.captureHere`, `.locked`. Body content
-localized server-side. Hero image described; like/bookmark buttons expose pressed state; gallery
-tiles labeled "user capture".
+The capture surfaces are **full-screen dark** (`#0D0909`) regardless of theme — a deliberate "camera
+mode". The bottom tab bar is hidden throughout the flow.
 
 ---
 
-## Cultural Beats
+## Camera Capture
 
-> **Product feature — prototype-consistent, forward-looking.** The prototype models "beats" as
-> photo captures; the VieGo product's **Cultural Beats** are curated **audio** pieces
-> (music/soundscapes/narration) tied to a heritage place. This spec applies the prototype's
-> visual language to that feature; validate against the
-> [Content design](../../software-architecture-document/design/content.md) when built.
+**Purpose & entry.** Opens the camera to capture today's Beat. Reached from the center **camera FAB**
+in the [tab bar](../components/navigation.md#bottomtabbar), the Snap home shutter, the
+[Province Sheet](exploration.md#province-sheet) "Check in here", the
+[Place Detail](exploration.md#place-detail) "Capture here", or the streak-broken banner. Snap →
+[Send Beat](#send-beat).
 
-**Purpose & entry.** Play a province's Cultural Beats. Opened from a
-[POI / Heritage Detail](#poi--heritage-detail) "play" affordance (or a heritage list within the
-province). Gated by unlock (403 when locked).
+**Anatomy.** Dark screen: top row — close [IconButton](../components/core.md#iconbutton) + centered
+**auto-tag** chip (gold-tint, location pin, "{Place — Province}", "auto-tag"); a large rounded camera
+preview with corner framing guides; a "Day N — keep it burning" streak line; bottom controls — gallery
+thumbnail, 80px **shutter** (white ring, crimson core, press-scale), and a flip-camera button.
 
-**Anatomy.** Artwork header (heritage image); track title + place; a waveform/progress bar;
-transport controls (play/pause primary crimson, skip); a beat-pulse indicator echoing the brand
-gold dot; a playlist of the province's beats (title, duration, playing state); a "Why this
-beat" note (localized).
+**React Native notes.** Camera via `expo-camera` (`CameraView`); request permission on entry with a
+rationale sheet and a denied-state fallback (open Settings). The auto-tag comes from device location +
+the carried province/place context (reverse-geocode or nearest known place); **outside Vietnam** the
+tag reads "Vị trí ngoài Việt Nam" and no precise province is resolved. Shutter press animates scale
+`0.85`, captures a still, then routes to Send with the photo URI. Gallery button opens
+`expo-image-picker`. Keep the flow dark; use `StatusBar` light content.
 
-**React Native notes.** Audio via `expo-av` (or `react-native-track-player` for background +
-lock-screen controls). Signed/CDN media URLs from the backend (object storage). Playback state
-in a light store so mini-player can persist across screens (optional). Waveform can be a
-simplified animated bar set; the gold pulse reuses the `vbBeat` animation, reduced-motion aware.
-Respect the device silent switch and audio-focus/interruptions.
+**States.** Permission-pending / granted (live preview) / denied (placeholder + "Enable camera" CTA).
+Location on/off / outside-Vietnam (auto-tag suppressed). Streak day N reflects current+1.
 
-**States.** Loading media; playing / paused / buffering; locked (403 → unlock prompt); no beats
-yet for the province.
+**Tokens.** Fixed dark palette (not theme-driven); auto-tag `rgba(242,183,47,0.14)` + gold; shutter
+core `palette.primary`.
 
-**Tokens.** Play button `palette.primary` (glow); pulse `palette.gold`; playlist rows `surface`.
-
-**i18n & a11y.** Keys `content.beats.nowPlaying`, `.whyThisBeat`, `.duration`, `.locked`,
-`.empty`. Transport controls labeled + `accessibilityRole="button"`; expose playback state and
-elapsed/total time to screen readers; captions/transcript for narrated beats where available.
+**i18n & a11y.** Keys `content.camera.autoTag`, `.outsideVN`, `.dayHint`, `.permission.title`,
+`.enable`. Shutter `accessibilityLabel="Capture"`, `accessibilityRole="button"`; flip + gallery
+labeled.
 
 ---
 
-## Trivia
+## Send Beat
 
-> **Product feature — prototype-consistent, forward-looking.** Not present as a screen in the
-> prototype; specified here in the prototype's visual language per the product scope. Validate
-> against the [Content design](../../software-architecture-document/design/content.md).
+**Purpose & entry.** Compose + choose **audience** for the captured Beat. Reached from
+[Camera](#camera-capture) (back returns to camera). Send → [Beat Sent](#beat-sent).
 
-**Purpose & entry.** A short cultural quiz for an unlocked province — reinforces heritage
-learning and can feed engagement. Opened from
-[POI / Heritage Detail](#poi--heritage-detail) or a province's content section. Gated by unlock.
+**Anatomy.** Dark screen: header (back + "Send to…"); a tilted capture **preview card** (`vbPop` in)
+with the location tag; an optional caption field ("Thêm caption…"); a **Friends / Public**
+[SegmentedControl](../components/navigation.md#segmentedcontrol); audience body — for **Friends**, a
+horizontal picker of friend [Avatar](../components/core.md#avatar)s (gold ring + check when selected);
+for **Public**, a globe note ("Everyone exploring this spot will see your beat as social proof."); a
+gold **Send** pill ("Send to N bạn" / "Post publicly").
 
-**Anatomy.** Progress indicator (question i of N, gold segments like onboarding); question card
-(title 18/800 + optional image); 2–4 answer options as full-width
-[SelectRow](../components/core.md#selectrow)s; on answer — correct (gold/`goldDeep`) vs.
-incorrect (crimson) feedback + a localized explanation; a **Next** primary pill; a results
-screen (score, a small reward/`Bolt` badge, "Tiếp tục").
+**React Native notes.** Caption is a `TextInput` over the dark surface. Segmented control drives which
+body renders; **Friends is the default** ([friends-first principle](../../software-architecture-document/architecture-principles.md)).
+Friend selection is multi-select local state; send count updates the CTA label. Send is a mutation
+that captures the Beat and emits `BeatCaptured` (province unlock + streak advance + feed fan-out
+follow asynchronously); route optimistically to Sent. Handle the offline queue per the
+[frontend offline strategy](../../software-architecture-document/frontend-architecture.md#data--state).
 
-**React Native notes.** Questions from the content API (localized). Answer selection locks the
-row set, reveals feedback, enables Next. Results may award a badge (engagement crossover). Keep
-feedback motion subtle (pop on the chosen row), reduced-motion aware. No timers by default
-(accessibility) unless product requires.
+**States.** Friends vs. Public; caption empty/filled; sending (spinner in CTA).
 
-**States.** Question (unanswered → answered/feedback); last question → results; locked province
-→ unlock prompt; empty (no trivia for the province).
+**Tokens.** Dark surfaces `rgba(255,255,255,0.08)`; selected friend ring `palette.gold`; Send pill
+`palette.gold`/`onGold` with gold glow.
 
-**Tokens.** Correct `palette.gold`/`goldDeep`; incorrect `palette.primary`; progress segments
-gold; Next CTA `shadow.glow`.
+**i18n & a11y.** Keys `content.send.title`, `.captionPlaceholder`, `.audience.friends`,
+`.audience.public`, `.publicNote`, `.sendToFriends`, `.postPublicly`. Segmented control
+`accessibilityRole="tablist"`; friend avatars are toggle buttons with selected state.
 
-**i18n & a11y.** Keys `content.trivia.progress`, `.correct`, `.incorrect`, `.explanation`,
-`.next`, `.results.score`, `.results.continue`. Questions/answers/explanations server-localized.
-Options `accessibilityRole="radio"`; correctness announced as text, never color alone;
-feedback via live region.
+---
+
+## Beat Sent
+
+**Purpose & entry.** Success confirmation after sending. Auto-context to
+[Milestone](engagement.md#milestone-celebration) when the streak hits a milestone, else back to the
+[Feed](social.md#friend-feed). "Keep exploring" dismisses.
+
+**Anatomy.** Centered dark screen: 96px gold **check** badge (`vbPop`); "Beat sent!" (display/800,
+white); a summary line ("Landed on N friends' home maps" / "Live on the public map for this spot") +
+the location tag; a streak pill card ("Day N", note e.g. "Milestone reached!" / "Personal best: 21");
+a ghost "Keep exploring" button.
+
+**React Native notes.** Pure confirmation screen; no data entry. Shown **optimistically** while upload
++ fan-out complete ([NFR-PERF-04](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-perf--performance)).
+The streak note is derived (broken-relit vs. milestone vs. best). "Keep exploring" routes to Milestone
+if the streak crossed a threshold, otherwise Feed.
+
+**States.** Friends vs. public summary; milestone-reached vs. normal vs. relit-after-break.
+
+**Tokens.** Fixed dark; check badge `palette.gold`/`onGold`; streak card `rgba(255,255,255,0.07)`.
+
+**i18n & a11y.** Keys `content.sent.title`, `.summaryFriends`, `.summaryPublic`,
+`.streakNote.milestone`, `.streakNote.best`, `.streakNote.relit`, `.keepExploring`. Announce "Beat
+sent" via live region; success not conveyed by color alone (icon + text).
+
+---
+
+## Beat Detail Modal
+
+**Purpose & entry.** A focused full-screen view of a single Beat, opened by tapping any Beat — from
+[Memories](#memories), the [Province Sheet](exploration.md#province-sheet) album, the
+[Friend Feed](social.md#friend-feed), or [Discover](social.md#discover).
+
+**Anatomy.** Blurred dark backdrop; top bar — close [IconButton](../components/core.md#iconbutton),
+author avatar + name + time, and a **Friend** / **Public** badge; a large rounded photo card (`vbPop`)
+with a location tag, the caption, a like control (heart + count), a "Streak beat" gold marker, and a
+**Done** pill.
+
+**React Native notes.** Presented as a modal route over any screen. Photo via `expo-image` from a
+signed URL; a caller not in the Beat's audience gets a 403 and the modal is not opened. Like is an
+optimistic reaction mutation (`BeatReacted`). Honour `useReducedMotion()` for the pop-in.
+
+**States.** Friend vs. public badge; has-caption vs. none; liked vs. not; image vs. striped
+placeholder.
+
+**Tokens.** Backdrop `rgba(13,9,9,0.95)` + blur; Friend badge `palette.gold`; like active
+`palette.primary`.
+
+**i18n & a11y.** Keys `content.beat.friend`, `.public`, `.streakBeat`, `.done`. Caption is user
+content (untranslated); like button labeled with state; focus trapped in the modal.
+
+---
+
+## Memories
+
+**Purpose & entry.** The Explorer's own Beats, time-ordered by month — a personal capture history.
+Reached from the Snap home "History / Memories" affordance. Tapping a tile opens the
+[Beat Detail Modal](#beat-detail-modal).
+
+**Anatomy.** Header (back + "Memories" + profile avatar); stacked month **cards** connected by dotted
+connectors — a faded previous-month card, the current month ("July 2026") as a 7-column grid of 38px
+photo tiles (streak days ringed gold with a flame marker; a "+N" count badge on busy days; empty
+future days as blank tiles); a bottom stats pill ("N Beats · Nd streak").
+
+**React Native notes.** `ScrollView` (or sectioned `FlatList` by month). Tiles are `Pressable` photo
+thumbnails via `expo-image`; the grid mirrors the prototype's calendar layout. Data from
+`['content','memories']`. Streak markers come from the engagement streak overlay.
+
+**States.** Loading skeleton grid; empty ("Chưa có beat nào — capture your first"); current month with
+gold streak ring on captured days.
+
+**Tokens.** Cards `radius.lg` + `surface`/`card`; streak ring `palette.gold`; stats pill `card` +
+`shadow.card`.
+
+**i18n & a11y.** Keys `content.memories.title`, `.beats`, `.streak`, `.empty`. Month headings
+localized; tiles labeled with date + "captured/empty".

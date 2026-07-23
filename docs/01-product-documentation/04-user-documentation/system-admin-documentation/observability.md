@@ -8,9 +8,9 @@ description: "Logs, metrics, traces, health checks, and alerting."
 ## The three signals
 - **Logs:** structured JSON, correlation id per request, no PII.
 - **Metrics:** Micrometer → Prometheus-compatible. Per-module throughput/latency/errors,
-  event-log backlog, and product metrics (unlock/streak rates).
+  event-log backlog, and product metrics (capture/unlock/streak rates).
 - **Traces:** OpenTelemetry; propagate app → API → DB, and across event handling to see the
-  cross-context effects of `ProvinceUnlocked` etc.
+  cross-context fan-out of `BeatCaptured` (unlock + streak + feed) etc.
 
 ## Health & readiness
 - Spring Boot Actuator `/actuator/health` gates deployments.

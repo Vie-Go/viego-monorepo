@@ -8,27 +8,27 @@ description: "Detailed design of the identity module: Explorer accounts, OIDC au
 - **Module:** `identity` · **Core feature:** Authentication ·
   **Phase:** [P1 — Identity & foundations](../../../../02-process-documentation/plans-estimates-schedules.md)
 - **Spec:** [`authentication.feature`](../../../01-core-specifications/executable-specifications/features/identity/authentication.feature)
-- **Requirements:** [FR-ID-01…08](../../../01-core-specifications/requirements/functional-requirements.md#fr-id--identity-authentication) · constrained by [NFR-SEC-*](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-sec--security--privacy)
+- **Requirements:** [FR-ID-01…09](../../../01-core-specifications/requirements/functional-requirements.md#fr-id--identity-authentication) · constrained by [NFR-SEC-*](../../../01-core-specifications/requirements/non-functional-requirements.md#nfr-sec--security--privacy)
 - **Upstream supplier** to every other context — nothing works without an authenticated Explorer,
   which is why this is the first phase and the gate for the whole [critical path](../../../../02-process-documentation/plans-estimates-schedules.md).
 
 ## Purpose & scope
 
 Let a visitor sign in with a supported [Auth Provider](../ddd-and-domain-model.md)
-and become an **Explorer** whose **Preferences** (language + theme) persist across sessions and
-devices. On first sign-in, publish **`ExplorerRegistered`** so Exploration, Engagement, and
-Content can provision their per-Explorer state.
+and become an **Explorer** with a unique **handle** (`@name`) whose **Preferences** (language +
+theme) persist across sessions and devices. On first sign-in, publish **`ExplorerRegistered`** so
+Exploration, Content, Engagement, and Social can provision their per-Explorer state.
 
 In scope: Email + Google now; JWT issue/refresh; preferences. Deferred: Facebook + Zalo
 (fast-follow, may slip to P5) and cross-provider **account linking** (open decision).
 
 ## Domain model
 
-- **Explorer** *(aggregate root)* — `id: ExplorerId`, `authProviders: AuthProvider[]`,
+- **Explorer** *(aggregate root)* — `id: ExplorerId`, `handle`, `authProviders: AuthProvider[]`,
   `profile`, `preferences: Preferences`.
-  - *Invariant:* at least one `AuthProvider`; an Explorer is created exactly once per identity
-    (first sign-in) — repeat sign-ins authenticate, they do not re-register.
-- **Preferences** *(value object)* — `{ language: vi|en, theme: light|dark }`. Replaced wholesale
+  - *Invariant:* `handle` is unique; at least one `AuthProvider`; an Explorer is created exactly once
+    per identity (first sign-in) — repeat sign-ins authenticate, they do not re-register.
+- **Preferences** *(value object)* — `{ language: vi|en|…, theme: light|dark }`. Replaced wholesale
   on update (VOs are immutable).
 - **AuthProvider** *(value object)* — `{ kind: email|google|facebook|zalo, ref }` where `ref` is
   the provider's subject id (never a password — VieGo is an OIDC relying party, it stores no
@@ -40,7 +40,7 @@ In scope: Email + Google now; JWT issue/refresh; preferences. Deferred: Facebook
 |-----------|------|------------------|
 | Command | `RegisterOrSignIn(provider, token)` | Validate the OIDC token; create the Explorer on first sight, else authenticate. |
 | Command | `UpdatePreferences(explorerId, prefs)` | Replace preferences; emit `PreferencesUpdated`. |
-| **Publishes** | **`ExplorerRegistered`** *(first sign-in only)* | `{ explorerId, at }` — fans out to all contexts. |
+| **Publishes** | **`ExplorerRegistered`** *(first sign-in only)* | `{ explorerId, handle, at }` — fans out to all contexts. |
 | **Publishes** | `PreferencesUpdated` | `{ explorerId, language, theme, at }`. |
 
 Events are immutable past-tense records in `identity/api/events`, carrying **ids/primitives only**.
@@ -81,7 +81,7 @@ POST /api/v1/auth/google
       → Explorer not found → create aggregate (default prefs vi/light)
       → publish ExplorerRegistered           (recorded in event log, same tx)
   → issue access + refresh JWT
-  ⇢ exploration / engagement / content listeners provision per-Explorer state (async)
+  ⇢ exploration / content / engagement / social listeners provision per-Explorer state (async)
 ```
 
 `@ready` scenario *"Preferences persist across sessions"* is satisfied because preferences live on

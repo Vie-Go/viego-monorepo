@@ -19,5 +19,6 @@ change a decision, add a new ADR that supersedes the old one.
 | [0007](0007-redis-cache-and-token-rotation.md) | Redis for caching and token rotation | Proposed |
 | [0008](0008-expo-and-eas-toolchain.md) | Expo + EAS for the React Native toolchain | Accepted |
 | [0009](0009-spring-boot-4-and-spring-cli-scaffolding.md) | Spring Boot 4 + Spring CLI scaffolding | Accepted |
+| [0010](0010-social-bounded-context-and-beat-backbone.md) | Social bounded context + `BeatCaptured` backbone | Accepted |
 
 Filename pattern: `NNNN-short-kebab-title.md`. Statuses: Proposed · Accepted · Superseded · Deprecated.

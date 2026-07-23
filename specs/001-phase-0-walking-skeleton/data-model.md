@@ -1,6 +1,6 @@
 # Phase 1 Data Model — Walking Skeleton
 
-Phase 0 introduces **no domain data** — the four product contexts are empty skeletons. The "entities"
+Phase 0 introduces **no domain data** — the five product contexts are empty skeletons. The "entities"
 here are the structural units the phase creates plus the one non-domain status resource.
 
 ## Structural units (not persisted domain data)
@@ -10,10 +10,11 @@ One Spring Modulith `@ApplicationModule` per bounded context. No aggregates, tab
 
 | Module | Package | Owns (later) | Phase 0 state |
 |--------|---------|--------------|---------------|
-| `identity` | `com.viego.identity` | Explorer, Preferences, Auth | empty skeleton + `api` |
-| `exploration` | `com.viego.exploration` | Collection, Province, Ward | empty skeleton + `api` |
-| `engagement` | `com.viego.engagement` | Streak, Discovery Ritual | empty skeleton + `api` |
-| `content` | `com.viego.content` | Regional Heritage, Cultural Beat, Trivia | empty skeleton + `api` |
+| `identity` | `com.viego.identity` | Explorer, Handle, Preferences, Auth | empty skeleton + `api` |
+| `exploration` | `com.viego.exploration` | Collection, Province, Ward, Place | empty skeleton + `api` |
+| `content` | `com.viego.content` | Beat, Review, Memories | empty skeleton + `api` |
+| `engagement` | `com.viego.engagement` | Streak, Milestone, Notification | empty skeleton + `api` |
+| `social` | `com.viego.social` | Friendship, Feed, Reaction | empty skeleton + `api` |
 | `shared` | `com.viego.shared` | stable value objects only (ids, `LocalizedText`) | thin kernel, no logic |
 
 **Rules (enforced by `verify()`):** each module exposes only its `api` named interface; `domain` is
@@ -28,8 +29,9 @@ Phase 0. Startup succeeds against an empty migration set (FR-008).
 db/migration/
 ├── identity/       (empty)
 ├── exploration/    (empty)
+├── content/        (empty)
 ├── engagement/     (empty)
-└── content/        (empty)
+└── social/         (empty)
 ```
 
 ## Non-domain resource

@@ -13,16 +13,16 @@ chrome across [screens](../screens/).
 ## BottomTabBar
 
 The floating, blurred bottom navigation with a raised center camera FAB. Shows on **Map ·
-Beats · Explore · Me**; hidden across the capture flow and full-screen surfaces.
+Beats · Discover · Me**; hidden across the capture flow and full-screen surfaces.
 
 - **Shape.** Absolutely positioned, 18px side insets, ~26px above the home indicator; height 66;
   `radius.pill` (33); `navBg` fill with `BlurView` (blur 16); `shadow.card`; 1.5px `line`
-  border. Five slots: Map, Beats, **Camera FAB** (center), Explore, Me.
+  border. Five slots: Map, Beats, **Camera FAB** (center), Discover, Me.
 - **Tab item.** Pill (height 44); **active** = `pill` fill + `pillText` icon **and its label**
-  ("Map"/"Beats"/"Explore"/"Me"); **inactive** = transparent + `sub` icon, no label. Icon swaps
+  ("Map"/"Beats"/"Discover"/"Me"); **inactive** = transparent + `sub` icon, no label. Icon swaps
   linear→bold on active.
 - **Camera FAB.** 56px crimson circle, white camera icon, `translateY(-10)` to overhang, 4px
-  `bg` border ring, crimson glow — always present; opens [Camera](../screens/engagement.md#camera-capture).
+  `bg` border ring, crimson glow — always present; opens [Camera](../screens/content.md#camera-capture).
 - **RN notes.** Custom `tabBar` in a `BottomTabNavigator`; the FAB is a center button that
   triggers a modal navigation rather than a tab route. Respect safe-area bottom inset. Hide via
   per-screen `tabBarStyle`/options on capture + detail screens.
@@ -62,7 +62,7 @@ future contextual sheet).
 
 ## SegmentedControl
 
-Two-option toggle (Friends / Public on [Send Beat](../screens/engagement.md#send-beat)).
+Two-option toggle (Friends / Public on [Send Beat](../screens/content.md#send-beat)).
 
 - **Shape.** Pill track (`rgba(255,255,255,0.08)` on dark), 2 equal segments; **selected** =
   `palette.gold` fill + `palette.onGold` text; **unselected** = transparent + muted text; 0.2s

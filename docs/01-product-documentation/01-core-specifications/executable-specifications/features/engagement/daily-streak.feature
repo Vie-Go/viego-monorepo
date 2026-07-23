@@ -1,39 +1,46 @@
-@engagement @draft
-Feature: Daily discovery streak
+@engagement
+Feature: Daily capture streak
   As an Explorer
-  I want my consecutive days of discovery to be counted
-  So that exploring Vietnamese culture becomes a rewarding daily ritual
+  I want each day I capture a Beat to keep my streak burning
+  So that exploring Vietnam becomes a rewarding daily ritual
 
   Background:
     Given I am an authenticated Explorer
 
   @ready
-  Scenario: Completing the ritual advances the streak once per day
-    Given my current streak is 3
-    And I have not completed today's discovery ritual
-    When I complete today's discovery ritual
-    Then my current streak is 4
+  Scenario: Capturing a Beat advances the streak once per day
+    Given my current streak is 6
+    And I have not captured a Beat today
+    When a "BeatCaptured" event for me is processed today
+    Then my current streak is 7
     And a "StreakAdvanced" event is published
 
   @ready
-  Scenario: The streak does not advance twice on the same day
-    Given my current streak is 4
-    And I have already completed today's discovery ritual
-    When I complete the discovery ritual again today
-    Then my current streak remains 4
+  Scenario: A second Beat on the same day does not advance the streak twice
+    Given my current streak is 7
+    And I have already captured a Beat today
+    When a "BeatCaptured" event for me is processed again today
+    Then my current streak remains 7
 
   @ready
   Scenario: Missing a day breaks the streak
-    Given my current streak is 4
-    And my last ritual was 2 days ago
+    Given my current streak is 12
+    And my last capture was 2 days ago
     When the streak is evaluated
     Then my current streak is 0
-    And my longest streak is still at least 4
+    And my longest streak is still at least 12
     And a "StreakBroken" event is published
 
+  @ready
+  Scenario: Reaching a milestone awards a badge
+    Given my current streak is 6
+    When a "BeatCaptured" event for me is processed today
+    Then my current streak is 7
+    And a "MilestoneReached" event for the badge "Tuần Rực Lửa" is published
+
   @draft
-  Scenario: Definition of the discovery ritual
-    # TODO(product): define what completes the ritual and the timezone for "a day"
-    Given the discovery ritual is defined
-    When I perform the qualifying activity
-    Then it counts toward today's streak
+  Scenario: Definition of the day boundary
+    # TODO(product): fix the timezone rule for what counts as "a day" (FR-EN-09)
+    Given the streak day boundary is defined
+    When I capture a Beat just before the boundary
+    Then it counts toward the correct day's streak

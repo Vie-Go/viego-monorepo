@@ -18,8 +18,9 @@ scenarios use the [ubiquitous language](../../../../02-process-documentation/sdd
 features/
 ├── identity/       authentication.feature
 ├── exploration/    province-unlocking.feature
+├── content/        beat-capture.feature
 ├── engagement/     daily-streak.feature
-└── content/        heritage-access.feature
+└── social/         social-feed.feature
 ```
 
 ## Authoring rules
@@ -31,5 +32,6 @@ features/
 - Keep VI/EN, theme, and accessibility acceptance as scenarios or checklist tags where testable.
 
 ## Status
-These are **seed** specifications. `@draft` scenarios (e.g. the unlock condition) need product
-decisions before they become `@ready`.
+These are **seed** specifications. `@draft` scenarios (e.g. the streak day/timezone boundary, review
+eligibility) need product decisions before they become `@ready`. The core loop — **capture a Beat →
+unlock the province, advance the streak, fan out to feeds** — is `@ready`.

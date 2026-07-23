@@ -17,9 +17,10 @@ each module is actually built*. There is **one design document per
 | Design | Module | Core feature (spec) | Backbone event | Phase |
 |--------|--------|---------------------|----------------|-------|
 | [Identity](identity.md) | `identity` | [Authentication](../../../01-core-specifications/executable-specifications/features/identity/authentication.feature) | `ExplorerRegistered` | [P1](../../../../02-process-documentation/plans-estimates-schedules.md) |
-| [Exploration](exploration.md) | `exploration` | [Province unlocking](../../../01-core-specifications/executable-specifications/features/exploration/province-unlocking.feature) | `ProvinceUnlocked` | [P2](../../../../02-process-documentation/plans-estimates-schedules.md) |
-| [Engagement](engagement.md) | `engagement` | [Daily streak](../../../01-core-specifications/executable-specifications/features/engagement/daily-streak.feature) | `StreakAdvanced` / `StreakBroken` | [P3](../../../../02-process-documentation/plans-estimates-schedules.md) |
-| [Content](content.md) | `content` | [Heritage access](../../../01-core-specifications/executable-specifications/features/content/heritage-access.feature) | *(consumer of `ProvinceUnlocked`)* | [P4](../../../../02-process-documentation/plans-estimates-schedules.md) |
+| [Exploration](exploration.md) | `exploration` | [Map, places & province unlocking](../../../01-core-specifications/executable-specifications/features/exploration/province-unlocking.feature) | `ProvinceUnlocked` *(from `BeatCaptured`)* | [P2](../../../../02-process-documentation/plans-estimates-schedules.md) |
+| [Content](content.md) | `content` | [Beat capture](../../../01-core-specifications/executable-specifications/features/content/beat-capture.feature) | **`BeatCaptured`** *(the backbone)* | [P3](../../../../02-process-documentation/plans-estimates-schedules.md) |
+| [Engagement](engagement.md) | `engagement` | [Daily streak](../../../01-core-specifications/executable-specifications/features/engagement/daily-streak.feature) | `StreakAdvanced` / `StreakBroken` / `MilestoneReached` | [P4](../../../../02-process-documentation/plans-estimates-schedules.md) |
+| [Social](social.md) | `social` | [Friends, feeds & reactions](../../../01-core-specifications/executable-specifications/features/social/social-feed.feature) | `FriendAdded` / `BeatReacted` | [P5](../../../../02-process-documentation/plans-estimates-schedules.md) |
 
 > The `shared` module is an open kernel of cross-cutting value objects (ids, `LocalizedText`) — it
 > has no core feature and therefore no design doc; it is documented in the

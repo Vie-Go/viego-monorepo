@@ -35,8 +35,9 @@ per Constitution Principle V. Update the plan's open-decision row to Resolved.
 ## R2. Module-boundary enforcement — Spring Modulith `verify()` from day one
 
 **Decision**: A single `ModulithVerificationTest` calling `ApplicationModules.of(VieGoApplication.class).verify()`
-runs in the backend test suite; five modules (`identity`, `exploration`, `engagement`, `content`,
-`shared`) exist as empty `@ApplicationModule` packages with a published `api` named interface each.
+runs in the backend test suite; six modules (`identity`, `exploration`, `content`, `engagement`,
+`social`, `shared`) exist as empty `@ApplicationModule` packages with a published `api` named
+interface each.
 
 **Rationale**: The [Module Boundary Rules](../../docs/02-process-documentation/sdd-standards/module-boundary-rules.md)
 and [architecture principles](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/architecture-principles.md)
@@ -62,7 +63,7 @@ approach; establishes the contract-first seam (Constitution I) with a non-domain
 ## R4. Local datastore & migrations — Docker Compose Postgres + Flyway (empty)
 
 **Decision**: `compose.yaml` runs Postgres locally; Flyway is configured with per-module migration
-locations (`db/migration/{identity,exploration,engagement,content}`) containing **no migrations yet**;
+locations (`db/migration/{identity,exploration,content,engagement,social}`) containing **no migrations yet**;
 the app starts cleanly with an empty migration set.
 
 **Rationale**: [ADR-0005](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0005-postgresql-and-event-driven-integration.md)

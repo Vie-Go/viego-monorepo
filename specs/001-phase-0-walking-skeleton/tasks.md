@@ -10,7 +10,7 @@ description: "Task list for Phase 0 — Walking Skeleton"
 
 **Tests**: This is a foundational/infra phase. The only test tasks included are ones that are
 themselves **deliverables** of the phase (the module-boundary `verify()` test and the `/status`
-contract test). No broader TDD suite is added — the four product contexts are empty.
+contract test). No broader TDD suite is added — the five product contexts are empty.
 
 **Organization**: Grouped by user story (US1–US4 from spec.md) so each is an independently testable
 increment. Path prefixes match the CI path-filters: `backend/**`, `mobile/**`, `contracts/**`.
@@ -42,7 +42,7 @@ increment. Path prefixes match the CI path-filters: `backend/**`, `mobile/**`, `
 
 - [X] T006 Create backend entrypoint `backend/src/main/java/com/viego/VieGoApplication.java` + `backend/src/main/resources/application.yml` (context path `/api/v1`, datasource config)
 - [X] T007 [P] Add local Postgres `backend/compose.yaml` (FR-009)
-- [X] T008 Wire Flyway with per-module empty locations `backend/src/main/resources/db/migration/{identity,exploration,engagement,content}/` so the app boots with zero migrations (FR-008)
+- [X] T008 Wire Flyway with per-module empty locations `backend/src/main/resources/db/migration/{identity,exploration,content,engagement,social}/` so the app boots with zero migrations (FR-008)
 - [ ] T009 Verify the backend boots locally against Compose Postgres (`./mvnw spring-boot:run`) — foundational checkpoint · ⏸ **BLOCKED (env): Docker daemon not running in this sandbox.** Code is ready; run `docker compose up -d && ./mvnw spring-boot:run` locally.
 - [X] T010 [P] Verify the mobile app bootstraps and renders `mobile/app/App.tsx` via `npm run start` on a simulator/dev build · ✅ scaffold complete, deps installed, `npx tsc --noEmit` green — ⚠ simulator render not run in sandbox (no simulator)
 - [X] T011 [P] Add backend `backend/Dockerfile` (or Spring Boot buildpacks config) producing an OCI image (FR-010) — prerequisite for the dev slice (US1) and CI deploy (US3) · ✅ Dockerfile written + deployable jar built (`./mvnw package`); ⚠ `docker build` not run (daemon down)
@@ -71,11 +71,11 @@ increment. Path prefixes match the CI path-filters: `backend/**`, `mobile/**`, `
 
 ## Phase 4: User Story 2 — Module boundaries verified from day one (Priority: P2)
 
-**Goal**: The five modules exist as empty skeletons with `ApplicationModules.verify()` enforcing boundaries on every build.
+**Goal**: The six modules exist as empty skeletons with `ApplicationModules.verify()` enforcing boundaries on every build.
 
 **Independent Test**: Run the backend build — verification passes with empty modules; introduce a deliberate cross-module violation — the build fails.
 
-- [X] T019 [P] [US2] Create the five module packages with `@ApplicationModule` + `package-info.java` + published `api` named interface: `identity`, `exploration`, `engagement`, `content`, `shared` under `backend/src/main/java/com/viego/*` (FR-004; [Module Boundary Rules](../../docs/02-process-documentation/sdd-standards/module-boundary-rules.md))
+- [X] T019 [P] [US2] Create the six module packages with `@ApplicationModule` + `package-info.java` + published `api` named interface: `identity`, `exploration`, `content`, `engagement`, `social`, `shared` under `backend/src/main/java/com/viego/*` (FR-004; [Module Boundary Rules](../../docs/02-process-documentation/sdd-standards/module-boundary-rules.md))
 - [X] T020 [US2] Implement `backend/src/test/java/com/viego/ModulithVerificationTest.java` calling `ApplicationModules.of(VieGoApplication.class).verify()` (FR-005)
 - [X] T021 [US2] Prove the gate bites: temporarily add a cross-module internal import, confirm the build **fails**, revert; document the check in [quickstart.md](quickstart.md) (US2 scenario 2, SC-004)
 

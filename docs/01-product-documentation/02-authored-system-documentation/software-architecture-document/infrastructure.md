@@ -13,7 +13,7 @@ The physical/deployment view of the [container architecture](README.md#c4-level-
 - **Database:** managed PostgreSQL; schema-per-module in a single database initially.
 - **Cache / token store:** managed **Redis** — a non-authoritative cache for hot, slow-changing
   reads and the server-side store for refresh-token rotation ([ADR 0007](decisions/0007-redis-cache-and-token-rotation.md)).
-- **Media:** object storage + CDN for Cultural Beats audio/images (signed URLs).
+- **Media:** object storage + CDN for Beat photos (served via short-lived signed URLs).
 - **Broker (future):** Kafka/RabbitMQ, introduced only when a module is
   [extracted](service-extraction-playbook.md).
 

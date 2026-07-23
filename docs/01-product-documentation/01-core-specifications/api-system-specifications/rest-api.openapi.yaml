@@ -4,6 +4,8 @@ info:
   version: 1.0.0
   description: >
     REST contract between the VieGo React Native app and the Spring Boot backend.
+    VieGo is a social capture app: the central act is capturing a Beat (a photo check-in),
+    which unlocks the province, advances the streak, and fans out to friends' feeds.
     Source of truth — Swagger UI / Redoc and client models are generated from this file.
 servers:
   - url: https://api.viego.app/api/v1
@@ -12,16 +14,53 @@ servers:
     description: Local
 tags:
   - name: identity
-    description: Explorer accounts, auth, preferences
+    description: Explorer accounts, handles, auth, preferences
   - name: exploration
-    description: Map, provinces, unlocking, collection
-  - name: engagement
-    description: Streaks, rituals, rewards
+    description: Map, provinces, places (POIs), unlocking, collection, search
   - name: content
-    description: Heritage, cultural beats, trivia
+    description: Beats (photo check-ins), reviews, memories
+  - name: engagement
+    description: Streaks, milestones, notifications
+  - name: social
+    description: Friends, invite links, feeds, reactions
 security:
   - bearerAuth: []
 paths:
+  /auth/{provider}:
+    post:
+      tags: [identity]
+      summary: Exchange a provider token for a VieGo session
+      security: []
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema: { type: string, enum: [email, google, facebook, zalo] }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token: { type: string, description: OIDC/provider token }
+      responses:
+        '200':
+          description: Signed in
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+  /auth/refresh:
+    post:
+      tags: [identity]
+      summary: Rotate the access token (refresh-token rotation with reuse detection)
+      security: []
+      responses:
+        '200':
+          description: Rotated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
   /explorers/me:
     get:
       tags: [identity]
@@ -32,10 +71,25 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Explorer' }
+  /explorers/me/preferences:
+    put:
+      tags: [identity]
+      summary: Update language/theme preferences (emits PreferencesUpdated)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Preferences' }
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Preferences' }
   /provinces:
     get:
       tags: [exploration]
-      summary: List provinces with the Explorer's unlocked status
+      summary: List provinces with unlocked status and public check-in heat
       parameters:
         - $ref: '#/components/parameters/AcceptLanguage'
       responses:
@@ -46,26 +100,22 @@ paths:
               schema:
                 type: array
                 items: { $ref: '#/components/schemas/Province' }
-  /provinces/{provinceId}/unlock:
-    post:
+  /provinces/{provinceId}:
+    get:
       tags: [exploration]
-      summary: Unlock a province for the authenticated Explorer
+      summary: A province with its places and public beats
       parameters:
         - name: provinceId
           in: path
           required: true
           schema: { type: string }
+        - $ref: '#/components/parameters/AcceptLanguage'
       responses:
         '200':
-          description: Unlocked
+          description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Province' }
-        '409':
-          description: Already unlocked
-          content:
-            application/problem+json:
-              schema: { $ref: '#/components/schemas/Problem' }
+              schema: { $ref: '#/components/schemas/ProvinceDetail' }
   /collection/me:
     get:
       tags: [exploration]
@@ -78,22 +128,12 @@ paths:
               schema:
                 type: array
                 items: { $ref: '#/components/schemas/Province' }
-  /streaks/me:
+  /places/{placeId}:
     get:
-      tags: [engagement]
-      summary: The Explorer's current streak
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Streak' }
-  /heritage/{provinceId}:
-    get:
-      tags: [content]
-      summary: Regional heritage for a province (requires it to be unlocked)
+      tags: [exploration]
+      summary: A place (POI) with local context, community beats, and reviews
       parameters:
-        - name: provinceId
+        - name: placeId
           in: path
           required: true
           schema: { type: string }
@@ -103,12 +143,206 @@ paths:
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/RegionalHeritage' }
+              schema: { $ref: '#/components/schemas/Place' }
+  /search:
+    get:
+      tags: [exploration]
+      summary: Search provinces, places, and dishes
+      parameters:
+        - name: q
+          in: query
+          required: false
+          schema: { type: string }
+        - name: category
+          in: query
+          required: false
+          schema: { type: string, enum: [coffee, food, heritage, nightlife, nature, hidden] }
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/SearchResult' }
+  /beats:
+    post:
+      tags: [content]
+      summary: Capture a Beat (emits BeatCaptured — unlocks province, advances streak, fans out to feeds)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CaptureBeatRequest' }
+      responses:
+        '201':
+          description: Captured
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Beat' }
+  /beats/{beatId}:
+    get:
+      tags: [content]
+      summary: Get a Beat (visible only to its audience)
+      parameters:
+        - name: beatId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Beat' }
         '403':
-          description: Province not unlocked
+          description: Not in the Beat's audience
           content:
             application/problem+json:
               schema: { $ref: '#/components/schemas/Problem' }
+  /memories/me:
+    get:
+      tags: [content]
+      summary: The Explorer's own Beats, time-ordered by month
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Beat' }
+  /places/{placeId}/reviews:
+    post:
+      tags: [content]
+      summary: Leave a review on a place (requires a Beat there — verified by location)
+      parameters:
+        - name: placeId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string }
+                rating: { type: number }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Review' }
+        '403':
+          description: No Beat at this place
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+  /streaks/me:
+    get:
+      tags: [engagement]
+      summary: The Explorer's current + longest streak and this-week view
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Streak' }
+  /notifications/me:
+    get:
+      tags: [engagement]
+      summary: The Explorer's notifications
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Notification' }
+  /feed/me:
+    get:
+      tags: [social]
+      summary: The friend feed — Beats whose audience includes me, freshest first
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Beat' }
+  /discover:
+    get:
+      tags: [social]
+      summary: The public Discover feed
+      parameters:
+        - name: near
+          in: query
+          required: false
+          schema: { type: string, description: place or province id to bias results }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Beat' }
+  /friends:
+    get:
+      tags: [social]
+      summary: The Explorer's friends
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Friend' }
+  /friends/add/{handle}:
+    post:
+      tags: [social]
+      summary: Add a friend by handle (from an invite link viego.app/add/@handle) — emits FriendAdded
+      parameters:
+        - name: handle
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '201':
+          description: Friend added
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Friend' }
+  /beats/{beatId}/reactions:
+    post:
+      tags: [social]
+      summary: React to a Beat (like/bolt) — emits BeatReacted
+      parameters:
+        - name: beatId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kind: { type: string, enum: [like, bolt] }
+      responses:
+        '200':
+          description: Reacted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Beat' }
 components:
   securitySchemes:
     bearerAuth:
@@ -120,47 +354,148 @@ components:
       name: Accept-Language
       in: header
       required: false
-      schema: { type: string, enum: [vi, en], default: vi }
+      schema: { type: string, enum: [vi, en, ko, ja, fr], default: vi }
   schemas:
     LocalizedText:
       type: object
       properties:
         vi: { type: string }
         en: { type: string }
+    Session:
+      type: object
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        explorer: { $ref: '#/components/schemas/Explorer' }
+    Preferences:
+      type: object
+      properties:
+        language: { type: string, enum: [vi, en, ko, ja, fr] }
+        theme: { type: string, enum: [light, dark] }
     Explorer:
       type: object
       properties:
         id: { type: string }
-        displayName: { type: string }
-        preferences:
-          type: object
-          properties:
-            language: { type: string, enum: [vi, en] }
-            theme: { type: string, enum: [light, dark] }
+        handle: { type: string, example: '@minh.dq' }
+        displayName: { type: string, example: 'Minh Đinh' }
+        homeProvince: { type: string, example: 'Hà Nội' }
+        preferences: { $ref: '#/components/schemas/Preferences' }
     Province:
       type: object
       properties:
         id: { type: string }
         name: { $ref: '#/components/schemas/LocalizedText' }
         unlocked: { type: boolean }
+        publicBeats: { type: integer, description: public check-ins, drives map heat }
+        myBeats: { type: integer, description: my Beats in this province }
+    ProvinceDetail:
+      allOf:
+        - $ref: '#/components/schemas/Province'
+        - type: object
+          properties:
+            places:
+              type: array
+              items: { $ref: '#/components/schemas/PlaceSummary' }
+            beats:
+              type: array
+              items: { $ref: '#/components/schemas/Beat' }
+    PlaceSummary:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        category: { type: string, enum: [coffee, food, heritage, nightlife, nature, hidden] }
+        rating: { type: number }
+    Place:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        provinceId: { type: string }
+        category: { type: string, enum: [coffee, food, heritage, nightlife, nature, hidden] }
+        localName: { type: string, description: 'locals-say tagline' }
+        description: { $ref: '#/components/schemas/LocalizedText' }
+        hours: { type: string }
+        cost: { type: string }
+        localTip: { type: string }
+        rating: { type: number }
+        checkins: { type: string }
+        friendsHere: { type: integer }
+        beats:
+          type: array
+          items: { $ref: '#/components/schemas/Beat' }
+        reviews:
+          type: array
+          items: { $ref: '#/components/schemas/Review' }
+    SearchResult:
+      type: object
+      properties:
+        kind: { type: string, enum: [Province, Spot] }
+        id: { type: string }
+        title: { type: string }
+        subtitle: { type: string }
+    CaptureBeatRequest:
+      type: object
+      required: [photoRef, audience]
+      properties:
+        photoRef: { type: string, description: 'upload handle / object key of the photo' }
+        placeId: { type: string, nullable: true }
+        provinceId: { type: string, description: 'resolved from location; suppressed outside Vietnam' }
+        caption: { type: string, nullable: true }
+        audience: { type: string, enum: [friends, public] }
+        recipients:
+          type: array
+          items: { type: string, description: 'friend handle; required when audience=friends' }
+    Beat:
+      type: object
+      properties:
+        id: { type: string }
+        explorerHandle: { type: string }
+        who: { type: string, description: 'display name' }
+        photoUrl: { type: string, format: uri, description: 'short-lived signed/CDN URL' }
+        placeId: { type: string, nullable: true }
+        place: { type: string, description: 'place — province label' }
+        provinceId: { type: string }
+        caption: { type: string, nullable: true }
+        audience: { type: string, enum: [friends, public] }
+        isFriend: { type: boolean, description: 'author is a friend of the viewer' }
+        likes: { type: integer }
+        capturedAt: { type: string, format: date-time }
+    Review:
+      type: object
+      properties:
+        explorerHandle: { type: string }
+        who: { type: string }
+        note: { type: string }
+        rating: { type: number }
+        capturedAt: { type: string, format: date-time }
     Streak:
       type: object
       properties:
         current: { type: integer }
         longest: { type: integer }
-        lastRitualDate: { type: string, format: date }
-    RegionalHeritage:
-      type: object
-      properties:
-        provinceId: { type: string }
-        beats:
+        lastCaptureDate: { type: string, format: date }
+        thisWeek:
           type: array
           items:
             type: object
             properties:
-              id: { type: string }
-              title: { $ref: '#/components/schemas/LocalizedText' }
-              audioUrl: { type: string, format: uri }
+              day: { type: string, example: 'T2' }
+              captured: { type: boolean }
+    Notification:
+      type: object
+      properties:
+        kind: { type: string, enum: [streak, like, friend-beat, milestone, place-nearby] }
+        title: { type: string }
+        subtitle: { type: string }
+        time: { type: string }
+        unread: { type: boolean }
+    Friend:
+      type: object
+      properties:
+        handle: { type: string }
+        displayName: { type: string }
+        online: { type: boolean }
     Problem:
       description: RFC 9457 Problem Details
       type: object

@@ -6,7 +6,7 @@ info:
     Non-domain platform endpoints for the Phase 0 walking skeleton. Establishes the
     contract-first seam (Constitution Principle I) with a trivial status resource the
     mobile app calls to prove end-to-end connectivity. No product behaviour here — the
-    four bounded contexts (identity/exploration/engagement/content) are empty skeletons.
+    five bounded contexts (identity/exploration/content/engagement/social) are empty skeletons.
 servers:
   - url: https://dev.api.viego.example/api/v1
     description: dev environment

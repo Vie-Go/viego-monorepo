@@ -1,8 +1,9 @@
 # VieGo — Project Documentation
 
-Knowledge base for **VieGo**: a gamified app for discovering, unlocking, and
-collecting Vietnam's regional cultural heritage — province by province. It serves both
-developers and AI agents.
+Knowledge base for **VieGo**: a social capture app for Vietnam — snap a photo (a **Beat**) that
+auto-tags where you are, keeps your daily streak alive, unlocks the province, and lands on your
+friends' maps and feeds. Province by province, one Beat at a time. It serves both developers and AI
+agents.
 
 **Stack:** Spring Boot (Java 25) modular monolith · React Native (iOS/Android) · PostgreSQL.
 **Method:** Spec-Driven Development (SDD) with a Domain-Driven Design (DDD) model.

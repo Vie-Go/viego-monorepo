@@ -19,9 +19,10 @@ description: "Conventions for REST/OpenAPI and event/AsyncAPI contracts."
 | Prefix | Module |
 |--------|--------|
 | `/api/v1/auth`, `/api/v1/explorers` | identity |
-| `/api/v1/provinces`, `/api/v1/collection` | exploration |
-| `/api/v1/streaks`, `/api/v1/rituals` | engagement |
-| `/api/v1/heritage`, `/api/v1/beats`, `/api/v1/trivia` | content |
+| `/api/v1/provinces`, `/api/v1/collection`, `/api/v1/places`, `/api/v1/search` | exploration |
+| `/api/v1/beats`, `/api/v1/memories`, `/api/v1/places/{id}/reviews` | content |
+| `/api/v1/streaks`, `/api/v1/notifications` | engagement |
+| `/api/v1/feed`, `/api/v1/discover`, `/api/v1/friends` | social |
 
 ## Events (AsyncAPI)
 - Past-tense names in `<module>.api.events`; payloads carry **ids/primitives only**.

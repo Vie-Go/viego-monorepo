@@ -121,14 +121,12 @@ Horizontal list item (settings rows, search results, notifications, spots-in-pro
 
 ## SelectRow
 
-Selectable option row (language picker, trivia answers).
+Selectable option row (language picker, settings options).
 
 - **Shape.** Row with leading marker (code chip / letter), label + subtitle, trailing radio dot;
   selected → `palette.primary` border + 6%-crimson fill + filled dot.
-- **Props.** `label`, `subtitle?`, `leading?`, `selected`, `state?` (`default` | `correct` |
-  `incorrect` for trivia), `onPress`.
-- **A11y.** `accessibilityRole="radio"` + `accessibilityState={{selected}}`; correctness in the
-  label, not color alone.
+- **Props.** `label`, `subtitle?`, `leading?`, `selected`, `onPress`.
+- **A11y.** `accessibilityRole="radio"` + `accessibilityState={{selected}}`.
 
 ## SocialAuthButton
 
@@ -151,7 +149,7 @@ Compact metric tile (profile stats).
 
 ## ProgressBars
 
-Segmented progress (onboarding, trivia).
+Segmented progress (onboarding slides).
 
 - **Shape.** N equal 3px segments, `space.sm` gap; filled = `palette.gold`, unfilled = 35%-white
   (on dark) / `line`.

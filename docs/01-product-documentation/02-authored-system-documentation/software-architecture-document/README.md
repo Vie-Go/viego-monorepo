@@ -14,7 +14,7 @@ services.
 | Doc | Covers |
 |-----|--------|
 | [Architecture Principles](architecture-principles.md) | Non-negotiable rules governing all design & code |
-| [DDD & Domain Model](ddd-and-domain-model.md) | Ubiquitous language, context map, aggregates, the four bounded contexts |
+| [DDD & Domain Model](ddd-and-domain-model.md) | Ubiquitous language, context map, aggregates, the five bounded contexts |
 | [Backend — Modular Monolith](backend-modular-monolith.md) | Spring Modulith module structure, events, persistence |
 | [Service Extraction Playbook](service-extraction-playbook.md) | Turning a module into a standalone service |
 | [Frontend Architecture](frontend-architecture.md) | React Native app structure, data/state, navigation |
@@ -44,20 +44,21 @@ flowchart TD
   Explorer([Explorer]) -->|uses| App[VieGo Mobile App\nReact Native]
   App -->|REST/JSON over HTTPS| API[VieGo Backend\nSpring Boot · Java 25]
   App -.->|OIDC/OAuth2| IdP[(Identity Providers\nGoogle · Facebook · Zalo)]
+  App -.->|capture photo| Cam[Camera + Location]
   API --> DB[(PostgreSQL)]
   API --> Cache[(Redis\ncache · token rotation)]
-  API --> Media[(Object Storage / CDN\nCultural Beats media)]
+  API --> Media[(Object Storage / CDN\nBeat photos)]
 ```
 
 ## C4 Level 2 — Containers
 
 | Container | Tech | Responsibility |
 |-----------|------|----------------|
-| Mobile App | React Native (TS) | Map, unlocking, streaks, content playback, theming, i18n |
-| Backend API | Spring Boot · Java 25 · Spring Modulith | Domain logic across four modules; REST API; event log |
+| Mobile App | React Native (TS) | Camera capture, map, streaks, feeds, theming, i18n |
+| Backend API | Spring Boot · Java 25 · Spring Modulith | Domain logic across five modules; REST API; event log |
 | PostgreSQL | Postgres | Persistence, schema-per-module (source of truth) |
 | Redis | Redis | Non-authoritative cache for hot/slow-changing reads; refresh-token rotation & revocation ([ADR 0007](decisions/0007-redis-cache-and-token-rotation.md)) |
-| Object storage/CDN | TBD | Cultural Beats audio/images |
+| Object storage/CDN | TBD | Beat photos (served via short-lived signed URLs) |
 | Identity Providers | External | Auth (Google, Facebook, Zalo, email) |
 
 ## C4 Level 3 — Backend modules

@@ -9,10 +9,11 @@ The rules everything obeys. A specification may not contradict these; to change 
 [ADR](decisions/).
 
 ## Product principles
-1. **Cultural Pride First** — celebrate Vietnam's regional diversity authentically.
-2. **Gamified Joy** — unlocks and streaks feel earned and delightful.
-3. **Tactile Mobile Ergonomics** — fluid single-handed navigation, crisp feedback.
-4. **Seamless Multi-region Experience** — frictionless language/theme switching, instant feedback.
+1. **Real Beats, Not a Blog** — everything on the map is a real capture, verified by location.
+2. **Capture-First Daily Ritual** — one Beat a day drives streak, unlock, and feed at once.
+3. **Friends-First, Then the World** — sharing to friends is the default; public is deliberate.
+4. **Cultural Pride First** — celebrate Vietnam's regional diversity authentically (incl. its seas/islands).
+5. **Tactile Mobile Ergonomics** — fluid single-handed navigation, crisp feedback, instant i18n/theme switching.
 
 ## Product & UX non-negotiables
 - **Mobile-first & adaptive** — design at the mobile viewport (~402×874) first.

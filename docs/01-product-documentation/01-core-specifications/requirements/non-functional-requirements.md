@@ -60,8 +60,9 @@ Source: [infrastructure](../../02-authored-system-documentation/software-archite
 | ID | Requirement | Priority | Verify |
 |----|-------------|----------|--------|
 | NFR-PERF-01 | The **map renders smoothly on low-end devices** (target ~60fps interaction; profile early, simplify/virtualize SVG). | MUST | Profiling on target devices |
-| NFR-PERF-02 | Interactive read endpoints (map, collection, streak, heritage) respond within a target latency budget (**p95 ≤ 500ms** server-side, excl. network); hot, slow-changing reads are served from the **Redis cache** ([ADR 0007](../../02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md)). | SHOULD | Load test · APM |
-| NFR-PERF-03 | Beat audio starts via a **signed/CDN URL**; media is never proxied through the app server. | MUST | Design review · [FR-CO-04](functional-requirements.md#fr-co--content-heritage-access) |
+| NFR-PERF-02 | Interactive read endpoints (map, collection, streak, place, feeds) respond within a target latency budget (**p95 ≤ 500ms** server-side, excl. network); hot, slow-changing reads are served from the **Redis cache** ([ADR 0007](../../02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md)). | SHOULD | Load test · APM |
+| NFR-PERF-03 | Beat **photos** load via a **signed/CDN URL**; media is never proxied through the app server. | MUST | Design review · [FR-CO-05](functional-requirements.md#fr-co--content-beats-reviews--memories) |
+| NFR-PERF-04 | The **capture → Beat sent** path feels instant: the confirmation ("Beat sent!") is shown optimistically while upload and fan-out complete asynchronously. | SHOULD | Manual test · APM |
 
 ## NFR-SEC — Security & Privacy
 
@@ -75,8 +76,9 @@ Source: [security](../../04-user-documentation/system-admin-documentation/securi
 | NFR-SEC-04 | VieGo stores **no passwords** — OIDC relying party; only provider subject refs + rotating refresh handles. | MUST | Design review · schema audit |
 | NFR-SEC-05 | **TLS everywhere** (HTTPS, DB in transit); sensitive data encrypted at rest. | MUST | Config audit |
 | NFR-SEC-06 | **No PII in logs or URLs**; input validated at the API boundary; errors leak no internals. | MUST | Code review · log audit |
-| NFR-SEC-07 | **Rate limiting** on auth and unlock endpoints. | SHOULD | Config · load test |
+| NFR-SEC-07 | **Rate limiting** on auth and capture endpoints. | SHOULD | Config · load test |
 | NFR-SEC-08 | Dependency & container **scanning** runs in CI. | MUST | [CI](../../04-user-documentation/system-admin-documentation/ci-cd.md) gate |
+| NFR-SEC-09 | **Location privacy**: precise location is captured/shown **only inside Vietnam**; outside Vietnam it is suppressed. A Beat is served **only to its audience** (Friends list or Public). | MUST | Integration test · [FR-EX-09](functional-requirements.md#fr-ex--exploration-map-places--province-unlocking) · [FR-CC-03](functional-requirements.md#fr-cc--cross-cutting) |
 
 ## NFR-REL — Reliability & Data integrity
 
@@ -85,7 +87,7 @@ Source: module designs · [Architecture Principles → Backend non-negotiables](
 | ID | Requirement | Priority | Verify |
 |----|-------------|----------|--------|
 | NFR-REL-01 | State-changing operations that emit events do so **transactionally** with the state change (event log, same tx). | MUST | `@ApplicationModuleTest` |
-| NFR-REL-02 | Event consumers are **idempotent** — reprocessing an event causes no duplicate side effects (e.g. duplicate `ProvinceUnlocked` grants once). | MUST | Module integration test |
+| NFR-REL-02 | Event consumers are **idempotent** — reprocessing an event causes no duplicate side effects (e.g. a re-delivered `BeatCaptured` advances the streak and unlocks the province at most once). | MUST | Module integration test |
 | NFR-REL-04 | The **cache is non-authoritative** — a Redis miss or outage falls back to Postgres; reads stay correct (only slower), and gating/entitlement checks always hit the source of truth. | MUST | Failover test · [ADR 0007](../../02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md) |
 | NFR-REL-03 | Idempotent commands (unlock, daily ritual) are **safe to retry** — matches offline queue/reconcile behaviour. | MUST | Contract test · [FR-EX-03](functional-requirements.md#fr-ex--exploration-province-unlocking) |
 

@@ -1,13 +1,14 @@
-@identity @draft
+@identity
 Feature: Authentication
   As a visitor
   I want to sign in with my preferred provider
-  So that my collection, streak, and preferences are saved to my account
+  So that my beats, streak, collection, and preferences are saved to my account
 
   Scenario Outline: Sign in with a supported provider
     Given I am on the sign-in screen
     When I authenticate with "<provider>"
     Then I am signed in as an Explorer
+    And I am assigned a unique handle
     And an "ExplorerRegistered" event is published on first sign-in
 
     Examples:

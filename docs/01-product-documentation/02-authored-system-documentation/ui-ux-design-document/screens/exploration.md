@@ -1,14 +1,17 @@
 ---
 title: "Screens — Exploration"
-description: "Map home, province sheet, search, discover/explore, and the collection map — the Exploration module screens."
+description: "Map home, province sheet, search, place (POI) detail, and the collection map — the Exploration module screens."
 ---
 
 # Screens — Exploration
 
-The [Exploration module](../../software-architecture-document/design/exploration.md) screens —
-the heart of the product: the interactive Vietnam map, province **unlocking**, discovery, and
-the Explorer's collection. Built in `features/exploration/screens`. Delivered in
-[Phase 2](../../../../02-process-documentation/plans-estimates-schedules.md#phase-2--core-loop-exploration-weeks-69).
+The [Exploration module](../../software-architecture-document/design/exploration.md) screens: the
+interactive Vietnam map, province **unlocking** (driven by capturing a Beat), places, and the
+Explorer's collection. Built in `features/exploration/screens`. Delivered in
+[Phase 2](../../../../02-process-documentation/plans-estimates-schedules.md).
+
+> The public **Discover** feed lives in [Social → Discover](social.md#discover) (it is a feed of
+> public beats, not a map surface).
 
 The map itself is the [`<VnMap>` component](../components/map.md) ported from the prototype's
 `<vn-map>` to `react-native-svg`.
@@ -24,10 +27,10 @@ overlay. Tapping a province opens the [Province Sheet](#province-sheet).
 **Anatomy** (top → bottom):
 1. **Header row** — 42px avatar; greeting ("Xin chào, {name}") + prompt ("Where's your next
    beat?"); [StreakBadge](../components/core.md#streakbadge); bell
-   [IconButton](../components/core.md#iconbutton) with unread dot → [Notifications](identity.md#notifications).
+   [IconButton](../components/core.md#iconbutton) with unread dot → [Notifications](engagement.md#notifications).
 2. **Search bar** (tappable, not a live input) → [Search](#search).
 3. **Streak-broken banner** (conditional) — crimson-tint prompt "Your streak ended at N days.
-   Snap today to relight it." → opens [Camera](engagement.md#camera-capture).
+   Snap today to relight it." → opens [Camera](content.md#camera-capture).
 4. **Category chips** — horizontal scroller of [Chip](../components/core.md#chip)s (All, Cà
    phê, Food, Heritage, Nightlife, Nature, Hidden gems); filters map spots + the sheet.
 5. **Map canvas** — rounded `surface` panel with a dotted texture; centered `<VnMap heat
@@ -65,10 +68,10 @@ the province, the Explorer's own check-ins, spots within it, public "beats", and
 2. **Your status** — gold-tint "You checked in here — N beats" **or** dashed "No beats from you
    yet — your first capture unlocks this province."
 3. **Spots here** (if any, filtered by category) — [SpotRow](../components/core.md#listrow)s
-   (40px tint thumb, name, category · rating, chevron) → [POI Detail](content.md#poi--heritage-detail).
+   (40px tint thumb, name, category · rating, chevron) → [Place Detail](exploration.md#place-detail).
 4. **Public beats** — up to 3 avatar + name + note items, or "No public beats yet — be the
    first."
-5. **Check in here** — crimson pill with camera icon → [Camera](engagement.md#camera-capture).
+5. **Check in here** — crimson pill with camera icon → [Camera](content.md#camera-capture).
 
 **React Native notes.** Use `@gorhom/bottom-sheet` (or a Reanimated sheet): snap points
 ~45%/85%, drag-to-dismiss, backdrop tap closes. Content is a scroll inside the sheet. The
@@ -92,8 +95,8 @@ dot from `palette.heat`; CTA crimson (no glow inside a sheet — flat crimson pi
 ## Search
 
 **Purpose & entry.** Full-screen search over provinces and spots. Reached from the Map or
-[Explore](#discover--explore) search bars. Selecting a result opens the
-[Province Sheet](#province-sheet) or [POI Detail](content.md#poi--heritage-detail).
+[Discover](social.md#discover) search bars. Selecting a result opens the
+[Province Sheet](#province-sheet) or [Place Detail](exploration.md#place-detail).
 
 **Anatomy.** Header — [BackButton](../components/navigation.md#backbutton) + a live search
 [Input](../components/core.md#input) (leading search icon, placeholder "Phở, pagodas,
@@ -116,31 +119,43 @@ divider `line`.
 
 ---
 
-## Discover / Explore
+## Place Detail
 
-**Purpose & entry.** The **Explore** tab — a feed of real traveller "beats" (location-verified
-notes + captures), not a travel blog. Reached from the tab bar; cards open
-[POI Detail](content.md#poi--heritage-detail).
+**Purpose & entry.** Deep detail for a **Place** (POI): hero image, "why it matters" context,
+practical info, community beats, reviews, and a **Capture here** CTA. Reached from the
+[Province Sheet](#province-sheet), [Search](#search), or a beat's tagged place. Capture →
+[Camera](content.md#camera-capture). Unlike the old heritage model, this screen is **never
+unlock-gated** — a place's context is open to everyone; capturing there is what unlocks the province.
 
-**Anatomy.** Title "Explore" + subtitle; tappable search bar → [Search](#search); a horizontal
-filter chip row (Near {place} / Trending / Local guides / This week); a vertical list of
-discovery [cards](../components/core.md#card): 150px media header with a place tag overlay, then
-author row (avatar, name, verified check, time), the note, and a star rating + "was here,
-verified by location".
+**Anatomy** (scroll):
+1. **Hero** — 300px image; back + like [IconButton](../components/core.md#iconbutton)s float over a
+   top gradient; content sheet overlaps the hero by ~26px (rounded top).
+2. **Title block** — name (headline 24/800); rating pill (gold-tint star); "Locals say: '{vi}'"
+   italic; a category tag + "{checkins} check-ins · {friends} friends were here".
+3. **Why it matters** — the place's context paragraph (`sub`).
+4. **Info card** — [ListRow](../components/core.md#listrow)s: Hours, Cost, and a gold **Local tip**.
+5. **Community beats** — "N captures" + a 3-up grid (2 captures + a "+N" more tile) → open the
+   [Beat Detail Modal](content.md#beat-detail-modal).
+6. **Recent from travellers** — [reviews](../../software-architecture-document/design/content.md)
+   (avatar, name, time, note; "verified by location").
+7. **Action row** — crimson **Capture here** pill (glow) + a `surface` bookmark
+   [IconButton](../components/core.md#iconbutton).
 
-**React Native notes.** `FlatList` of cards, `ListHeaderComponent` for title/search/chips.
-Media is remote `expo-image` (prototype uses striped placeholders); location-verified badge is
-a gold check. Filters are UI state → query params. Infinite scroll / pull-to-refresh at scale.
+**React Native notes.** `ScrollView` with an optional collapsing hero. Hero + gallery images via
+`expo-image`. Like/bookmark are optimistic mutations. Place context (`whyItMatters`, `tip`, hours,
+cost) is server [`LocalizedText`](../localization.md) from the `exploration` place endpoint; community
+beats + reviews come from `content`. "Friends were here" comes from social.
 
-**States.** Loading skeleton cards; empty (no beats for the active filter); verified vs.
-unverified author.
+**States.** Full content; liked/bookmarked toggles; loading skeleton (hero + text lines); image-less
+place → striped placeholder; no beats/reviews yet → "be the first".
 
-**Tokens.** Cards `radius.lg`+ `card` + `shadow.card`; verified check `palette.gold`; active
-filter chip = `pill`/`pillText`.
+**Tokens.** Hero overlay gradient; rating pill `rgba(242,183,47,0.16)`; info card `surface`
+`radius.lg`; Capture CTA `shadow.glow`.
 
-**i18n & a11y.** Keys `exploration.discover.title`, `.subtitle`, `.searchPlaceholder`,
-`.filter.*`, `.verifiedByLocation`. Note text is user content (not translated); UI chrome is.
-Cards `accessibilityRole="button"` summarizing author + place.
+**i18n & a11y.** Keys `exploration.place.whyItMatters`, `.hours`, `.cost`, `.localTip`,
+`.communityBeats`, `.captures`, `.recentTravellers`, `.captureHere`. Body context localized
+server-side. Hero image described; like/bookmark buttons expose pressed state; gallery tiles labeled
+"user capture".
 
 ---
 

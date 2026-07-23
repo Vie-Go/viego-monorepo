@@ -6,6 +6,9 @@ info:
     Asynchronous domain events published between Spring Modulith modules via the transactional
     event-publication log. On service extraction these become broker topics (Kafka/AMQP) with
     no change to publishers. Source of truth for the event catalog.
+
+    BeatCaptured is the backbone event: one capture fans out to exploration (unlock), engagement
+    (streak), and social (feeds).
 defaultContentType: application/json
 channels:
   explorerRegistered:
@@ -18,6 +21,11 @@ channels:
     messages:
       PreferencesUpdated:
         $ref: '#/components/messages/PreferencesUpdated'
+  beatCaptured:
+    address: viego.content.beat-captured
+    messages:
+      BeatCaptured:
+        $ref: '#/components/messages/BeatCaptured'
   provinceUnlocked:
     address: viego.exploration.province-unlocked
     messages:
@@ -33,7 +41,34 @@ channels:
     messages:
       StreakBroken:
         $ref: '#/components/messages/StreakBroken'
+  milestoneReached:
+    address: viego.engagement.milestone-reached
+    messages:
+      MilestoneReached:
+        $ref: '#/components/messages/MilestoneReached'
+  friendAdded:
+    address: viego.social.friend-added
+    messages:
+      FriendAdded:
+        $ref: '#/components/messages/FriendAdded'
+  beatReacted:
+    address: viego.social.beat-reacted
+    messages:
+      BeatReacted:
+        $ref: '#/components/messages/BeatReacted'
 operations:
+  publishBeatCaptured:
+    action: send
+    channel:
+      $ref: '#/channels/beatCaptured'
+    summary: content publishes when an Explorer captures a Beat (the backbone event)
+  onBeatCaptured:
+    action: receive
+    channel:
+      $ref: '#/channels/beatCaptured'
+    summary: >
+      exploration (unlock the province of the first Beat), engagement (advance the daily streak),
+      and social (fan out to friend feeds / discover) all consume this
   publishProvinceUnlocked:
     action: send
     channel:
@@ -43,7 +78,7 @@ operations:
     action: receive
     channel:
       $ref: '#/channels/provinceUnlocked'
-    summary: engagement (advance streak) and content (grant access) consume this
+    summary: engagement consumes this for province-milestone surfaces
 components:
   messages:
     ExplorerRegistered:
@@ -51,14 +86,28 @@ components:
         type: object
         properties:
           explorerId: { type: string }
+          handle: { type: string }
           at: { type: string, format: date-time }
     PreferencesUpdated:
       payload:
         type: object
         properties:
           explorerId: { type: string }
-          language: { type: string, enum: [vi, en] }
+          language: { type: string, enum: [vi, en, ko, ja, fr] }
           theme: { type: string, enum: [light, dark] }
+    BeatCaptured:
+      payload:
+        type: object
+        properties:
+          beatId: { type: string }
+          explorerId: { type: string }
+          provinceId: { type: string }
+          placeId: { type: string, nullable: true }
+          audience: { type: string, enum: [friends, public] }
+          recipients:
+            type: array
+            items: { type: string, description: 'friend id; present when audience=friends' }
+          at: { type: string, format: date-time }
     ProvinceUnlocked:
       payload:
         type: object
@@ -79,4 +128,27 @@ components:
         properties:
           explorerId: { type: string }
           previousCount: { type: integer }
+          at: { type: string, format: date-time }
+    MilestoneReached:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          milestone: { type: integer, description: 'streak length reached, e.g. 7' }
+          badge: { type: string, example: 'Tuần Rực Lửa' }
+          at: { type: string, format: date-time }
+    FriendAdded:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          friendId: { type: string }
+          at: { type: string, format: date-time }
+    BeatReacted:
+      payload:
+        type: object
+        properties:
+          beatId: { type: string }
+          explorerId: { type: string }
+          kind: { type: string, enum: [like, bolt] }
           at: { type: string, format: date-time }
