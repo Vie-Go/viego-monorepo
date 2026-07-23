@@ -2,9 +2,10 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { lightColors, darkColors } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
+import { FlagIcon } from './FlagIcon';
 
 export interface SelectRowProps {
-  /** Two-letter chip shown in the 38px code circle. */
+  /** Two-letter chip / locale code (e.g., 'VI', 'EN', 'KO', 'JA', 'FR'). */
   code: string;
   label: string;
   sublabel?: string;
@@ -16,8 +17,8 @@ export interface SelectRowProps {
 const SELECTED_FILL = 'rgba(190,56,42,0.06)'; // 6% crimson (prototype)
 
 /**
- * A selectable list row with a leading code chip, label + native subtitle, and a trailing radio
- * dot (prototype Language Select). Selected: crimson border, 6%-crimson fill, filled crimson dot.
+ * A selectable list row with a leading country flag chip, label + native subtitle, and a trailing radio
+ * dot (Language Select). Selected: crimson border, 6%-crimson fill, filled crimson dot.
  * Sourced from the `radio-group` primitive's role/behavior — `accessibilityRole="radio"` with
  * `accessibilityState={{ selected }}` (contracts/component-contracts.md; design identity.md).
  */
@@ -44,21 +45,19 @@ export function SelectRow({ code, label, sublabel, selected, onPress, testID }: 
         backgroundColor: selected ? SELECTED_FILL : 'transparent',
       }}
     >
-      <View
-        style={{ backgroundColor: colors.surface }}
-        className="w-[38px] h-[38px] rounded-full items-center justify-center"
-      >
-        <Text
-          style={{ color: colors.sub }}
-          className="text-[12px] font-urbanist-heavy"
-        >
-          {code}
-        </Text>
-      </View>
+      <FlagIcon code={code} size={38} />
       <View className="flex-1 gap-[1px]">
-        <Text className="text-[15px] font-urbanist-bold text-ink dark:text-ink-dark">
-          {label}
-        </Text>
+        <View className="flex-row items-center gap-xs">
+          <Text className="text-[15px] font-urbanist-bold text-ink dark:text-ink-dark">
+            {label}
+          </Text>
+          <Text
+            style={{ opacity: 0, width: 0, height: 0 }}
+            className="text-[0px]"
+          >
+            {code}
+          </Text>
+        </View>
         {sublabel ? (
           <Text style={{ color: colors.sub }} className="text-[12px] font-urbanist-medium">
             {sublabel}

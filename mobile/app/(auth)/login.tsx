@@ -18,7 +18,7 @@ import { validateLogin, hasErrors, FieldErrors, LoginFields } from '../shared/li
  * Log in (US3) — returning-Explorer sign-in against the mock repository. Invalid credentials →
  * a clear error banner with the entered email preserved (FR-023). Success → signed-in session,
  * onboarding marked complete, straight to main — Onboarding is skipped for returning Explorers
- * (US3 scenario 1). Facebook/Zalo render disabled (FR-025; scenario 4).
+ * (US3 scenario 1). Facebook renders disabled (FR-025; scenario 4).
  */
 export default function LoginScreen() {
   const router = useRouter();
@@ -137,7 +137,6 @@ export default function LoginScreen() {
         <View className="flex-row gap-md justify-center mt-md">
           <SocialAuthButton provider="google" />
           <SocialAuthButton provider="facebook" disabled />
-          <SocialAuthButton provider="zalo" disabled />
         </View>
 
         <View className="flex-1 min-h-[20px]" />

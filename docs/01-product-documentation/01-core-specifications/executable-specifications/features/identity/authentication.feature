@@ -16,7 +16,6 @@ Feature: Authentication
       | Email    |
       | Google   |
       | Facebook |
-      | Zalo     |
 
   @ready
   Scenario: Preferences persist across sessions

@@ -130,7 +130,6 @@ export default function RegisterScreen() {
         <View className="flex-row gap-md justify-center mt-md">
           <SocialAuthButton provider="google" />
           <SocialAuthButton provider="facebook" disabled />
-          <SocialAuthButton provider="zalo" disabled />
         </View>
 
         <View className="flex-1 min-h-[20px]" />

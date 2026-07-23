@@ -51,10 +51,9 @@ describe('Log in screen', () => {
     expect(getByTestId('login-register-link')).toBeTruthy();
   });
 
-  it('renders Facebook and Zalo as disabled providers', () => {
+  it('renders Facebook as a disabled provider', () => {
     const { getByLabelText } = renderWithProviders(<LoginScreen />);
     expect(getByLabelText('Continue with Facebook').props.accessibilityState.disabled).toBe(true);
-    expect(getByLabelText('Continue with Zalo').props.accessibilityState.disabled).toBe(true);
     expect(getByLabelText('Continue with Google').props.accessibilityState.disabled).toBeFalsy();
   });
 });

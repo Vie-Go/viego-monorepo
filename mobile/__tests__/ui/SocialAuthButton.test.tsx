@@ -16,9 +16,9 @@ describe('SocialAuthButton', () => {
   it('renders a disabled state for not-yet-wired providers', () => {
     const onPress = jest.fn();
     const { getByLabelText } = renderWithProviders(
-      <SocialAuthButton provider="zalo" onPress={onPress} disabled />,
+      <SocialAuthButton provider="facebook" onPress={onPress} disabled />,
     );
-    const btn = getByLabelText('Continue with Zalo');
+    const btn = getByLabelText('Continue with Facebook');
     expect(btn.props.accessibilityState.disabled).toBe(true);
     fireEvent.press(btn);
     expect(onPress).not.toHaveBeenCalled();
