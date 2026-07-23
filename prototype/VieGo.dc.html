@@ -429,20 +429,39 @@
               </div>
             </sc-if>
             <div style="display:flex;flex-direction:column;gap:8px">
-              <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub)">Public beats</span>
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--sub)">Beats</span>
+                <sc-if value="{{provHasPub}}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:11px;font-weight:700;color:var(--sub)">Scroll album →</span>
+                </sc-if>
+              </div>
               <sc-if value="{{provHasPub}}" hint-placeholder-val="{{ true }}">
-                <sc-for list="{{provPubList}}" as="pb" hint-placeholder-count="2">
-                  <div style="display:flex;gap:10px;align-items:flex-start">
-                    <div style="width:32px;height:32px;border-radius:50%;background:{{pb.av}};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0">{{pb.ini}}</div>
-                    <div style="flex:1;display:flex;flex-direction:column;gap:1px">
-                      <div style="display:flex;align-items:center;gap:7px"><span style="font-size:12.5px;font-weight:800">{{pb.who}}</span><span style="font-size:10.5px;color:var(--sub)">{{pb.time}}</span></div>
-                      <span style="font-size:12px;line-height:1.45;color:var(--sub)">{{pb.note}}</span>
+                <div style="display:flex;gap:10px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch">
+                  <sc-for list="{{provPubList}}" as="pb" hint-placeholder-count="4">
+                    <div style="flex-shrink:0;width:124px;height:156px;border-radius:18px;position:relative;overflow:hidden;background:var(--sf);box-shadow:0 3px 12px rgba(0,0,0,0.12);cursor:pointer">
+                      <sc-if value="{{pb.hasImg}}" hint-placeholder-val="{{ true }}">
+                        <img src="{{pb.img}}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" />
+                      </sc-if>
+                      <sc-if value="{{pb.noImg}}" hint-placeholder-val="{{ false }}">
+                        <div style="width:100%;height:100%;background:{{pb.tint}} repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 8px,transparent 8px 16px);position:absolute;inset:0"></div>
+                      </sc-if>
+                      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.45) 0%,transparent 35%,rgba(0,0,0,0.8) 100%)"></div>
+                      <div style="position:absolute;left:8px;top:8px;right:8px;display:flex;align-items:center;justify-content:space-between">
+                        <div style="width:26px;height:26px;border-radius:50%;background:{{pb.av}};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;border:1.5px solid #FFFFFF;box-shadow:0 2px 4px rgba(0,0,0,0.3)">{{pb.ini}}</div>
+                        <sc-if value="{{pb.isFriend}}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:9px;background:#F2B72F;color:#231A08;box-shadow:0 1px 3px rgba(0,0,0,0.2)">Friend</span>
+                        </sc-if>
+                      </div>
+                      <div style="position:absolute;left:8px;right:8px;bottom:8px;display:flex;flex-direction:column;gap:1.5px">
+                        <span style="font-size:12px;font-weight:800;color:#FFFFFF;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,0.6)">{{pb.who}}</span>
+                        <span style="font-size:9.5px;color:rgba(255,255,255,0.85);font-weight:600">{{pb.time}}</span>
+                      </div>
                     </div>
-                  </div>
-                </sc-for>
+                  </sc-for>
+                </div>
               </sc-if>
               <sc-if value="{{provNoPub}}" hint-placeholder-val="{{ false }}">
-                <span style="font-size:12px;color:var(--sub);font-weight:600">No public beats yet — be the first.</span>
+                <span style="font-size:12px;color:var(--sub);font-weight:600">No beats yet — be the first.</span>
               </sc-if>
             </div>
           </div>
@@ -670,6 +689,74 @@
         </div>
       </div>
       <div onClick="{{celebrateDone}}" style="margin-top:20px;height:52px;padding:0 44px;border-radius:26px;background:#231A08;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;cursor:pointer">Tiếp tục</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{hasActiveBeat}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Beat detail modal" style="position:absolute;inset:0;z-index:9999;background:rgba(13,9,9,0.95);backdrop-filter:blur(18px);display:flex;flex-direction:column;padding-top:54px;animation:vbFade 0.25s ease">
+      
+      <!-- Top Bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px">
+        <div onClick="{{closeBeat}}" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;color:#FFFFFF;cursor:pointer">
+          <v-icon name="Close" size="18"></v-icon>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:34px;height:34px;border-radius:50%;background:{{activeBeat.av}};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:1.5px solid #FFFFFF;box-shadow:0 2px 6px rgba(0,0,0,0.3)">{{activeBeat.ini}}</div>
+          <div style="display:flex;flex-direction:column">
+            <span style="font-size:14.5px;font-weight:800;color:#FFFFFF">{{activeBeat.who}}</span>
+            <span style="font-size:11px;color:rgba(255,255,255,0.65);font-weight:600">{{activeBeat.time}}</span>
+          </div>
+        </div>
+        <sc-if value="{{activeBeat.isFriend}}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:10px;font-weight:800;padding:4px 10px;border-radius:12px;background:#F2B72F;color:#231A08">Friend</span>
+        </sc-if>
+        <sc-if value="{{activeBeat.noFriend}}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:10px;font-weight:800;padding:4px 10px;border-radius:12px;background:rgba(255,255,255,0.16);color:#FFFFFF">Public</span>
+        </sc-if>
+      </div>
+
+      <!-- Main Full Beat Display Area -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px 28px">
+        <div style="width:100%;max-width:340px;aspect-ratio:3.8/4.8;border-radius:28px;position:relative;overflow:hidden;background:var(--sf);box-shadow:0 24px 50px rgba(0,0,0,0.7);animation:vbPop 0.35s cubic-bezier(0.2,1,0.3,1)">
+          <sc-if value="{{activeBeat.hasImg}}" hint-placeholder-val="{{ true }}">
+            <img src="{{activeBeat.img}}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" />
+          </sc-if>
+          <sc-if value="{{activeBeat.noImg}}" hint-placeholder-val="{{ false }}">
+            <div style="width:100%;height:100%;background:{{activeBeat.tint}} repeating-linear-gradient(45deg,rgba(12,5,7,0.05) 0 10px,transparent 10px 20px);position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+              <v-icon name="CameraFill" size="48" style="color:rgba(12,5,7,0.35)"></v-icon>
+            </div>
+          </sc-if>
+
+          <!-- Gradient Overlays -->
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.4) 0%,transparent 30%,rgba(0,0,0,0.85) 100%)"></div>
+
+          <!-- Location Tag -->
+          <div style="position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:16px;background:rgba(13,9,9,0.65);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.15)">
+            <v-icon name="LocationProperty1Bold" size="13" style="color:#F2B72F"></v-icon>
+            <span style="font-size:11.5px;font-weight:700;color:#FFFFFF">{{activeBeat.place}}</span>
+          </div>
+
+          <!-- Caption & Reactions -->
+          <div style="position:absolute;left:16px;right:16px;bottom:16px;display:flex;flex-direction:column;gap:10px">
+            <sc-if value="{{activeBeat.hasNote}}" hint-placeholder-val="{{ true }}">
+              <span style="font-size:14px;line-height:1.45;color:#FFFFFF;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,0.7)">{{activeBeat.note}}</span>
+            </sc-if>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding-top:4px">
+              <div style="display:flex;align-items:center;gap:14px">
+                <div onClick="{{toggleBeatLike}}" style="display:flex;align-items:center;gap:6px;cursor:pointer;color:{{activeBeat.likeC}}">
+                  <v-icon name="{{activeBeat.likeIcon}}" size="22"></v-icon>
+                  <span style="font-size:13px;font-weight:800;color:#FFFFFF">{{activeBeat.likes}}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;color:#F2B72F">
+                  <v-icon name="Flame" size="20"></v-icon>
+                  <span style="font-size:13px;font-weight:800;color:#FFFFFF">Streak beat</span>
+                </div>
+              </div>
+              <div onClick="{{closeBeat}}" style="height:34px;padding:0 18px;border-radius:17px;background:#F2B72F;color:#231A08;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer">Done</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </sc-if>
 
@@ -937,8 +1024,8 @@ class Component extends DCLogic {
     this.state = {
       screen: startMap[props.startScreen] || 'lang',
       ob: 0, lang: 'en', cat: 'all', sel: null, provSel: null, q: '', notifRead: false, scrolled: false,
-      streakDelta: 0, aud: 'friends', sentTo: ['Linh', 'Đức', 'Mai', 'Khoa'],
-      themeOv: null, liked: false
+      streakDelta: 0, aud: 'public', sentTo: ['Linh', 'Đức', 'Mai', 'Khoa'],
+      themeOv: null, liked: false, activeBeat: null
     };
     this.JUNE_MEMORIES = [
       { hasImg: false, isDot: true },
@@ -1056,13 +1143,22 @@ class Component extends DCLogic {
     };
     this.POI_PROV = { giang: 'Hà Nội', tahien: 'Hà Nội', train: 'Hà Nội', halong: 'Quảng Ninh', sapa: 'Lào Cai', hagiang: 'Tuyên Quang', trangan: 'Ninh Bình', hue: 'Huế', goldenbridge: 'Đà Nẵng', banhmi: 'Đà Nẵng', nhatrang: 'Khánh Hòa', buivien: 'Hồ Chí Minh City', apartment: 'Hồ Chí Minh City', cairang: 'Cần Thơ' };
     this.PROV_PUB = [
-      { who: '@nomadngan', ini: 'N', av: '#B8641F', time: '2 h', note: '“Skip the front gates — the side hẻm food carts are where locals actually eat.”' },
-      { who: '@yuna.travels', ini: 'Y', av: '#3E5A74', time: '7 h', note: '“Went because 3 friends beat this province in one week. Zero regrets.”' },
-      { who: '@dulich.tung', ini: 'T', av: '#4E6E58', time: '1 d', note: '“Sáng sớm vắng người — go before 7am for empty streets and the best light.”' }
+      { who: 'Linh', ini: 'L', av: '#BE382A', time: '12 min', note: '“Check-in đẹp vi diệu!”', img: 'uploads/6585672e2dafacf1f5be1.jpg', isFriend: true },
+      { who: '@nomadngan', ini: 'N', av: '#B8641F', time: '2 h', note: '“Skip the front gates — side hẻm food carts are where locals eat.”', img: 'uploads/5f5799ffd37e52200b6f4.jpg', isFriend: false },
+      { who: 'Đức', ini: 'Đ', av: '#8A5B2B', time: '4 h', note: '“Bia hơi cold as ice.”', img: 'uploads/ed22f189bb083a5663193.jpg', isFriend: true },
+      { who: '@yuna.travels', ini: 'Y', av: '#3E5A74', time: '7 h', note: '“Went because 3 friends beat this province in one week.”', img: 'uploads/8550c58c8f0d0e53571c.jpg', isFriend: false },
+      { who: 'Mai', ini: 'M', av: '#4E6E58', time: '12 h', note: '“Market haul & fresh coffee.”', img: 'uploads/e5f9f852b2d3338d6ac22.jpg', isFriend: true },
+      { who: '@dulich.tung', ini: 'T', av: '#4E6E58', time: '1 d', note: '“Sáng sớm vắng người — go before 7am for empty streets.”', img: 'uploads/5f5799ffd37e52200b6f4.jpg', isFriend: false }
     ];
     this.PROV_PUB_BY = {
-      'Quần đảo Trường Sa': [{ who: '@haiquan.doan', ini: 'H', av: '#3E5A74', time: '3 d', note: '“Beat sent from Trường Sa Lớn — flag ceremony at dawn, không quên được.”' }],
-      'Quần đảo Hoàng Sa': [{ who: '@nguphu.lyson', ini: 'N', av: '#4E6E58', time: '2 w', note: '“Logged from a fishing boat off the archipelago — Hoàng Sa là của Việt Nam.”' }]
+      'Quần đảo Trường Sa': [
+        { who: 'Khoa', ini: 'K', av: '#3E5A74', time: '1 d', note: '“Trường Sa Lớn — biển đảo quê hương.”', img: 'uploads/e5f9f852b2d3338d6ac22.jpg', isFriend: true },
+        { who: '@haiquan.doan', ini: 'H', av: '#3E5A74', time: '3 d', note: '“Beat sent from Trường Sa Lớn — flag ceremony at dawn.”', img: 'uploads/8550c58c8f0d0e53571c.jpg', isFriend: false }
+      ],
+      'Quần đảo Hoàng Sa': [
+        { who: 'Trang', ini: 'T', av: '#7A4E6E', time: '5 d', note: '“Hoàng Sa là của Việt Nam.”', img: 'uploads/6585672e2dafacf1f5be1.jpg', isFriend: true },
+        { who: '@nguphu.lyson', ini: 'N', av: '#4E6E58', time: '2 w', note: '“Logged from a fishing boat off the archipelago.”', img: 'uploads/5f5799ffd37e52200b6f4.jpg', isFriend: false }
+      ]
     };
     this.NOTIFS = [
       { icon: 'Flame', c: '#C08A10', bg: 'rgba(242,183,47,0.16)', t: 'Streak check-in time', s: 'One beat today takes you to day 7', time: 'now', dot: true },
@@ -1104,9 +1200,30 @@ class Component extends DCLogic {
       cat: (this.CATS.find(c => c.id === x.cat) || {}).label,
       pick: () => this.setState({ sel: x.id, screen: 'poi' })
     }));
-    const provPubList = provSel ? (this.PROV_PUB_BY[provSel] || (pd && pd.pub ? this.PROV_PUB.slice(0, pd.pub >= 5000 ? 3 : 2) : [])) : [];
+    const rawBeats = provSel ? (this.PROV_PUB_BY[provSel] || (pd ? this.PROV_PUB : [])) : [];
+    const provPubList = rawBeats.map(b => ({
+      ...b,
+      hasImg: !!b.img,
+      noImg: !b.img,
+      tint: b.tint || '#E9DEC8',
+      pick: () => this.setState({
+        activeBeat: {
+          who: b.who,
+          ini: b.ini || b.who[0],
+          av: b.av || '#BE382A',
+          time: b.time || 'recently',
+          note: b.note || 'Captured beat in ' + (provSel || 'Việt Nam'),
+          place: provSel || 'Việt Nam',
+          img: b.img,
+          tint: b.tint || '#E9DEC8',
+          isFriend: !!b.isFriend,
+          likes: 18,
+          liked: false
+        }
+      })
+    }));
     const ql = st.q.trim().toLowerCase();
-    const provRow = n => ({ t: n, s: PR[n] && PR[n].pub ? fmt(PR[n].pub) + ' public check-ins' : 'Province', kind: 'Province', icon: 'Globe', pick: () => this.setState({ screen: 'map', provSel: n, q: '' }) });
+    const provRow = n => ({ t: n, s: PR[n] && PR[n].pub ? fmt(PR[n].pub) + ' beats' : 'Province', kind: 'Province', icon: 'Globe', pick: () => this.setState({ screen: 'map', provSel: n, q: '' }) });
     const spotRow = x => ({ t: x.name, s: x.place + ' · ' + x.rating, kind: 'Spot', icon: 'LocationProperty1Bold', pick: () => this.setState({ screen: 'poi', sel: x.id, q: '' }) });
     let searchResults;
     if (!ql) searchResults = [...this.POIS.slice(0, 4).map(spotRow), ...['Hà Nội', 'Đà Nẵng', 'Hồ Chí Minh City'].map(provRow)];
@@ -1122,19 +1239,51 @@ class Component extends DCLogic {
     const sentN = st.aud === 'friends' ? st.sentTo.length : null;
     const days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
     const donePattern = broken ? [1, 1, 1, 0, 0, 0, 0] : [1, 1, 1, 1, 1, 1, streak >= 7 ? 1 : 0];
+    const ab = st.activeBeat;
+    const hasActiveBeat = !!ab;
+    const activeBeat = ab ? {
+      ...ab,
+      hasImg: !!ab.img,
+      noImg: !ab.img,
+      noFriend: !ab.isFriend,
+      hasNote: !!ab.note,
+      likeIcon: ab.liked ? 'HeartFill' : 'Heart',
+      likeC: ab.liked ? '#BE382A' : '#FFFFFF',
+      likes: (ab.likes || 12) + (ab.liked ? 1 : 0)
+    } : null;
     return {
-      theme, streak, broken,
+      theme, streak, broken, hasActiveBeat, activeBeat,
+      closeBeat: () => this.setState({ activeBeat: null }),
+      toggleBeatLike: () => st.activeBeat && this.setState({ activeBeat: { ...st.activeBeat, liked: !st.activeBeat.liked } }),
       frameDark: dark || ['onboard', 'snap', 'camera', 'audience', 'sent', 'celebrate'].includes(s),
       isLang: s === 'lang', isOb: s === 'onboard', isSnap: s === 'snap', isHistory: s === 'history', isMap: s === 'map', isPoi: s === 'poi',
       isCamera: s === 'camera', isAud: s === 'audience', isSent: s === 'sent',
       isCelebrate: s === 'celebrate', isFeed: s === 'feed', isDiscover: s === 'discover', isProfile: s === 'profile',
       showNav: ['snap', 'history', 'map', 'feed', 'discover', 'profile'].includes(s),
-      juneItems: this.JUNE_MEMORIES.map(x => ({ ...x, borderStyle: x.borderStyle || 'none', pick: () => this.go('feed') })),
-      julyItems: this.JULY_MEMORIES.map(x => ({ ...x, borderStyle: x.borderStyle || 'none', pick: () => this.go('feed') })),
+      juneItems: this.JUNE_MEMORIES.map(x => ({
+        ...x, borderStyle: x.borderStyle || 'none',
+        pick: () => x.hasImg ? this.setState({
+          activeBeat: {
+            who: 'You (Me)', ini: 'M', av: '#BE382A', time: 'June 2026',
+            note: 'Your captured beat memory in Việt Nam', place: 'Hà Nội',
+            img: x.img, isFriend: false, likes: 45, liked: false
+          }
+        }) : this.go('feed')
+      })),
+      julyItems: this.JULY_MEMORIES.map(x => ({
+        ...x, borderStyle: x.borderStyle || 'none',
+        pick: () => x.hasImg ? this.setState({
+          activeBeat: {
+            who: 'You (Me)', ini: 'M', av: '#BE382A', time: 'July 2026',
+            note: 'Your captured beat memory in Việt Nam', place: 'Hà Nội',
+            img: x.img, isFriend: false, likes: 52, liked: false
+          }
+        }) : this.go('feed')
+      })),
       goHistory: () => this.go('history'),
       userInVN, userOutVN: !userInVN,
       snapTag: userInVN ? 'Hà Nội · Hoàn Kiếm' : 'Vị trí ngoài Việt Nam',
-      goSnap: () => this.go('snap'), snapShutter: () => this.go('audience'),
+      goSnap: () => this.go('snap'), snapShutter: () => this.go('audience', { aud: 'public' }),
       onScroll: (e) => { const v = e.target.scrollTop > 36; if (v !== st.scrolled) this.setState({ scrolled: v }); },
       navBottom: st.scrolled ? '20px' : '26px', navH: st.scrolled ? '54px' : '64px',
       navGap: st.scrolled ? '4px' : '7px', navPadX: st.scrolled ? '8px' : '11px',
@@ -1165,7 +1314,7 @@ class Component extends DCLogic {
       unlockedStr: this.UNLOCKED, heatStr,
       hasProv: s === 'map' && !!provSel, noProv: s === 'map' && !provSel,
       provName: provSel || '',
-      provPubTxt: pd && pd.pub ? fmt(pd.pub) + ' public check-ins' : 'No public check-ins yet',
+      provPubTxt: pd && pd.pub ? fmt(pd.pub) + ' beats' : 'No beats yet',
       provTierC: tierC(pd ? pd.pub : 0),
       provMine: pd ? pd.mine : 0, provMineHas: !!pd && pd.mine > 0, provMineNone: !pd || pd.mine === 0,
       provHasSpots: provSpotRows.length > 0, provSpots: provSpotRows,
@@ -1199,9 +1348,9 @@ class Component extends DCLogic {
       openPoi: () => {}, closePoi: () => this.setState({ sel: null }),
       viewPoi: () => this.go('poi'), backToMap: () => this.go('map'),
       camTag, nextStreak: streak + 1,
-      openCamera: () => this.go('camera'),
+      openCamera: () => this.go('camera', { aud: 'public' }),
       closeCamera: () => this.go(sel ? 'poi' : 'map'),
-      snap: () => this.go('audience'),
+      snap: () => this.go('audience', { aud: 'public' }),
       audFriends: () => this.setState({ aud: 'friends' }), audPublic: () => this.setState({ aud: 'public' }),
       isFriendsAud: st.aud === 'friends', isPublicAud: st.aud === 'public',
       audFBg: st.aud === 'friends' ? '#F2B72F' : 'transparent', audFC: st.aud === 'friends' ? '#231A08' : 'rgba(255,255,255,0.6)',
@@ -1219,8 +1368,26 @@ class Component extends DCLogic {
       sentContinue: () => this.go(streak >= 7 ? 'celebrate' : 'feed'),
       celebrateDone: () => this.go('feed'),
       confetti: this.CONFETTI,
-      momentsBig: this.MOMENTS.slice(0, 1).map(m => ({ ...m, ini: m.who[0], ring: m.fresh ? '#F2B72F' : 'rgba(255,255,255,0.85)' })),
-      momentsSmall: this.MOMENTS.slice(1).map(m => ({ ...m, ini: m.who[0], ring: m.fresh ? '#F2B72F' : 'rgba(255,255,255,0.85)' })),
+      momentsBig: this.MOMENTS.slice(0, 1).map(m => ({
+        ...m, ini: m.who[0], ring: m.fresh ? '#F2B72F' : 'rgba(255,255,255,0.85)',
+        pick: () => this.setState({
+          activeBeat: {
+            who: m.who, ini: m.who[0], av: m.av, time: m.time + ' ago',
+            note: m.label, place: m.place, img: 'uploads/6585672e2dafacf1f5be1.jpg',
+            isFriend: true, likes: 34, liked: false
+          }
+        })
+      })),
+      momentsSmall: this.MOMENTS.slice(1).map(m => ({
+        ...m, ini: m.who[0], ring: m.fresh ? '#F2B72F' : 'rgba(255,255,255,0.85)',
+        pick: () => this.setState({
+          activeBeat: {
+            who: m.who, ini: m.who[0], av: m.av, time: m.time + ' ago',
+            note: m.label, place: m.place, img: 'uploads/ed22f189bb083a5663193.jpg',
+            isFriend: true, likes: 21, liked: false
+          }
+        })
+      })),
       discover: this.DISCOVER,
       week: days.map((d, i) => ({
         d,
