@@ -18,6 +18,8 @@ spring:
       - classpath:db/migration/exploration
       - classpath:db/migration/engagement
       - classpath:db/migration/content
+      - classpath:db/migration/social
+      - classpath:db/migration/public
 
 management:
   endpoints:

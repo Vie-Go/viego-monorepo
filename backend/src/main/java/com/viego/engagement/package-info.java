@@ -7,5 +7,5 @@
  * module may depend on nothing but the OPEN {@code shared} kernel. Later phases add
  * explicit allowed dependencies as real integration is introduced.
  */
-@org.springframework.modulith.ApplicationModule(displayName = "Engagement", allowedDependencies = {})
+@org.springframework.modulith.ApplicationModule(displayName = "Engagement", allowedDependencies = {"shared", "content::api"})
 package com.viego.engagement;
