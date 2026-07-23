@@ -198,3 +198,8 @@ Task: "Mobile API client skeleton + getStatus in mobile/app/shared/api/client.ts
 - [P] = different files, no incomplete-task dependencies.
 - Commit after each task or logical group; keep the backend pipeline green (`verify()` must stay passing).
 - The exit for this phase is **milestone M0** — skeleton runs in dev, CI green both sides, `verify()` green ([plans-estimates-schedules](../../docs/02-process-documentation/plans-estimates-schedules.md)).
+- **Post-P0 stack update**: T030 (navigation shell) and T028 (UI primitives) were built before
+  [ADR-0011](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md)
+  (Expo Router, Zustand, Maestro). Checkmarks above reflect what actually shipped in P0 and are left
+  as-is; migrating `mobile/app/navigation/` to Expo Router and the UI primitives to `@expo/ui` is
+  unstarted follow-up work for a later phase, not retroactively marked done here.

@@ -23,15 +23,19 @@ GitHub Actions with `paths:` filters for path-scoped pipelines.
 [ADR-0009](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0009-spring-boot-4-and-spring-cli-scaffolding.md)); Mobile **TypeScript** on **React Native** via **Expo SDK** (latest stable).
 
 **Primary Dependencies**: Backend — Spring Boot 4, **Spring Modulith**, springdoc-openapi, Flyway,
-Spring Actuator. Mobile — Expo, **EAS Build**, React Navigation, React Query, an i18n library
-(react-i18next or equivalent).
+Spring Actuator. Mobile — Expo, **EAS Build**, **Expo Router**, **Zustand** (client state),
+**TanStack Query** (server state), an i18n library (react-i18next or equivalent) — per
+[ADR-0011](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md),
+superseding the React Navigation reference in earlier drafts of this plan.
 
 **Storage**: **PostgreSQL** (schema-per-module; single DB in dev). Local Postgres via **Docker
 Compose**. Redis is **out of scope** for Phase 0 ([ADR 0007](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0007-redis-cache-and-token-rotation.md) — introduced with its first consumer in P1/P2).
 
 **Testing**: Backend — JUnit 5, **`@ApplicationModuleTest`**, `ApplicationModules.verify()`,
-Testcontainers (Postgres). Mobile — Jest + React Native Testing Library; Detox/Maestro E2E deferred
-past P0.
+Testcontainers (Postgres). Mobile — Jest + React Native Testing Library; **Maestro** E2E
+([ADR-0011](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md) —
+supersedes the earlier "Detox/Maestro deferred past P0" note; Maestro is in scope, Detox is not
+used).
 
 **Target Platform**: Backend — Linux container on a managed container platform (dev). Mobile —
 iOS 15+ / Android (via Expo/EAS).

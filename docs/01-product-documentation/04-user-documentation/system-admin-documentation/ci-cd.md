@@ -41,7 +41,7 @@ changes under its own path.
 1. Install, typecheck, lint.
 2. Jest unit + component tests.
 3. Build iOS + Android (EAS/Fastlane).
-4. E2E (Detox/Maestro) on simulators.
+4. E2E (Maestro) on simulators.
 5. Release: TestFlight / Play internal → beta → production.
 
 ## Quality gates (block merge)

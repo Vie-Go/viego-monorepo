@@ -5,8 +5,8 @@ description: "Bottom tab bar, screen header, back button, bottom sheet, and segm
 
 # Components — Navigation & chrome
 
-Navigation and screen-frame components. These wrap React Navigation and provide the consistent
-chrome across [screens](../screens/).
+Navigation and screen-frame components. These wrap [Expo Router](../../software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md)
+and provide the consistent chrome across [screens](../screens/).
 
 ---
 
@@ -23,9 +23,9 @@ Beats · Discover · Me**; hidden across the capture flow and full-screen surfac
   linear→bold on active.
 - **Camera FAB.** 56px crimson circle, white camera icon, `translateY(-10)` to overhang, 4px
   `bg` border ring, crimson glow — always present; opens [Camera](../screens/content.md#camera-capture).
-- **RN notes.** Custom `tabBar` in a `BottomTabNavigator`; the FAB is a center button that
-  triggers a modal navigation rather than a tab route. Respect safe-area bottom inset. Hide via
-  per-screen `tabBarStyle`/options on capture + detail screens.
+- **RN notes.** Custom `tabBar` on Expo Router's `Tabs` layout (`app/(tabs)/_layout.tsx`); the FAB
+  is a center button that triggers a modal route rather than a tab route. Respect safe-area bottom
+  inset. Hide via per-screen `options`/`tabBarStyle` on capture + detail routes.
 - **A11y.** Each tab `accessibilityRole="tab"` + `selected` state; FAB
   `accessibilityRole="button"` labeled "Capture". Active tab exposes its label even when
   visually icon-only for inactive tabs.

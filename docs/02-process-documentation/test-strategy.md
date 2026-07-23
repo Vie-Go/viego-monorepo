@@ -26,7 +26,7 @@ prove the implementation matches the **contract** (OpenAPI/AsyncAPI) and the **b
 | Unit | Jest | Logic, hooks, formatters |
 | Component | RN Testing Library | Rendering, interaction, a11y |
 | **Contract** | MSW mocks generated from OpenAPI | API hooks vs. the agreed contract |
-| E2E | Detox / Maestro | Core loop on device/simulator |
+| E2E | Maestro ([ADR-0011](../01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md)) | Core loop on device/simulator |
 
 ## Cross-cutting
 - Test **both themes** and **both locales** for key screens (parity is a principle).

@@ -99,3 +99,13 @@ doc). Provider choice does not change any FR; if it changes, only workflow synta
 | CI path-scoping mechanism | GitHub Actions `paths:` filters (R5) |
 
 All spec `[NEEDS CLARIFICATION]` markers are now resolved.
+
+## Post-P0 addendum
+
+Routing, client-state, and E2E-tool choices were left implicit when this research was authored
+(the skeleton was built with hand-wired `@react-navigation/*` navigators and no E2E). They are now
+settled by [ADR-0011](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0011-expo-router-zustand-maestro-for-mobile.md):
+**Expo Router** for navigation, **Zustand** for client state, **Maestro** (not Detox) for E2E. See
+[plan.md](plan.md)'s Technical Context and [`mobile/CLAUDE.md`](../../mobile/CLAUDE.md) for the
+resulting engineering rules. The existing `mobile/app/navigation/` code and UI primitives predate
+this decision and are migration candidates, not yet migrated.
