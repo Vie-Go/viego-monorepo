@@ -7,8 +7,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true,
-      "deploymentTarget": "18.7.8"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {

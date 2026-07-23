@@ -62,6 +62,7 @@ const strings = {
     // Main placeholder (US2)
     'identity.main.title': 'You’re all set',
     'identity.main.subtitle': 'The living map lands here soon. Keep an eye on your streak.',
+    'identity.main.restartFlow': 'Restart flow (dev)',
 
     // Field validation
     'validation.required': 'This field is required.',
@@ -134,6 +135,7 @@ const strings = {
 
     'identity.main.title': 'Bạn đã sẵn sàng',
     'identity.main.subtitle': 'Bản đồ sống sẽ xuất hiện ở đây. Hãy để mắt tới chuỗi ngày của bạn.',
+    'identity.main.restartFlow': 'Khởi động lại luồng (dev)',
 
     'validation.required': 'Trường này là bắt buộc.',
     'validation.email': 'Nhập một địa chỉ email hợp lệ.',

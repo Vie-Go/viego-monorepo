@@ -28,6 +28,8 @@ interface LanguageState {
   previewLanguage: (code: Locale) => void;
   /** Confirm the choice (Continue) — sets hasChosen, letting the routing guard advance. */
   confirmLanguage: (code: Locale) => void;
+  /** Clear back to unchosen — lets the routing guard send the Explorer to Language Select again. */
+  reset: () => void;
 }
 
 export const useLanguageStore = create<LanguageState>()(
@@ -40,6 +42,7 @@ export const useLanguageStore = create<LanguageState>()(
         set({ code, source, hasChosen: source === 'explicit' }),
       previewLanguage: (code) => set({ code }),
       confirmLanguage: (code) => set({ code, source: 'explicit', hasChosen: true }),
+      reset: () => set({ code: null, source: 'device', hasChosen: false }),
     }),
     {
       name: 'viego.language',
