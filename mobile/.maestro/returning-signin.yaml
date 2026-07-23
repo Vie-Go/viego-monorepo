@@ -1,0 +1,25 @@
+# Maestro E2E — returning-Explorer sign-in journey (T069)
+# login → main, with Onboarding skipped. Assumes the account from first-launch.yaml already
+# exists in this install's mock store (run first-launch.yaml first, or seed the account), then
+# signs out / relaunches to the Log in screen.
+appId: com.viego.mobile
+---
+- launchApp
+
+# If a session is still active this lands on main; this flow targets the Log in screen, so it
+# assumes a signed-out state (e.g. after first-launch.yaml + a sign-out, or a fresh relaunch
+# where the guard shows Log in because language is chosen but session is signed-out).
+- assertVisible: "Welcome back"
+
+# US3 — Log in with the returning account
+- tapOn:
+    id: "Email"
+- inputText: "mai.e2e@viego.app"
+- tapOn:
+    id: "Password"
+- inputText: "secret6"
+- tapOn: "Log in"
+
+# Lands directly on main — Onboarding is skipped for a returning Explorer.
+- assertVisible: "You’re all set"
+- assertNotVisible: "Next"

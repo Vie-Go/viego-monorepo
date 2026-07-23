@@ -1,0 +1,34 @@
+# Maestro E2E — new-Explorer first-launch journey (T068)
+# language → register → onboarding → main. Run against a built app / dev client (not Expo Go
+# unit mocks). Clears state first so the routing guard starts at Language Select.
+appId: com.viego.mobile
+---
+- clearState
+- launchApp
+
+# US1 — Language Select
+- assertVisible: "Continue"
+- tapOn: "Tiếng Việt"
+- tapOn: "Continue"
+
+# US2 — Register
+- assertVisible: "Tạo tài khoản"
+- tapOn:
+    id: "Full name"
+- inputText: "Mai Nguyen"
+- tapOn:
+    id: "Email"
+- inputText: "mai.e2e@viego.app"
+- tapOn:
+    id: "Password"
+- inputText: "secret6"
+- tapOn: "Create account"
+
+# US2 — Onboarding (3 slides, gold CTA)
+- assertVisible: "Next"
+- tapOn: "Next"
+- tapOn: "Next"
+- tapOn: "Bắt đầu — Get started"
+
+# US2 — blank main placeholder
+- assertVisible: "You’re all set"
