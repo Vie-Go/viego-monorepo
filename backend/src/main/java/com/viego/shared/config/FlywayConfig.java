@@ -78,4 +78,17 @@ public class FlywayConfig {
         flyway.migrate();
         return flyway;
     }
+
+    @Bean
+    public Flyway publicFlyway(DataSource dataSource) {
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .schemas("public")
+                .defaultSchema("public")
+                .locations("classpath:db/migration/public")
+                .table("flyway_schema_history")
+                .load();
+        flyway.migrate();
+        return flyway;
+    }
 }

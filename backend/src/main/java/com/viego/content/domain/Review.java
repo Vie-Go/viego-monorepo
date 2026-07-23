@@ -19,7 +19,7 @@ public class Review extends BaseTsidEntity {
     private Long beatId; // TSID ref to content.beats(id)
 
     @Column(name = "rating", nullable = false)
-    private Integer rating;
+    private Short rating;
 
     @Column(name = "comment", nullable = false)
     private String comment;
@@ -35,8 +35,8 @@ public class Review extends BaseTsidEntity {
     public void setPlaceId(Long placeId) { this.placeId = placeId; }
     public Long getBeatId() { return beatId; }
     public void setBeatId(Long beatId) { this.beatId = beatId; }
-    public Integer getRating() { return rating; }
-    public void setRating(Integer rating) { this.rating = rating; }
+    public Short getRating() { return rating; }
+    public void setRating(Short rating) { this.rating = rating; }
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
     public Instant getCreatedAt() { return createdAt; }

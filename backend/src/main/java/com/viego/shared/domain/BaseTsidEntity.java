@@ -6,7 +6,6 @@ import jakarta.persistence.PrePersist;
 import io.hypersistence.tsid.TSID;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
