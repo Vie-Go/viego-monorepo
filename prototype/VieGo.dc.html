@@ -114,6 +114,56 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{isFirstTimeShare}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Add friends post signup" style="position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;padding:72px 24px 34px;animation:vbFade 0.3s ease;overflow-y:auto">
+      
+      <!-- Top Brand -->
+      <div style="display:flex;align-items:center;gap:7px">
+        <span style="font-size:26px;font-weight:800;letter-spacing:-0.5px">viego</span>
+        <span style="width:10px;height:10px;border-radius:50%;background:#F2B72F;animation:vbBeat 1.6s ease infinite;margin-top:6px"></span>
+      </div>
+
+      <!-- Title & Subtitle -->
+      <div style="font-size:26px;font-weight:800;line-height:1.15;letter-spacing:-0.4px;margin-top:20px">Add friends to start sharing beats</div>
+      <div style="font-size:13.5px;color:var(--sub);font-weight:500;margin-top:6px;line-height:1.5">Share your personal link so your friends can track streaks and see your check-ins live on the map.</div>
+
+      <!-- User Invite Card -->
+      <div style="margin-top:20px;border-radius:24px;background:var(--sf);border:1.5px solid var(--ln);padding:20px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:var(--sc)">
+        <div style="width:68px;height:68px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px;border:3px solid #F2B72F;box-shadow:0 6px 16px rgba(0,0,0,0.15)">M</div>
+        
+        <div style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">
+          <span style="font-size:18px;font-weight:800;color:var(--tx)">Minh Đinh</span>
+          <span style="font-size:13px;color:var(--sub);font-weight:600">@minh.dq</span>
+        </div>
+
+        <!-- Invite Link Box -->
+        <div style="width:100%;padding:12px 14px;border-radius:16px;background:var(--bg);border:1px solid var(--ln);display:flex;align-items:center;justify-content:space-between;box-sizing:border-box">
+          <span style="font-size:12.5px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">viego.app/add/@minh.dq</span>
+          <span style="font-size:10px;font-weight:900;color:#BE382A;background:rgba(190,56,42,0.1);padding:3px 8px;border-radius:8px">YOUR LINK</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display:flex;flex-direction:column;gap:10px;width:100%">
+          <div onClick="{{copyInviteLink}}" style="height:48px;border-radius:24px;background:{{copyBtnBg}};color:{{copyBtnColor}};display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:800;cursor:pointer;border:1px solid var(--ln);transition:all 0.2s">
+            <v-icon name="{{copyIcon}}" size="16"></v-icon>
+            <span>{{copyBtnText}}</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div onClick="{{shareZalo}}" style="height:42px;border-radius:21px;background:rgba(0,104,255,0.12);color:#0068FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;cursor:pointer">Zalo</div>
+            <div onClick="{{shareFb}}" style="height:42px;border-radius:21px;background:rgba(24,119,242,0.12);color:#1877F2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;cursor:pointer">Facebook</div>
+            <div onClick="{{openShareModal}}" style="height:42px;border-radius:21px;background:var(--sf);color:var(--tx);border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;cursor:pointer">QR Code</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1"></div>
+
+      <!-- Continue to App -->
+      <div onClick="{{finishShareStep}}" style="height:54px;border-radius:27px;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(190,56,42,0.35);margin-top:20px">Continue to VieGo</div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{isNotif}}" hint-placeholder-val="{{ false }}">
     <div data-screen-label="Notifications" onScroll="{{onScroll}}" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 40px;animation:vbFade 0.25s ease">
       <div style="display:flex;align-items:center;gap:12px">
@@ -760,6 +810,55 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{showShareModal}}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Share link modal" style="position:absolute;inset:0;z-index:99999;background:rgba(13,9,9,0.85);backdrop-filter:blur(14px);display:flex;align-items:flex-end;justify-content:center;animation:vbFade 0.25s ease">
+      <div style="width:100%;border-radius:28px 28px 0 0;background:var(--card);box-shadow:0 -10px 40px rgba(0,0,0,0.5);padding:24px 20px 36px;display:flex;flex-direction:column;gap:18px;animation:vbSlideUp 0.3s cubic-bezier(0.2,0.9,0.3,1);box-sizing:border-box">
+        
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:42px;height:42px;border-radius:50%;background:#BE382A;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px">M</div>
+            <div style="display:flex;flex-direction:column">
+              <span style="font-size:16px;font-weight:800;color:var(--tx)">Add Minh Đinh as friend</span>
+              <span style="font-size:12.5px;color:var(--sub);font-weight:600">@minh.dq · VieGo Explorer</span>
+            </div>
+          </div>
+          <div onClick="{{closeShareModal}}" style="width:34px;height:34px;border-radius:50%;background:var(--sf);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--sub)">
+            <v-icon name="Close" size="16"></v-icon>
+          </div>
+        </div>
+
+        <!-- QR Code & Link Banner -->
+        <div style="border-radius:20px;background:var(--sf);border:1.5px solid var(--ln);padding:16px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+          <div style="width:120px;height:120px;border-radius:16px;background:#FFFFFF;padding:8px;box-shadow:0 4px 12px rgba(0,0,0,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative">
+            <div style="width:100%;height:100%;border:2px dashed #0C0507;border-radius:8px;position:relative;background:repeating-linear-gradient(45deg,rgba(12,5,7,0.12) 0 6px,transparent 6px 12px);display:flex;align-items:center;justify-content:center">
+              <v-icon name="UserProperty1Bold" size="32" style="color:#BE382A"></v-icon>
+            </div>
+            <span style="position:absolute;bottom:-8px;background:#F2B72F;color:#231A08;font-size:9.5px;font-weight:900;padding:2px 8px;border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,0.2)">SCAN QR</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:13.5px;font-weight:800;color:var(--tx)">viego.app/add/@minh.dq</span>
+            <span style="font-size:11.5px;color:var(--sub);font-weight:600">Anyone with this link can add you on VieGo</span>
+          </div>
+        </div>
+
+        <!-- Sharing Options -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div onClick="{{copyInviteLink}}" style="height:48px;border-radius:24px;background:{{copyBtnBg}};color:{{copyBtnColor}};display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:800;cursor:pointer;border:1px solid var(--ln);transition:all 0.2s">
+            <v-icon name="{{copyIcon}}" size="16"></v-icon>
+            <span>{{copyBtnText}}</span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+            <div onClick="{{shareZalo}}" style="height:42px;border-radius:21px;background:rgba(0,104,255,0.12);color:#0068FF;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;cursor:pointer">Zalo</div>
+            <div onClick="{{shareFb}}" style="height:42px;border-radius:21px;background:rgba(24,119,242,0.12);color:#1877F2;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;cursor:pointer">Facebook</div>
+            <div onClick="{{copyInviteLink}}" style="height:42px;border-radius:21px;background:var(--sf);color:var(--tx);border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;cursor:pointer">System</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{isFeed}}" hint-placeholder-val="{{ false }}">
     <div data-screen-label="Friend feed" onScroll="{{onScroll}}" style="position:absolute;inset:0;background:var(--bg);overflow-y:auto;padding:72px 20px 120px;animation:vbFade 0.3s ease">
       <div style="display:flex;align-items:center;gap:10px">
@@ -880,6 +979,29 @@
         </div>
         <span style="font-size:22px;font-weight:800;letter-spacing:-0.3px">Minh Đinh</span>
         <span style="font-size:13px;color:var(--sub);font-weight:600;margin-top:-6px">@minh.dq · Hà Nội</span>
+      </div>
+
+      <!-- Share Link to Add Friend -->
+      <div style="margin-top:14px;border-radius:20px;background:rgba(242,183,47,0.14);border:1.5px solid rgba(242,183,47,0.4);padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;border-radius:50%;background:#F2B72F;color:#231A08;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <v-icon name="UserProperty1Bold" size="18"></v-icon>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+            <span style="font-size:14px;font-weight:800;color:var(--tx)">Share link to add friends</span>
+            <span style="font-size:11.5px;color:var(--sub);font-weight:600">viego.app/add/@minh.dq</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div onClick="{{copyInviteLink}}" style="flex:1;height:38px;border-radius:19px;background:{{copyBtnBg}};color:{{copyBtnColor}};font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border:1px solid var(--ln);transition:all 0.2s">
+            <v-icon name="{{copyIcon}}" size="14"></v-icon>
+            <span>{{copyBtnText}}</span>
+          </div>
+          <div onClick="{{openShareModal}}" style="height:38px;padding:0 16px;border-radius:19px;background:#BE382A;color:#FFFFFF;font-size:12.5px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;box-shadow:0 6px 16px rgba(190,56,42,0.3)">
+            <v-icon name="Send" size="14"></v-icon>
+            <span>Share</span>
+          </div>
+        </div>
       </div>
       <div style="display:flex;gap:10px;margin-top:18px">
         <div style="flex:1;border-radius:18px;background:var(--sf);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:2px">
@@ -1020,12 +1142,12 @@
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    const startMap = { language: 'lang', login: 'login', register: 'register', onboarding: 'onboard', snap: 'snap', history: 'history', map: 'map', search: 'search', notifications: 'notif', camera: 'camera', feed: 'feed', discover: 'discover', profile: 'profile' };
+    const startMap = { language: 'lang', login: 'login', register: 'register', onboarding: 'onboard', snap: 'snap', history: 'history', map: 'map', search: 'search', notifications: 'notif', camera: 'camera', feed: 'feed', discover: 'discover', profile: 'profile', firstTimeShare: 'firstTimeShare' };
     this.state = {
       screen: startMap[props.startScreen] || 'lang',
       ob: 0, lang: 'en', cat: 'all', sel: null, provSel: null, q: '', notifRead: false, scrolled: false,
       streakDelta: 0, aud: 'public', sentTo: ['Linh', 'Đức', 'Mai', 'Khoa'],
-      themeOv: null, liked: false, activeBeat: null
+      themeOv: null, liked: false, activeBeat: null, copiedLink: false, showShareModal: false
     };
     this.JUNE_MEMORIES = [
       { hasImg: false, isDot: true },
@@ -1251,14 +1373,38 @@ class Component extends DCLogic {
       likeC: ab.liked ? '#BE382A' : '#FFFFFF',
       likes: (ab.likes || 12) + (ab.liked ? 1 : 0)
     } : null;
+    const copied = st.copiedLink;
     return {
       theme, streak, broken, hasActiveBeat, activeBeat,
+      showShareModal: st.showShareModal,
+      openShareModal: () => this.setState({ showShareModal: true }),
+      closeShareModal: () => this.setState({ showShareModal: false }),
+      copyBtnText: copied ? 'Link Copied!' : 'Copy Link',
+      copyBtnBg: copied ? '#4E6E58' : 'var(--sf)',
+      copyBtnColor: copied ? '#FFFFFF' : 'var(--tx)',
+      copyIcon: copied ? 'Check' : 'Send',
+      copyInviteLink: () => {
+        this.setState({ copiedLink: true });
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText('https://viego.app/add/@minh.dq').catch(() => {});
+        }
+        setTimeout(() => this.setState({ copiedLink: false }), 2200);
+      },
+      shareZalo: () => {
+        this.setState({ copiedLink: true });
+        setTimeout(() => this.setState({ copiedLink: false }), 2200);
+      },
+      shareFb: () => {
+        this.setState({ copiedLink: true });
+        setTimeout(() => this.setState({ copiedLink: false }), 2200);
+      },
       closeBeat: () => this.setState({ activeBeat: null }),
       toggleBeatLike: () => st.activeBeat && this.setState({ activeBeat: { ...st.activeBeat, liked: !st.activeBeat.liked } }),
       frameDark: dark || ['onboard', 'snap', 'camera', 'audience', 'sent', 'celebrate'].includes(s),
       isLang: s === 'lang', isOb: s === 'onboard', isSnap: s === 'snap', isHistory: s === 'history', isMap: s === 'map', isPoi: s === 'poi',
       isCamera: s === 'camera', isAud: s === 'audience', isSent: s === 'sent',
       isCelebrate: s === 'celebrate', isFeed: s === 'feed', isDiscover: s === 'discover', isProfile: s === 'profile',
+      isFirstTimeShare: s === 'firstTimeShare', finishShareStep: () => this.go('onboard', { ob: 0 }),
       showNav: ['snap', 'history', 'map', 'feed', 'discover', 'profile'].includes(s),
       juneItems: this.JUNE_MEMORIES.map(x => ({
         ...x, borderStyle: x.borderStyle || 'none',
@@ -1321,7 +1467,7 @@ class Component extends DCLogic {
       provPubList, provHasPub: provPubList.length > 0, provNoPub: provPubList.length === 0,
       closeProv: () => this.setState({ provSel: null }),
       isLogin: s === 'login', isReg: s === 'register', isNotif: s === 'notif', isSearch: s === 'search',
-      doLogin: () => this.go('onboard', { ob: 0 }), doReg: () => this.go('onboard', { ob: 0 }),
+      doLogin: () => this.go('firstTimeShare'), doReg: () => this.go('firstTimeShare'),
       goReg: () => this.go('register'), goLoginScreen: () => this.go('login'),
       q: st.q, onSearch: (e) => this.setState({ q: e.target.value }),
       searchOpen: () => this.go('search', { q: '' }),
