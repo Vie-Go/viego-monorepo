@@ -26,10 +26,10 @@ services.
 
 | Area | Choice | ADR |
 |------|--------|-----|
-| Backend language | Java 25 (LTS) | [0004](decisions/0004-java-and-spring-boot.md) |
-| Backend framework | Spring Boot 3.x | [0004](decisions/0004-java-and-spring-boot.md) |
+| Backend language | Java 25 (LTS) | [0004](decisions/0004-java-and-spring-boot.md) · [0009](decisions/0009-spring-boot-4-and-spring-cli-scaffolding.md) |
+| Backend framework | Spring Boot 4 | [0009](decisions/0009-spring-boot-4-and-spring-cli-scaffolding.md) |
 | Backend architecture | Modular monolith · Spring Modulith | [0002](decisions/0002-modular-monolith-with-spring-modulith.md) |
-| Build | Maven (backend) · npm/EAS (mobile) | — |
+| Build | Maven (backend, scaffolded via Spring CLI) · npm/EAS (mobile) | [0009](decisions/0009-spring-boot-4-and-spring-cli-scaffolding.md) |
 | Source control | Single monorepo, path-scoped CI | [0006](decisions/0006-monorepo-source-control.md) |
 | Datastore | PostgreSQL, schema-per-module | [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
 | Cache / token store | Redis — hot & slow-changing read cache + refresh-token rotation | [0007](decisions/0007-redis-cache-and-token-rotation.md) |

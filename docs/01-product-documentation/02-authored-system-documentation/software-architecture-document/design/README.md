@@ -46,5 +46,5 @@ Every module design follows the same shape, so they read consistently and diff c
 - **Vocabulary:** every name here comes from the [ubiquitous language](../ddd-and-domain-model.md) — no synonyms.
 - **Frontend:** feature folders mirror these modules
   ([frontend architecture](../frontend-architecture.md)); no hard-coded colours or strings
-  ([design system](../../ux-design-documentation/design-system.md) ·
-  [localization](../../ux-design-documentation/localization.md)).
+  ([design system](../../ui-ux-design-document/design-system.md) ·
+  [localization](../../ui-ux-design-document/localization.md)).

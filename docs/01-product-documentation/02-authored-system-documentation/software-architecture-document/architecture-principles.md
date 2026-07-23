@@ -18,7 +18,7 @@ The rules everything obeys. A specification may not contradict these; to change 
 - **Mobile-first & adaptive** — design at the mobile viewport (~402×874) first.
 - **Accessibility** — high contrast in light & dark, touch targets ≥ 44px, readable type.
 - **Vietnamese + English parity** — no feature ships with VI or EN missing; nothing hard-coded.
-- **Dual-theme by default** and **design tokens are law** (see [UX design](../ux-design-documentation/)).
+- **Dual-theme by default** and **design tokens are law** (see [UX design](../ui-ux-design-document/)).
 
 ## Backend architecture non-negotiables
 - **Modules are bounded contexts** — each context is one Spring Modulith module owning its logic

@@ -13,7 +13,7 @@ SVG map, animations, theming), and fast iteration. The prototype is web/JS.
 
 ## Decision
 Use **React Native (TypeScript)** targeting iOS and Android from a single codebase. Design tokens
-come from the [design system](../../ux-design-documentation/design-system.md); the prototype's
+come from the [design system](../../ui-ux-design-document/design-system.md); the prototype's
 `<vn-map>` is ported to an RN SVG component.
 
 Open sub-decision (own ADR when decided): **Expo vs. bare React Native**.

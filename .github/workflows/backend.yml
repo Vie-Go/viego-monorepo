@@ -1,0 +1,58 @@
+name: backend
+
+# Path-scoped: backend changes and shared contracts only (CI/CD doc). A mobile-only
+# change never triggers this pipeline; a contracts/** change triggers both.
+on:
+  push:
+    branches: [main]
+    paths: ['backend/**', 'contracts/**', '.github/workflows/backend.yml']
+  pull_request:
+    paths: ['backend/**', 'contracts/**', '.github/workflows/backend.yml']
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      # Build → module-boundary verify() → unit/web tests (Testcontainers where present).
+      - name: Build & test (incl. ApplicationModules.verify())
+        run: ./mvnw --batch-mode verify
+
+      - name: Package deployable jar
+        run: ./mvnw --batch-mode -DskipTests package
+
+      # Dependency + container vulnerability scan (fails on HIGH/CRITICAL).
+      - name: Vulnerability scan
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: fs
+          scan-ref: backend
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Build container image
+        run: docker build -t viego-backend:${{ github.sha }} .
+
+  deploy-dev:
+    # Auto-deploy to dev on merge to main (FR-023). Requires the DEV_* secrets/environment.
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to dev
+        run: echo "TODO: push image to registry and roll out to the dev platform (health-gated)."

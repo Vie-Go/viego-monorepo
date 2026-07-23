@@ -33,7 +33,7 @@ Applies to the functional scope in the [FRD](functional-requirements.md); refere
 
 ## NFR-UX — Usability & Accessibility
 
-Source: [Architecture Principles → Product & UX non-negotiables](../../02-authored-system-documentation/software-architecture-document/architecture-principles.md) · [UX design](../../02-authored-system-documentation/ux-design-documentation/)
+Source: [Architecture Principles → Product & UX non-negotiables](../../02-authored-system-documentation/software-architecture-document/architecture-principles.md) · [UX design](../../02-authored-system-documentation/ui-ux-design-document/)
 
 | ID | Requirement | Priority | Verify |
 |----|-------------|----------|--------|
@@ -45,7 +45,7 @@ Source: [Architecture Principles → Product & UX non-negotiables](../../02-auth
 
 ## NFR-I18N — Localization
 
-Source: [localization](../../02-authored-system-documentation/ux-design-documentation/localization.md) · realises [FR-CC-01](functional-requirements.md#fr-cc--cross-cutting)
+Source: [localization](../../02-authored-system-documentation/ui-ux-design-document/localization.md) · realises [FR-CC-01](functional-requirements.md#fr-cc--cross-cutting)
 
 | ID | Requirement | Priority | Verify |
 |----|-------------|----------|--------|

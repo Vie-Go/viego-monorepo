@@ -42,8 +42,10 @@ ahead) against the agreed contracts. Ownership swaps every phase.
   to production, for two engineers full-time.
   Vertical ownership doesn't change this total: the non-owning engineer uses the same calendar
   time productively on next-phase prep, then the two swap.
-- Assumes datasets exist (they do — the prototype's province data), design system exists
-  (`DESIGN.md`), and infra is a managed container platform + managed Postgres.
+- Assumes datasets exist (they do — the prototype's province data), the design system and
+  screen/component specs exist (`DESIGN.md` +
+  [UI/UX Design Document](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/)),
+  and infra is a managed container platform + managed Postgres.
 - Timeline is **relative** (Week 1…18); the example calendar starts **2026-08-04** and can shift.
 
 ## Roadmap at a glance
@@ -75,12 +77,15 @@ gantt
 **Goal:** the monorepo builds (`backend/` + `mobile/`), a trivial vertical slice runs in the
 **dev** environment, path-scoped CI is green, and module-boundary verification is wired from day
 one. (No feature vertical exists yet, so this phase is still split by app.)
+UI/UX: [Design System + RN translation layer](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/design-system.md) ·
+[Core UI components](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/core.md) ·
+[Navigation & tab bar](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/navigation.md).
 
 | Engineer A (backend scaffold) | Engineer B (mobile scaffold) |
 |--------------------------------|-------------------------------|
-| Maven + Spring Boot (Java 25) project | React Native + TypeScript app scaffold |
-| Spring Modulith with empty modules (`identity/exploration/engagement/content/shared`) + `ApplicationModules.verify()` test | Navigation shell (Auth stack + tab placeholders) |
-| Postgres via Docker Compose + Flyway wiring; Actuator health | Design tokens from `DESIGN.md`; UI primitives (Button/Card/Input) |
+| Spring Boot 4 (Java 25) project scaffolded via **Spring CLI** ([ADR-0009](../01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0009-spring-boot-4-and-spring-cli-scaffolding.md)) | React Native + TypeScript app scaffold |
+| Spring Modulith with empty modules (`identity/exploration/engagement/content/shared`) + `ApplicationModules.verify()` test | [Navigation shell](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/README.md#navigation-model) (Auth stack + [floating tab bar](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/navigation.md#bottomtabbar) placeholders) |
+| Postgres via Docker Compose + Flyway wiring; Actuator health | [Design tokens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/design-system.md#tokens) from `DESIGN.md`; [UI primitives](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/core.md) (Button/Card/Input) |
 | One trivial endpoint + springdoc OpenAPI; Dockerize | i18n scaffold (vi/en); theme switch; API client skeleton |
 | CI: build → test → scan → image → deploy to dev | CI: typecheck → lint → test → build |
 
@@ -93,6 +98,12 @@ branch strategy; dev environment.
 flow validated on a real feature.
 Spec: [`authentication.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/identity/authentication.feature).
 Design: [Identity module design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/identity.md).
+UI/UX: [Identity screens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity.md) —
+[Language](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity.md#language-select) ·
+[Onboarding](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity.md#onboarding) ·
+[Log in](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity.md#log-in) ·
+[Register](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity.md#register) ·
+[Profile & Preferences](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/identity.md#profile--preferences).
 
 **Owner — Engineer A (full stack, backend → mobile):**
 - `identity` module: Explorer aggregate, preferences
@@ -115,6 +126,13 @@ scenarios pass; first real contract + BDD tests in CI.
 **Goal:** the heart of the product — map, province **unlocking**, collection.
 Spec: [`province-unlocking.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/exploration/province-unlocking.feature).
 Design: [Exploration module design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/exploration.md).
+UI/UX: [Exploration screens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration.md) —
+[Map Home](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration.md#map-home) ·
+[Province Sheet](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration.md#province-sheet) ·
+[Collection](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration.md#collection-your-vietnam) ·
+[Search](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration.md#search) ·
+[Discover](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/exploration.md#discover--explore);
+[Map components (`<VnMap>`)](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/components/map.md).
 **Prereq:** the **unlock condition** decision (see open decisions).
 
 **Owner — Engineer B (full stack, building on P1's groundwork):**
@@ -136,6 +154,13 @@ scenarios pass; map rendering performance acceptable.
 **Goal:** daily **streak** & discovery ritual.
 Spec: [`daily-streak.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/engagement/daily-streak.feature).
 Design: [Engagement module design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/engagement.md).
+UI/UX: [Engagement screens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md) —
+the capture ritual [Camera](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md#camera-capture) →
+[Send](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md#send-beat) →
+[Sent](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md#beat-sent) →
+[Milestone](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md#milestone-celebration) ·
+[Friend Feed](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md#friend-feed) ·
+[Streak surfaces](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md#streak-surfaces-shared).
 **Prereq:** **discovery ritual** definition + day/timezone rule.
 
 **Owner — Engineer A (full stack, integrating P2's groundwork):**
@@ -155,6 +180,10 @@ streak scenarios pass.
 **Goal:** the cultural payoff — heritage access, **Cultural Beats**, trivia.
 Spec: [`heritage-access.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/content/heritage-access.feature).
 Design: [Content module design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/content.md).
+UI/UX: [Content screens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/content.md) —
+[POI / Heritage Detail](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/content.md#poi--heritage-detail) ·
+[Cultural Beats](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/content.md#cultural-beats) ·
+[Trivia](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/content.md#trivia).
 
 **Owner — Engineer B (full stack, building on P3's groundwork):**
 - `content` module: RegionalHeritage / CulturalBeat / Trivia
@@ -176,7 +205,7 @@ single vertical feature, so this phase is **joint**, split by concern rather tha
 | Engineer A — backend/infra | Engineer B — mobile/store |
 |------------------------------|------------------------------|
 | Observability: logs/metrics/traces, dashboards, alerts (incl. event-log backlog) | Sentry on mobile; crash-free rate monitoring |
-| Security review: auth/secrets/rate-limiting; dependency + container scans clean | Accessibility + VI/EN parity audit across all screens, both themes |
+| Security review: auth/secrets/rate-limiting; dependency + container scans clean | Accessibility + VI/EN parity audit across [all screens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/), both themes (per each screen spec's **i18n & a11y** section) |
 | Performance: API + map-backend load testing; DB indexing; caching | Performance: map render + list scroll profiling on low-end devices |
 | Ops: staging cutover; blue/green deploy + **rollback rehearsal**; migration safety (expand/contract) | Store prep: metadata, screenshots, privacy disclosures; TestFlight / Play **beta** + feedback loop |
 | Runbooks: complete them; run an incident-response drill | Auth completeness: add Facebook + Zalo if deferred (mobile side) |
