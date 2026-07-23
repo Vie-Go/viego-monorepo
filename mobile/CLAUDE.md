@@ -40,25 +40,46 @@ not hand-edited Xcode/Gradle files.
 > work, see tasks.md's Notes section) — expect to find the pre-migration code when you open those
 > files, not the target pattern.
 
-## UI: use `@expo/ui`, not raw React Native primitives
+## UI: NativeWind + React Native Reusables, not `@expo/ui`
 
-- Default to **`@expo/ui`** universal components (`Host`, `Column`, `Row`, `Button`, `Text`, `List`,
-  `Switch`, `Slider`, `Menu`, `DateTimePicker`, `BottomSheet`, etc., imported from `@expo/ui`) for
-  new screens and components. These render real SwiftUI on iOS and Jetpack Compose on Android —
-  prefer them over hand-rolled `View`/`TouchableOpacity`/`StyleSheet` primitives like the current
-  [`app/shared/ui/index.tsx`](app/shared/ui/index.tsx) `Button`/`Card`/`Input`.
-- Only drop to the platform-specific trees (`@expo/ui/swift-ui`, `@expo/ui/jetpack-compose`) for an
-  affordance that's genuinely platform-only. Don't split a universal screen into two platform files
-  just for minor visual tweaks.
-- Existing custom primitives in `app/shared/ui/` are migration candidates, not a pattern to keep
-  extending — when you touch a screen that uses them, prefer replacing with `@expo/ui` equivalents
-  wired to the existing theme tokens in `app/shared/theme/tokens.ts`, rather than adding new custom
-  primitives.
-- **Before writing any `@expo/ui` tree**, load the `expo:expo-ui` skill (`Skill({skill:
-  "expo:expo-ui"})`). Don't guess component props from memory — the API surface (modifiers, Host
-  sizing, event props) is easy to get subtly wrong.
-- For HIG-level styling questions (semantic colors, SF Symbols, native controls not covered by
-  `@expo/ui`), load `expo:expo-native-ui`.
+> **Superseded default (2026-07-23):** this section previously defaulted new components to
+> `@expo/ui`. That's now the exception, not the rule — see
+> [ADR-0012](../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md).
+> `@expo/ui` renders real native SwiftUI/Jetpack Compose controls, which cannot reproduce the
+> [design system](../docs/01-product-documentation/02-authored-system-documentation/ui-ux-design-document/design-system.md)'s
+> one custom, cross-platform-identical brand skin (ported 1:1 from
+> [`prototype/VieGo.dc.html`](../prototype/VieGo.dc.html)) — that requirement and the `@expo/ui`
+> default are mutually exclusive, so the default changed.
+
+- Default to **NativeWind v4** (Tailwind-style utility classes compiled onto plain `View`/
+  `Pressable`/`Text`, themed from a VieGo-specific Tailwind config that encodes the design system's
+  tokens — palette, radius, spacing, font, shadow — once) for styling every new screen/component.
+- Start new interactive components from **React Native Reusables (RNR)**'s copy-paste source —
+  accessible, unstyled `@rn-primitives/*` packages (`switch`, `radio-group`, `select`, `toggle`,
+  `dialog`, `progress`, `avatar`, `checkbox`, `accordion`, `tabs`, `tooltip`, `toast`, `separator`,
+  `slider`, and more) — then restyle to the VieGo Tailwind theme. Components with no
+  `@rn-primitives` equivalent (the branded `Button`, `StreakBadge`, gesture-driven `BottomSheet`,
+  etc.) are hand-built directly on NativeWind-styled RN views. Components are copied into
+  [`app/shared/ui/`](app/shared/ui/) (same location/convention as before) — owned in this repo, not
+  an opaque dependency.
+- See [contracts/component-contracts.md](../specs/002-theme-components-identity/contracts/component-contracts.md)
+  for the full prototype-component-to-`@rn-primitives` mapping, and
+  [research.md](../specs/002-theme-components-identity/research.md) R1 for the verified version
+  compatibility (React/RN/Expo/NativeWind/Reanimated versions checked against RNR's own showcase
+  app, not assumed).
+- **`@expo/ui` is now the exception**, reserved for a genuinely platform-only affordance with no
+  design-system equivalent (a native share sheet, a system permission prompt) — not a starting
+  point. Only drop to its platform-specific trees (`@expo/ui/swift-ui`, `@expo/ui/jetpack-compose`)
+  for that kind of affordance, and don't split a design-system screen into two platform files for
+  it. When you do use `@expo/ui` for one of these exceptions, load the `expo:expo-ui` skill first
+  (`Skill({skill: "expo:expo-ui"})`) — don't guess component props from memory.
+- **Before NativeWind/RNR setup or config work**, load the `expo:expo-tailwind-setup` skill
+  (`Skill({skill: "expo:expo-tailwind-setup"})`) rather than hand-writing `tailwind.config.js`/
+  babel/metro wiring from memory — verify the current NativeWind major version at that time (this
+  skill mentions "NativeWind v5"/`react-native-css`, while the latest published `nativewind` on npm
+  was `4.2.6` when ADR-0012 was written; reconcile before committing to a version).
+- For HIG-level styling questions on the `@expo/ui` exception path (semantic colors, SF Symbols,
+  native controls), load `expo:expo-native-ui`.
 
 ## Config plugins & native installs
 
@@ -66,16 +87,28 @@ not hand-edited Xcode/Gradle files.
   the version matches this Expo SDK.
 - If a package ships a config plugin, register it in `app.json`'s `"plugins"` array — don't hand-edit
   native project files (there are none checked in; this app is managed workflow).
-- Adding a package with native code means **Expo Go can no longer run this app** — it needs a
-  development build (`expo-dev-client`). Call this out explicitly when it happens instead of letting
-  `expo start` silently fail for the user.
+- A package with native code **might** end Expo Go support and need a development build
+  (`expo-dev-client`) — but not always: Expo curates a large set of common native-code packages that
+  Expo Go itself bundles (e.g. `react-native-reanimated`, `react-native-gesture-handler`,
+  `react-native-svg`, `expo-blur`, `expo-linear-gradient`, `@react-native-async-storage/async-storage`
+  are all "Included in Expo Go" per the current SDK reference — verified for
+  [ADR-0012](../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md)'s
+  dependency set, none of them required a dev-client). **Check the package's page under
+  `docs.expo.dev/versions/latest/sdk/...md` (via `mcp__expo__read_documentation`) for the
+  "Included in Expo Go" line before assuming either way**, and call out the actual result
+  explicitly instead of guessing or letting `expo start` silently fail for the user.
 - Prefer `mcp__expo__add_library` over a bare `Bash npm install` when installing/linking an
   Expo-aware library — it resolves SDK-compatible versions and flags config-plugin requirements.
 
 ## Skills — load before, not instead of, reading code
 
-- `expo:expo-ui` — any `@expo/ui` component tree.
-- `expo:expo-native-ui` — HIG styling, semantic colors, native controls/animations outside `@expo/ui`.
+- `expo:expo-tailwind-setup` — any NativeWind/Tailwind config work (the default styling approach —
+  see UI section above). Verify the NativeWind major version current at the time against what this
+  skill and the npm registry actually say; don't assume the version named in ADR-0012.
+- `expo:expo-ui` — only for the `@expo/ui` exception path (a platform-only affordance with no
+  design-system equivalent), not the default component path.
+- `expo:expo-native-ui` — HIG styling, semantic colors, native controls/animations outside `@expo/ui`,
+  also only relevant to the exception path.
 - `expo:expo-router` — load for **any** routing/navigation work. Expo Router is the target
   navigation stack (see Stack direction above); use it for new routes and when migrating existing
   screens off manual `@react-navigation/*` trees.
@@ -117,4 +150,7 @@ not hand-edited Xcode/Gradle files.
 
 - No new domain terms without a glossary check (root constitution principle II).
 - A stack-level decision (routing library, state management, UI kit swap) is an **ADR**, not a
-  drive-by refactor — see [ADR-0008](../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0008-expo-and-eas-toolchain.md) as the precedent for the Expo/EAS toolchain decision itself.
+  drive-by refactor — see [ADR-0008](../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0008-expo-and-eas-toolchain.md) (Expo/EAS toolchain) and
+  [ADR-0012](../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md)
+  (NativeWind + React Native Reusables, superseding the never-formally-recorded `@expo/ui` default)
+  as precedents.

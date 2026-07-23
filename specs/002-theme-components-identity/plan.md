@@ -23,18 +23,28 @@ than silently diverged from.
 Technical approach (full detail in [research.md](research.md)): Expo Router (file-based routing,
 migrating off the pre-migration manual navigator), Zustand with persisted storage for
 theme/language/mock-session, the existing hand-rolled i18n provider extended rather than replaced,
-`@expo-google-fonts/urbanist` for the brand typeface, Reanimated + Gesture Handler for the
-animation catalogue (this introduces a dev-client requirement — Expo Go can no longer run the app
-from this feature onward), `@expo/vector-icons` in place of the design doc's `iconsax-react-native`
-suggestion, and a small mock account/session repository module with zero network calls.
+`@expo-google-fonts/urbanist` for the brand typeface, Reanimated v4 + Gesture Handler for the
+animation catalogue (verified against Expo's own SDK docs to remain fully **Expo Go**-compatible —
+no dev-client build is needed for this feature), `lucide-react-native` in place of the design doc's
+`iconsax-react-native` suggestion, and a small mock account/session repository module with zero
+network calls.
 
-**Flagged deviation**: this plan builds the component base as **custom themed React Native
-primitives**, not `@expo/ui`, even though [`mobile/CLAUDE.md`](../../mobile/CLAUDE.md) currently
-states `@expo/ui` as the default for new components. See Complexity Tracking below — `@expo/ui`
-renders real native OS controls and cannot reproduce the prototype's custom cross-platform brand
-skin, so following the prototype-exact instruction and following the `@expo/ui` default are
-mutually exclusive for this feature; prototype fidelity was explicitly and repeatedly requested, so
-it takes precedence.
+**Stack-level decision, now formalized**: this plan builds the component base with **NativeWind v4
++ React Native Reusables (RNR)** — copy-paste components built on accessible `@rn-primitives/*`
+packages, restyled with a VieGo-specific Tailwind theme — not `@expo/ui`. `@expo/ui` renders real
+native OS controls and cannot reproduce the prototype's custom cross-platform brand skin, so
+following the prototype-exact instruction and defaulting to `@expo/ui` were mutually exclusive for
+this feature; prototype fidelity was explicitly and repeatedly requested, so it took precedence.
+This is no longer just a one-feature deviation: it's recorded as
+[ADR-0012](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md)
+and [`mobile/CLAUDE.md`](../../mobile/CLAUDE.md) has been amended in this same change to make
+NativeWind/RNR the standing default for all mobile UI work, superseding `@expo/ui`'s previous
+(never formally-ADR'd) default. NativeWind/RNR was chosen over fully hand-rolling every primitive
+from scratch because it gives working, accessible control behavior (switch, radio-group, select,
+toggle, dialog, etc. — verified present in `@rn-primitives`) for less first-party code, while still
+rendering plain RN views (not native OS chrome), so it doesn't reopen the `@expo/ui` problem.
+Compatibility with this project's exact dependency versions (Expo 57, RN 0.86, React 19) was
+checked against RNR's own showcase app — see [research.md](research.md) R1.
 
 ## Technical Context
 
@@ -43,7 +53,12 @@ already scaffolded in `mobile/` by Phase 0.
 
 **Primary Dependencies**:
 - Already present: `expo`, `@react-navigation/*` (being migrated off for this flow), `@tanstack/react-query` (unused by this feature — no backend calls), `react-native-safe-area-context`, `react-native-screens`.
-- Added by this feature: `expo-router`, `zustand`, `react-native-reanimated`, `react-native-gesture-handler`, `expo-linear-gradient`, `expo-blur`, `react-native-svg`, `expo-font`, `expo-splash-screen`, `@expo-google-fonts/urbanist`, `@react-native-async-storage/async-storage`, `@expo/vector-icons`.
+- Added by this feature: `expo-router`, `zustand`, `nativewind` (+ `tailwindcss`), React Native
+  Reusables copy-paste components sourced from `@rn-primitives/*` (`switch`, `radio-group`,
+  `select`, `toggle`, `dialog`, `progress`, `avatar`, etc.), `react-native-reanimated` (v4.x),
+  `react-native-gesture-handler`, `expo-linear-gradient`, `expo-blur`, `react-native-svg`,
+  `expo-font`, `expo-splash-screen`, `@expo-google-fonts/urbanist`,
+  `@react-native-async-storage/async-storage`, `lucide-react-native`.
 
 **Storage**: Client-only. `AsyncStorage` (via Zustand `persist`) for theme/language/mock
 account+session data. No backend datastore is touched (N/A for this feature).
@@ -53,8 +68,10 @@ account+session data. No backend datastore is touched (N/A for this feature).
 returning-sign-in journeys (cross-screen, matches `mobile/CLAUDE.md`'s guidance on when Maestro
 flows are warranted).
 
-**Target Platform**: iOS 15+ / Android via Expo — **development build required from this feature
-onward** (Reanimated + Gesture Handler are native-code packages; Expo Go can no longer run the app).
+**Target Platform**: iOS 15+ / Android via Expo — runs in **Expo Go**, same as Phase 0 (verified:
+every added native-code package — Reanimated, Gesture Handler, SVG, Blur, Linear Gradient,
+AsyncStorage — is officially "Included in Expo Go" per Expo's SDK 57 reference; no dev-client
+build is required by this feature).
 
 **Project Type**: Mobile (existing `mobile/` app within the Phase 0 monorepo; no backend change).
 
@@ -88,17 +105,19 @@ Verified against the VieGo Documentation Constitution (`.specify/memory/constitu
   `ApplicationModules.verify()` is unaffected. **PASS.**
 - [x] **IV. Documentation conventions** — This plan's own artifacts follow the SDD template
   structure under `specs/` (not the docmd knowledge base), so frontmatter/taxonomy rules don't
-  apply here. The one knowledge-base correction this plan makes (Onboarding Skip, R10) is a small
-  edit to the existing `spec.md` assumption, not a new page. **PASS.**
+  apply to them directly. This change does add one new knowledge-base page —
+  [ADR-0012](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md)
+  — placed in the correct taxonomy (`decisions/`) with `title`/`description` frontmatter, plus the
+  small Onboarding Skip correction (R10) to the existing `spec.md` assumption. **PASS.**
 - [x] **V. Immutable decisions & spec-first flow** — `spec.md` was authored and refined before this
   plan; the R10 correction updates the spec in the same change as discovering it, before
-  implementation, not after. The `@expo/ui` deviation (R1) is recorded here with rationale rather
-  than silently done; if it should become the standing rule for branded UI work, that's a
-  `mobile/CLAUDE.md` amendment to raise separately, not something this plan does unilaterally.
-  **PASS** (see Complexity Tracking for the deviation's justification).
+  implementation, not after. The `@expo/ui` → NativeWind/RNR change is a stack-level UI-kit swap,
+  which `mobile/CLAUDE.md` itself requires to be an ADR, not a drive-by refactor — recorded as
+  **ADR-0012** (new, not editing any prior ADR; the previous `@expo/ui` default was never itself
+  formally an ADR, so nothing is superseded in the ADR log, but `mobile/CLAUDE.md`'s guidance is
+  updated to match in this same change). **PASS.**
 
-No constitution violation blocks this plan; the one flagged deviation is from `mobile/CLAUDE.md`
-project guidance (not a constitution principle) and is justified below.
+No constitution violation blocks this plan.
 
 ## Project Structure
 
@@ -109,7 +128,7 @@ specs/002-theme-components-identity/
 ├── plan.md                        # This file
 ├── research.md                    # Phase 0 output — 10 decisions (R1–R10)
 ├── data-model.md                  # Phase 1 output — Theme/Language/Explorer/Session shapes
-├── quickstart.md                  # Phase 1 output — install, dev-client build, manual smoke test
+├── quickstart.md                  # Phase 1 output — install (Expo Go compatible), manual smoke test
 ├── contracts/
 │   └── component-contracts.md     # Phase 1 output — component prop contracts + mock data contract
 └── tasks.md                       # Phase 2 output (/speckit-tasks — NOT created here)
@@ -119,6 +138,10 @@ specs/002-theme-components-identity/
 
 ```text
 mobile/                                    # Expo app (existing, Phase 0) — path: mobile/**
+├── tailwind.config.js                     # NEW — VieGo token theme (colors/radius/spacing/font) for NativeWind — research.md R1
+├── global.css                             # NEW — NativeWind's Tailwind entrypoint
+├── babel.config.js                        # UPDATED — NativeWind babel preset
+├── metro.config.js                        # UPDATED — NativeWind metro wrapper
 ├── app/                                   # Expo Router routes (NEW for this feature — migrates off app/navigation/)
 │   ├── _layout.tsx                        # Root layout: Theme/I18n/Session providers, font load, routing guard
 │   ├── (auth)/
@@ -143,9 +166,15 @@ mobile/                                    # Expo app (existing, Phase 0) — pa
 │       ├── Button.tsx, Input.tsx, Card.tsx, Chip.tsx, Toggle.tsx, Avatar.tsx,
 │       │   ListRow.tsx, StatTile.tsx, SelectRow.tsx, SocialAuthButton.tsx,
 │       │   ProgressBars.tsx, Confetti.tsx, IconButton.tsx, Divider.tsx, StreakBadge.tsx
+│       │   # ^ sourced from React Native Reusables' copy-paste components where an
+│       │   #   @rn-primitives equivalent exists (switch, radio-group, select, toggle,
+│       │   #   progress, avatar, checkbox), restyled to the VieGo Tailwind theme;
+│       │   #   hand-built where no primitive fits (e.g. Divider, StreakBadge) — research.md R1
 │       └── navigation/
 │           ├── BottomTabBar.tsx, ScreenHeader.tsx, BackButton.tsx,
 │           │   BottomSheet.tsx, SegmentedControl.tsx
+│           │   # ^ no @rn-primitives equivalent (no bottom-sheet/drawer primitive exists);
+│           │   #   hand-built with Reanimated + Gesture Handler — research.md R1, R6
 ├── __tests__/                             # Jest + RNTL — one file per component/screen (existing convention)
 ├── .maestro/                              # NEW — first-launch + returning-sign-in E2E flows
 ├── app.json                               # UPDATED — config plugins for new native packages (research.md R6/R8)
@@ -160,12 +189,18 @@ reference it) but is not extended for this flow, per research.md R2.
 
 ## Complexity Tracking
 
-> Fill ONLY if Constitution Check has violations that must be justified. The item below is a
-> justified deviation from **project guidance** (`mobile/CLAUDE.md`), not a **constitution**
-> violation — recorded here anyway for visibility since it's the single highest-impact decision in
-> this plan.
+> No constitution violations — section intentionally empty.
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|---------------------------------------|
-| Component base built as custom RN primitives instead of `@expo/ui` (contradicts `mobile/CLAUDE.md`'s "default to `@expo/ui`" guidance) | The spec and this session's instructions require every component to match `prototype/VieGo.dc.html` exactly (colors, radii, shadows, Urbanist typeface) identically on iOS and Android | `@expo/ui` renders real native SwiftUI/Jetpack Compose controls — it cannot produce a single custom cross-platform brand skin at all, so it isn't a viable alternative for this specific requirement, only for generic/native-look UI work |
-| Adding Reanimated + Gesture Handler ends Expo Go support for the whole app (not just this feature) | The design system's full animation catalogue (rise-in, pop, beat-pulse, gesture-driven bottom sheet) requires them; the design doc names Reanimated explicitly | Core `Animated` API can't express the gesture-driven bottom-sheet drag or match the design doc's own Reanimated mapping table |
+Earlier drafts of this plan carried two items here that no longer belong in this table:
+
+- **NativeWind/RNR instead of `@expo/ui`** was tracked as a deviation from `mobile/CLAUDE.md`
+  project guidance. It no longer is one: `mobile/CLAUDE.md` has been amended in this same change
+  (see Summary above) to make NativeWind/RNR the standing default, formalized as
+  [ADR-0012](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0012-nativewind-and-react-native-reusables-for-mobile-ui.md).
+  The added Tailwind/NativeWind build-tooling layer (babel + metro plugin, `tailwind.config.js`) is
+  now just part of adopting that standing default, not a one-off complexity — see research.md R1
+  and ADR-0012's Consequences for the tradeoffs.
+- **"Reanimated + Gesture Handler end Expo Go support"** was listed as a violation in an even
+  earlier draft. That was **wrong** — verified against Expo's SDK 57 reference, both packages (and
+  every other native-code package this feature adds) are officially "Included in Expo Go." See
+  research.md R6.
