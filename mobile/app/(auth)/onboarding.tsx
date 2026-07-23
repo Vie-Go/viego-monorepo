@@ -141,7 +141,7 @@ export default function OnboardingScreen() {
       <View style={{ position: 'absolute', left: 26, right: 26, bottom: 36 }} className="gap-[14px]">
         <Text
           className="text-[38px] font-urbanist-heavy text-white"
-          style={{ lineHeight: 41, letterSpacing: -0.6 }}
+          style={{ fontSize: 38, lineHeight: 41, letterSpacing: -0.6 }}
         >
           {t(current.title)}
         </Text>

@@ -51,12 +51,7 @@ export function SelectRow({ code, label, sublabel, selected, onPress, testID }: 
           <Text className="text-[15px] font-urbanist-bold text-ink dark:text-ink-dark">
             {label}
           </Text>
-          <Text
-            style={{ opacity: 0, width: 0, height: 0 }}
-            className="text-[0px]"
-          >
-            {code}
-          </Text>
+          <Text style={{ opacity: 0, width: 0, height: 0 }}>{code}</Text>
         </View>
         {sublabel ? (
           <Text style={{ color: colors.sub }} className="text-[12px] font-urbanist-medium">
