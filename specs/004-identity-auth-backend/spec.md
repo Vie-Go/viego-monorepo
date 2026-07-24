@@ -229,7 +229,7 @@ the account and preferences survive an app reinstall.
 - **Explorer**: A registered person using VieGo — has a unique handle, a display identity, and
   owns exactly one set of Preferences. Created exactly once per identity, on first successful
   sign-in.
-- **Auth Provider Link**: The binding between an Explorer and one external sign-in method (Email or
+- **Auth Provider**: The binding between an Explorer and one external sign-in method (Email or
   Google at this feature) that lets them prove who they are on a future sign-in. Never carries a
   password.
 - **Preferences**: An Explorer's language and theme choice — exactly one per Explorer, replaced

@@ -1,0 +1,147 @@
+openapi: 3.1.0
+info:
+  title: VieGo API — Identity (excerpt)
+  version: 1.0.0
+  description: >
+    Identity-scoped excerpt of the canonical
+    docs/01-product-documentation/01-core-specifications/api-system-specifications/rest-api.openapi.yaml
+    for this feature's implementers. The canonical file is the source of truth (constitution
+    Principle I) — this excerpt is a copy for convenience and MUST be re-synced if the canonical
+    file changes. Additions made by this feature (the /auth/email/challenge endpoint and the
+    email/code request fields) are marked below; see ../research.md#r10 for why.
+servers:
+  - url: https://api.viego.app/api/v1
+    description: Production
+  - url: http://localhost:8080/api/v1
+    description: Local
+tags:
+  - name: identity
+    description: Explorer accounts, handles, auth, preferences
+security:
+  - bearerAuth: []
+paths:
+  /auth/email/challenge:
+    post:
+      tags: [identity]
+      summary: (NEW — this feature) Send a one-time sign-in code to an email address
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '202':
+          description: Code sent (or silently no-op'd for an unknown/invalid address — never reveals which addresses exist)
+  /auth/{provider}:
+    post:
+      tags: [identity]
+      summary: Exchange a provider token (or, for email, a challenge code) for a VieGo session
+      security: []
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema: { type: string, enum: [email, google, facebook, zalo] }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token: { type: string, description: 'OIDC/provider token — required for google/facebook/zalo' }
+                email: { type: string, format: email, description: '(NEW — this feature) required for email; must match the address challenged via /auth/email/challenge' }
+                code: { type: string, description: '(NEW — this feature) the one-time code from /auth/email/challenge; required for email' }
+      responses:
+        '200':
+          description: Signed in
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '400':
+          description: Invalid/expired/tampered credential — no Explorer created or signed in (FR-005)
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '501':
+          description: Provider not yet supported (facebook, zalo — fast-follow, FR-019/R11)
+  /auth/refresh:
+    post:
+      tags: [identity]
+      summary: Rotate the access token (refresh-token rotation with reuse detection)
+      security: []
+      responses:
+        '200':
+          description: Rotated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '401':
+          description: Reused/invalid refresh token — the whole rotation family is revoked (FR-013)
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+  /explorers/me:
+    get:
+      tags: [identity]
+      summary: Get the authenticated Explorer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Explorer' }
+  /explorers/me/preferences:
+    put:
+      tags: [identity]
+      summary: Update language/theme preferences (emits PreferencesUpdated)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Preferences' }
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Preferences' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Session:
+      type: object
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        explorer: { $ref: '#/components/schemas/Explorer' }
+    Preferences:
+      type: object
+      properties:
+        language: { type: string, enum: [vi, en, ko, ja, fr] }
+        theme: { type: string, enum: [light, dark] }
+    Explorer:
+      type: object
+      properties:
+        id: { type: string }
+        handle: { type: string, example: '@minh.dq' }
+        displayName: { type: string, example: 'Minh Đinh' }
+        homeProvince: { type: string, nullable: true, description: 'populated by Exploration (P2); always null at this feature' }
+        preferences: { $ref: '#/components/schemas/Preferences' }
+    Problem:
+      description: RFC 9457 Problem Details
+      type: object
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }

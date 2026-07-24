@@ -1,0 +1,50 @@
+asyncapi: 3.0.0
+info:
+  title: VieGo Domain Events — Identity (excerpt)
+  version: 1.0.0
+  description: >
+    Identity-scoped excerpt of the canonical
+    docs/01-product-documentation/01-core-specifications/api-system-specifications/domain-events.asyncapi.yaml
+    for this feature's implementers. No changes are made to these two events by this feature —
+    the excerpt exists so implementers have the exact payload shape without cross-referencing the
+    full multi-module file. Delivery mechanism: Spring Modulith's JPA event publication registry
+    (same transaction as the state change) — see data-model.md.
+channels:
+  explorerRegistered:
+    address: viego.identity.explorer-registered
+    messages:
+      ExplorerRegistered:
+        $ref: '#/components/messages/ExplorerRegistered'
+  preferencesUpdated:
+    address: viego.identity.preferences-updated
+    messages:
+      PreferencesUpdated:
+        $ref: '#/components/messages/PreferencesUpdated'
+operations:
+  publishExplorerRegistered:
+    action: send
+    channel:
+      $ref: '#/channels/explorerRegistered'
+    summary: Published exactly once, on first sign-in for a given identity (FR-006)
+  publishPreferencesUpdated:
+    action: send
+    channel:
+      $ref: '#/channels/preferencesUpdated'
+    summary: Published on every successful language/theme change (FR-009)
+components:
+  messages:
+    ExplorerRegistered:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          handle: { type: string }
+          at: { type: string, format: date-time }
+    PreferencesUpdated:
+      payload:
+        type: object
+        properties:
+          explorerId: { type: string }
+          language: { type: string, enum: [vi, en, ko, ja, fr] }
+          theme: { type: string, enum: [light, dark] }
+          at: { type: string, format: date-time }

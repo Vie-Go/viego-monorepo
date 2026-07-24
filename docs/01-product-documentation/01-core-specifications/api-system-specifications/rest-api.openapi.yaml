@@ -28,10 +28,27 @@ tags:
 security:
   - bearerAuth: []
 paths:
+  /auth/email/challenge:
+    post:
+      tags: [identity]
+      summary: Send a one-time sign-in code to an email address (passwordless — VieGo never stores passwords)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+      responses:
+        '202':
+          description: Code sent (or silently no-op'd if the address is invalid, to avoid leaking which addresses exist)
   /auth/{provider}:
     post:
       tags: [identity]
-      summary: Exchange a provider token for a VieGo session
+      summary: Exchange a provider token (or, for email, a challenge code) for a VieGo session
       security: []
       parameters:
         - name: provider
@@ -45,13 +62,17 @@ paths:
             schema:
               type: object
               properties:
-                token: { type: string, description: OIDC/provider token }
+                token: { type: string, description: 'OIDC/provider token — required for google/facebook/zalo' }
+                email: { type: string, format: email, description: 'required for email (must match the address challenged via /auth/email/challenge)' }
+                code: { type: string, description: 'the one-time code from /auth/email/challenge — required for email' }
       responses:
         '200':
           description: Signed in
           content:
             application/json:
               schema: { $ref: '#/components/schemas/Session' }
+        '501':
+          description: Provider not yet supported (facebook, zalo — fast-follow)
   /auth/refresh:
     post:
       tags: [identity]
