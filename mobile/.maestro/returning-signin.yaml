@@ -1,7 +1,9 @@
 # Maestro E2E — returning-Explorer sign-in journey (T069)
-# login → main, with Onboarding skipped. Assumes the account from first-launch.yaml already
-# exists in this install's mock store (run first-launch.yaml first, or seed the account), then
-# signs out / relaunches to the Log in screen.
+# login (passwordless email code) → main, with Onboarding skipped. Assumes the account from
+# first-launch.yaml already exists (real backend, not the removed mock repository — FR-017).
+#
+# NOTE: see first-launch.yaml's note — the verification code must come from the real backend
+# response for this run, not a hard-coded value.
 appId: com.viego.mobile
 ---
 - launchApp
@@ -11,14 +13,16 @@ appId: com.viego.mobile
 # where the guard shows Log in because language is chosen but session is signed-out).
 - assertVisible: "Welcome back"
 
-# US3 — Log in with the returning account
+# US3 — Log in with the returning account (email code, no password)
 - tapOn:
     id: "Email"
 - inputText: "mai.e2e@viego.app"
+- tapOn: "Send code"
+- assertVisible: "Check your email"
 - tapOn:
-    id: "Password"
-- inputText: "secret6"
-- tapOn: "Log in"
+    id: "Verification code"
+- inputText: "123456" # replace with the real code sent to mai.e2e@viego.app
+- tapOn: "Verify & continue"
 
 # Lands directly on main — Onboarding is skipped for a returning Explorer.
 - assertVisible: "You’re all set"

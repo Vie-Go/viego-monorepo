@@ -1,6 +1,11 @@
 # Maestro E2E — new-Explorer first-launch journey (T068)
-# language → register → onboarding → main. Run against a built app / dev client (not Expo Go
-# unit mocks). Clears state first so the routing guard starts at Language Select.
+# language → register (passwordless email code) → onboarding → main. Run against a built app /
+# dev client with the real backend reachable (not Expo Go unit mocks — 004 removed the mock
+# repository entirely, FR-017). Clears state first so the routing guard starts at Language Select.
+#
+# NOTE: the verification code is generated server-side per request (research R3) — this flow
+# can't hard-code it. Point EMAIL_CHALLENGE_SENDER at a test double that returns a fixed code, or
+# read the code from the backend's console log before running the second half of this flow.
 appId: com.viego.mobile
 ---
 - clearState
@@ -11,18 +16,17 @@ appId: com.viego.mobile
 - tapOn: "Tiếng Việt"
 - tapOn: "Continue"
 
-# US2 — Register
+# US1 — Register (email code, no password — NFR-SEC-04)
 - assertVisible: "Tạo tài khoản"
-- tapOn:
-    id: "Full name"
-- inputText: "Mai Nguyen"
 - tapOn:
     id: "Email"
 - inputText: "mai.e2e@viego.app"
+- tapOn: "Send code"
+- assertVisible: "Check your email"
 - tapOn:
-    id: "Password"
-- inputText: "secret6"
-- tapOn: "Create account"
+    id: "Verification code"
+- inputText: "123456" # replace with the real code sent to mai.e2e@viego.app
+- tapOn: "Verify & continue"
 
 # US2 — Onboarding (3 slides, gold CTA)
 - assertVisible: "Next"

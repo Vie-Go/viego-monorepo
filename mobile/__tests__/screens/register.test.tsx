@@ -3,7 +3,29 @@ import { fireEvent, waitFor } from '@testing-library/react-native';
 import { renderWithProviders } from '../testUtils';
 import RegisterScreen from '../../app/(auth)/register';
 import { useSessionStore } from '../../app/shared/store/sessionStore';
-import { register, _resetForTests } from '../../app/shared/mock/explorerRepository';
+import * as auth from '../../app/shared/api/auth';
+import * as authTokenStore from '../../app/shared/api/authTokenStore';
+
+jest.mock('../../app/shared/api/auth');
+jest.mock('../../app/shared/api/authTokenStore');
+jest.mock('../../app/shared/api/useGoogleSignIn', () => ({
+  useGoogleSignIn: () => ({ ready: false, promptAsync: jest.fn() }),
+}));
+
+const mockedAuth = auth as jest.Mocked<typeof auth>;
+const mockedTokenStore = authTokenStore as jest.Mocked<typeof authTokenStore>;
+
+const SESSION: auth.Session = {
+  accessToken: 'access.jwt',
+  refreshToken: 'refresh.jwt',
+  explorer: {
+    id: 'exp_2',
+    handle: 'linh',
+    displayName: 'linh',
+    homeProvince: null,
+    preferences: { language: 'vi', theme: 'light' },
+  },
+};
 
 function resetSession() {
   useSessionStore.setState({
@@ -14,15 +36,16 @@ function resetSession() {
 }
 
 describe('Register screen', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     resetSession();
-    await _resetForTests();
+    jest.clearAllMocks();
+    mockedTokenStore.setTokens.mockResolvedValue(undefined);
   });
 
-  it('shows validation errors when submitting an empty form', () => {
-    const { getByTestId, getAllByText } = renderWithProviders(<RegisterScreen />);
+  it('shows a validation error when submitting an empty email', () => {
+    const { getByTestId, getByText } = renderWithProviders(<RegisterScreen />);
     fireEvent.press(getByTestId('register-submit'));
-    expect(getAllByText('This field is required.').length).toBeGreaterThanOrEqual(3);
+    expect(getByText('This field is required.')).toBeTruthy();
     expect(useSessionStore.getState().status).toBe('signed-out');
   });
 
@@ -33,35 +56,37 @@ describe('Register screen', () => {
     ).toBeTruthy();
   });
 
-  it('surfaces a duplicate-email error while preserving entered fields', async () => {
-    await register({ displayName: 'Mai', email: 'mai@viego.app', password: 'secret6' });
-    const { getByTestId, getByText, getByLabelText } = renderWithProviders(<RegisterScreen />);
+  it('requests a code, then signs in with a valid code and lands in Onboarding', async () => {
+    mockedAuth.requestEmailChallenge.mockResolvedValue(undefined);
+    mockedAuth.signInWithEmailCode.mockResolvedValue(SESSION);
 
-    fireEvent.changeText(getByLabelText('Full name'), 'Mai Again');
-    fireEvent.changeText(getByLabelText('Email'), 'mai@viego.app');
-    fireEvent.changeText(getByLabelText('Password'), 'secret6');
-    fireEvent.press(getByTestId('register-submit'));
-
-    await waitFor(() => {
-      expect(getByText('An account with this email already exists.')).toBeTruthy();
-    });
-    // Fields preserved (FR-023).
-    expect(getByLabelText('Full name').props.value).toBe('Mai Again');
-    expect(getByLabelText('Email').props.value).toBe('mai@viego.app');
-    expect(useSessionStore.getState().status).toBe('signed-out');
-  });
-
-  it('creates a session on successful registration', async () => {
     const { getByTestId, getByLabelText } = renderWithProviders(<RegisterScreen />);
-    fireEvent.changeText(getByLabelText('Full name'), 'Linh');
     fireEvent.changeText(getByLabelText('Email'), 'linh@viego.app');
-    fireEvent.changeText(getByLabelText('Password'), 'secret6');
     fireEvent.press(getByTestId('register-submit'));
+
+    await waitFor(() => expect(getByTestId('register-code-submit')).toBeTruthy());
+
+    fireEvent.changeText(getByLabelText('Verification code'), '654321');
+    fireEvent.press(getByTestId('register-code-submit'));
 
     await waitFor(() => {
       expect(useSessionStore.getState().status).toBe('signed-in');
     });
     // Onboarding not yet completed → guard will show Onboarding.
     expect(useSessionStore.getState().onboardingCompletedAt).toBeNull();
+    expect(mockedTokenStore.setTokens).toHaveBeenCalledWith('access.jwt', 'refresh.jwt');
+  });
+
+  it('shows a connectivity error distinct from an invalid code (FR-018)', async () => {
+    mockedAuth.requestEmailChallenge.mockRejectedValue(new TypeError('Network request failed'));
+
+    const { getByTestId, getByLabelText, getByText } = renderWithProviders(<RegisterScreen />);
+    fireEvent.changeText(getByLabelText('Email'), 'linh@viego.app');
+    fireEvent.press(getByTestId('register-submit'));
+
+    await waitFor(() => {
+      expect(getByTestId('register-error')).toBeTruthy();
+    });
+    expect(getByText("Can't reach VieGo. Check your connection and try again.")).toBeTruthy();
   });
 });

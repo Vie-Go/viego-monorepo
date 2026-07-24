@@ -5,6 +5,9 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/viego}
     username: ${DB_USERNAME:viego}
     password: ${DB_PASSWORD:viego}
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
   jpa:
     open-in-view: false
     hibernate:
@@ -31,3 +34,13 @@ management:
 # Build version surfaced by GET /api/v1/status (filtered from the Maven project version at build time).
 viego:
   version: @project.version@
+  security:
+    # Dev-only fixed value — never a real secret in this file (NFR-SEC-03). Must be at least 256
+    # bits for HS256; overridden by a real secret in every non-local environment.
+    jwt-signing-secret: ${JWT_SIGNING_SECRET:dev-only-jwt-signing-secret-change-me-0123456789abcdef}
+    access-token-ttl: PT15M
+    refresh-token-ttl: P30D
+  google:
+    oauth-client-id: ${GOOGLE_OAUTH_CLIENT_ID:}
+  email:
+    challenge-sender: ${EMAIL_CHALLENGE_SENDER:console}

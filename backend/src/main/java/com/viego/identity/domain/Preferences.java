@@ -35,7 +35,7 @@ public class Preferences implements Serializable {
 
     @Builder.Default
     @Column(name = "theme", nullable = false, length = 8)
-    private String theme = "system";
+    private String theme = "light";
 
     @Builder.Default
     @Column(name = "updated_at", nullable = false)

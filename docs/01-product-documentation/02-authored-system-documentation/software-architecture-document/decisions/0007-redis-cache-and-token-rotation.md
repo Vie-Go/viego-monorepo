@@ -5,7 +5,7 @@ description: "Redis as a non-authoritative cache for hot and slow-changing reads
 
 # ADR 0007 — Redis for caching and token rotation
 
-- **Status:** Proposed · **Date:** 2026-07-22 · **Deciders:** VieGo team
+- **Status:** Accepted · **Date:** 2026-07-24 · **Deciders:** VieGo team
 
 ## Context
 [PostgreSQL](0005-postgresql-and-event-driven-integration.md) is the primary datastore, but two

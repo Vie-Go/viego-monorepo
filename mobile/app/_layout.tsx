@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   useFonts,
   Urbanist_400Regular,
@@ -23,6 +24,10 @@ import { resolveRoute } from './shared/lib/routing';
 
 // Keep the splash visible until fonts + persisted stores are ready (research.md R5).
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+// One QueryClient for the app's lifetime — owns caching/invalidation for all server state
+// (identity, and later modules), per mobile/CLAUDE.md's Zustand-for-client/Query-for-server split.
+const queryClient = new QueryClient();
 
 /** True once all three persisted Zustand stores have rehydrated from AsyncStorage. */
 function useStoresHydrated(): boolean {
@@ -95,14 +100,16 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <ThemeProvider>
-          <I18nProvider>
-            <RoutingGuard />
-            <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
-          </I18nProvider>
-        </ThemeProvider>
-      </SafeAreaProvider>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <I18nProvider>
+              <RoutingGuard />
+              <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
+            </I18nProvider>
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </QueryClientProvider>
     </GestureHandlerRootView>
   );
 }
