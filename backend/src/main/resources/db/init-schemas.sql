@@ -12,8 +12,11 @@ CREATE SCHEMA IF NOT EXISTS exploration;
 -- 3. Content Schema (Beats, reviews, memories)
 CREATE SCHEMA IF NOT EXISTS content;
 
--- 4. Engagement Schema (Streaks, milestones, notifications)
+-- 4. Engagement Schema (Streaks, milestones)
 CREATE SCHEMA IF NOT EXISTS engagement;
 
 -- 5. Social Schema (Friendships, invite links, feed entries, reactions)
 CREATE SCHEMA IF NOT EXISTS social;
+
+-- 6. Notification Schema (Notifications, device tokens)
+CREATE SCHEMA IF NOT EXISTS notification;

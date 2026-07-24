@@ -6,13 +6,13 @@
 
 ## Summary
 
-Implement 5 isolated PostgreSQL schemas (`identity`, `exploration`, `content`, `engagement`, `social`) mapped 1-to-1 with Spring Modulith backend modules. Configure 5 separate Flyway Spring `@Bean` instances (`identityFlyway`, `explorationFlyway`, `contentFlyway`, `engagementFlyway`, `socialFlyway`) to manage migration history tables independently inside each schema. Adopt a hybrid primary key strategy using 64-bit TSIDs (`BIGINT`, 8 bytes) for high-write tables (`content`, `engagement`, `social`) and 128-bit `UUID`s for core security tables (`identity`).
+Implement 5 isolated PostgreSQL schemas (`identity`, `exploration`, `content`, `engagement`, `social`) mapped 1-to-1 with Spring Modulith backend modules. Configure 5 separate Flyway Spring `@Bean` instances (`identityFlyway`, `explorationFlyway`, `contentFlyway`, `engagementFlyway`, `socialFlyway`) to manage migration history tables independently inside each schema. Use a single primary key type across all five schemas: application-generated, time-ordered **UUIDv7** (ADR-0014), with natural ISO keys retained for `exploration.provinces` / `wards`.
 
 ## Technical Context
 
 **Language/Version**: Java 25 (Spring Boot 3.4+)
 
-**Primary Dependencies**: Spring Modulith, Hibernate/JPA, Flyway Migration (5 separate Beans), TSID Creator, Jackson, PostGIS (for spatial coordinates)
+**Primary Dependencies**: Spring Modulith, Hibernate/JPA, Flyway Migration (5 separate Beans), Lombok, Jackson, PostGIS (for spatial coordinates)
 
 **Storage**: PostgreSQL 16+ (Multi-schema partitioning: `identity`, `exploration`, `content`, `engagement`, `social`)
 
@@ -22,7 +22,7 @@ Implement 5 isolated PostgreSQL schemas (`identity`, `exploration`, `content`, `
 
 **Project Type**: Spring Boot Modular Monolith Web Application
 
-**Performance Goals**: Support 1,000 concurrent DB queries/sec with zero cross-schema lock contention; 50% B-tree index size reduction on high-volume tables via 64-bit TSIDs
+**Performance Goals**: Support 1,000 concurrent DB queries/sec with zero cross-schema lock contention; time-ordered UUIDv7 keys keep B-tree inserts at the index right edge
 
 **Constraints**: Prohibit all cross-schema foreign keys; 5 separate Flyway Beans MUST manage isolated `flyway_schema_history` tables per schema
 
@@ -68,13 +68,13 @@ backend/
 │   ├── identity/
 │   │   └── domain/                   # Identity entities (@Table(schema = "identity"), UUID PK)
 │   ├── exploration/
-│   │   └── domain/                   # Exploration entities (@Table(schema = "exploration"), String/TSID PK)
+│   │   └── domain/                   # Exploration entities (@Table(schema = "exploration"), ISO/UUIDv7 PK)
 │   ├── content/
-│   │   └── domain/                   # Content entities (@Table(schema = "content"), TSID BIGINT PK)
+│   │   └── domain/                   # Content entities (@Table(schema = "content"), UUIDv7 PK)
 │   ├── engagement/
-│   │   └── domain/                   # Engagement entities (@Table(schema = "engagement"), TSID BIGINT PK)
+│   │   └── domain/                   # Engagement entities (@Table(schema = "engagement"), UUIDv7 PK)
 │   └── social/
-│       └── domain/                   # Social entities (@Table(schema = "social"), TSID BIGINT PK)
+│       └── domain/                   # Social entities (@Table(schema = "social"), UUIDv7 PK)
 └── src/main/resources/
     └── db/migration/
         ├── identity/                 # Flyway V1__identity_schema.sql (managed by identityFlyway)
@@ -84,7 +84,7 @@ backend/
         └── social/                   # Flyway V1__social_schema.sql (managed by socialFlyway)
 ```
 
-**Structure Decision**: Monorepo backend layout using Spring Modulith package structure with 5 separate Flyway migration beans and hybrid TSID/UUID entity mapping.
+**Structure Decision**: Monorepo backend layout using Spring Modulith package structure with 5 separate Flyway migration beans and uniform UUIDv7 entity mapping via a shared `BaseEntity`.
 
 ## Complexity Tracking
 

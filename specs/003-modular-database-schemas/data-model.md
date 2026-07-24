@@ -7,25 +7,32 @@
 ## Database Schema & Primary Key Strategy Overview
 
 The database structure is partitioned into 5 independent PostgreSQL schemas corresponding to VieGo's bounded contexts:
-1. `identity` (Core Security & Accounts) — Uses **UUIDv7 / UUIDv4** (16 bytes) for public unguessability and security.
-2. `exploration` (Geography & Unlocks) — Uses **String ISO** for provinces/wards, and **TSID** (`BIGINT`, 8 bytes) for places & collections.
-3. `content` (High-Volume Captures & Reviews) — Uses **TSID** (`BIGINT`, 8 bytes) for write performance & 50% index storage savings.
-4. `engagement` (Streaks & Notifications) — Uses **TSID** (`BIGINT`, 8 bytes) for high-frequency notification streams.
-5. `social` (High-Volume Feeds & Reactions) — Uses **TSID** (`BIGINT`, 8 bytes) for timeline entries & reactions.
+1. `identity` (Core Security & Accounts)
+2. `exploration` (Geography & Unlocks) — natural **ISO codes** for provinces/wards
+3. `content` (Captures & Reviews)
+4. `engagement` (Streaks & Notifications)
+5. `social` (Feeds & Reactions)
+
+**Every generated primary key is a UUIDv7** (RFC 9562), assigned by the application via
+`BaseEntity` — time-ordered for index locality, unguessable, and identical in every schema.
+See [ADR-0014](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0014-uuidv7-primary-keys.md).
+Natural keys are kept where they already exist (`exploration.provinces`, `exploration.wards`), and
+entities whose identity *is* another entity's key (`identity.preferences`, `engagement.streaks`)
+keep `explorer_id` as their primary key.
 
 > [!IMPORTANT]
 > **No Foreign Keys Across Schemas**: Foreign key constraints MUST NOT cross schema boundaries. All references across schemas (e.g. `explorer_id` in `content.beats`) are raw logical ID columns enforced at the application level.
 
 ---
 
-## 1. `identity` Schema (ID Type: `UUID` - 16 bytes)
+## 1. `identity` Schema
 
 ### `identity.explorers`
 Main Explorer account record.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `UUID` | `PRIMARY KEY` | Unique Explorer identifier (UUIDv7/v4) |
+| `id` | `UUID` | `PRIMARY KEY` | Unique Explorer identifier (UUIDv7) |
 | `handle` | `VARCHAR(32)` | `NOT NULL, UNIQUE` | Explorer handle (e.g. `@minh.dq`) |
 | `display_name` | `VARCHAR(64)` | `NOT NULL` | Display name |
 | `avatar_url` | `TEXT` | `NULL` | Profile avatar URL |
@@ -58,7 +65,7 @@ Explorer configuration preferences.
 
 ---
 
-## 2. `exploration` Schema (ID Type: String ISO / TSID `BIGINT`)
+## 2. `exploration` Schema (natural ISO keys for provinces/wards)
 
 ### `exploration.provinces`
 Administrative province data.
@@ -88,7 +95,7 @@ Points of Interest (POIs).
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Place TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Place identifier (UUIDv7) |
 | `province_id` | `VARCHAR(16)` | `NOT NULL, FK -> exploration.provinces(id)` | Province code |
 | `ward_id` | `VARCHAR(16)` | `NULL, FK -> exploration.wards(id)` | Ward code |
 | `name` | `VARCHAR(128)` | `NOT NULL` | Place name |
@@ -103,26 +110,26 @@ Unlocked provinces per Explorer (No foreign key to `identity.explorers`).
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Collection entry TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Collection entry identifier (UUIDv7) |
 | `explorer_id` | `UUID` | `NOT NULL` | Logical reference to `identity.explorers(id)` |
 | `province_id` | `VARCHAR(16)` | `NOT NULL, FK -> exploration.provinces(id)` | Unlocked province |
 | `unlocked_at` | `TIMESTAMPTZ` | `NOT NULL` | Timestamp of first Beat capture in province |
-| `first_beat_id` | `BIGINT` | `NOT NULL` | Logical reference to `content.beats(id)` (TSID) |
+| `first_beat_id` | `UUID` | `NOT NULL` | Logical reference to `content.beats(id)` |
 
 *Index*: `UNIQUE (explorer_id, province_id)`
 
 ---
 
-## 3. `content` Schema (ID Type: TSID `BIGINT` - 8 bytes)
+## 3. `content` Schema
 
 ### `content.beats`
 High-frequency photo check-in captures.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Beat TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Beat identifier (UUIDv7) |
 | `explorer_id` | `UUID` | `NOT NULL` | Logical reference to `identity.explorers(id)` |
-| `place_id` | `BIGINT` | `NOT NULL` | Logical reference to `exploration.places(id)` (TSID) |
+| `place_id` | `UUID` | `NOT NULL` | Logical reference to `exploration.places(id)` |
 | `province_id` | `VARCHAR(16)` | `NOT NULL` | Logical reference to `exploration.provinces(id)` |
 | `media_url` | `TEXT` | `NOT NULL` | Photo media storage URL |
 | `caption` | `TEXT` | `NULL` | Optional caption |
@@ -135,17 +142,17 @@ Short traveler notes for places.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Review TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Review identifier (UUIDv7) |
 | `explorer_id` | `UUID` | `NOT NULL` | Logical reference to `identity.explorers(id)` |
-| `place_id` | `BIGINT` | `NOT NULL` | Logical reference to `exploration.places(id)` (TSID) |
-| `beat_id` | `BIGINT` | `NOT NULL, FK -> content.beats(id)` | Associated verified Beat (TSID) |
+| `place_id` | `UUID` | `NOT NULL` | Logical reference to `exploration.places(id)` |
+| `beat_id` | `UUID` | `NOT NULL, FK -> content.beats(id)` | Associated verified Beat |
 | `rating` | `SMALLINT` | `NOT NULL` | Rating score (1-5) |
 | `comment` | `TEXT` | `NOT NULL` | Review comment |
 | `created_at` | `TIMESTAMPTZ` | `NOT NULL` | Review timestamp |
 
 ---
 
-## 4. `engagement` Schema (ID Type: TSID `BIGINT` - 8 bytes)
+## 4. `engagement` Schema
 
 ### `engagement.streaks`
 Active capture streak per Explorer.
@@ -163,33 +170,26 @@ Streak and exploration badges unlocked.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Milestone entry TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Milestone entry identifier (UUIDv7) |
 | `explorer_id` | `UUID` | `NOT NULL` | Logical reference to `identity.explorers(id)` |
 | `badge_code` | `VARCHAR(32)` | `NOT NULL` | Badge identifier (e.g. `STREAK_7_DAYS`) |
 | `unlocked_at` | `TIMESTAMPTZ` | `NOT NULL` | Milestone achievement timestamp |
 
-### `engagement.notifications`
-High-volume notification stream.
-
-| Column | Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Notification TSID (8 bytes) |
-| `recipient_id` | `UUID` | `NOT NULL` | Logical reference to `identity.explorers(id)` |
-| `kind` | `VARCHAR(32)` | `NOT NULL` | Type (`STREAK_REMINDER`, `FRIEND_BEAT`, `REACTION`) |
-| `payload_json` | `JSONB` | `NOT NULL` | Event detail payload |
-| `is_read` | `BOOLEAN` | `NOT NULL DEFAULT FALSE` | Read status |
-| `created_at` | `TIMESTAMPTZ` | `NOT NULL` | Notification timestamp |
+> **Moved out (post-spec).** Notifications were originally modelled in `engagement`. They now live
+> in their own `notification` schema/module — see
+> [notification design](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/notification.md).
+> The `engagement` schema no longer contains a `notifications` table.
 
 ---
 
-## 5. `social` Schema (ID Type: TSID `BIGINT` - 8 bytes)
+## 5. `social` Schema
 
 ### `social.friendships`
 Mutual connections between Explorers.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Friendship TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Friendship identifier (UUIDv7) |
 | `explorer_id` | `UUID` | `NOT NULL` | First Explorer UUID |
 | `friend_id` | `UUID` | `NOT NULL` | Second Explorer UUID |
 | `established_at` | `TIMESTAMPTZ` | `NOT NULL` | Friendship establishment timestamp |
@@ -201,9 +201,9 @@ High-volume fan-out timeline feed entries.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Feed item TSID (8 bytes) |
+| `id` | `UUID` | `PRIMARY KEY` | Feed item identifier (UUIDv7) |
 | `subscriber_id` | `UUID` | `NOT NULL` | Logical reference to recipient Explorer UUID |
-| `beat_id` | `BIGINT` | `NOT NULL` | Logical reference to `content.beats(id)` (TSID) |
+| `beat_id` | `UUID` | `NOT NULL` | Logical reference to `content.beats(id)` |
 | `author_id` | `UUID` | `NOT NULL` | Logical reference to author Explorer UUID |
 | `feed_type` | `VARCHAR(16)` | `NOT NULL` | Feed context (`FRIEND_FEED`, `DISCOVER`) |
 | `published_at` | `TIMESTAMPTZ` | `NOT NULL` | Beat creation timestamp |
@@ -215,8 +215,8 @@ High-volume social reactions to Beats.
 
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | `PRIMARY KEY` | Reaction TSID (8 bytes) |
-| `beat_id` | `BIGINT` | `NOT NULL` | Logical reference to `content.beats(id)` (TSID) |
+| `id` | `UUID` | `PRIMARY KEY` | Reaction identifier (UUIDv7) |
+| `beat_id` | `UUID` | `NOT NULL` | Logical reference to `content.beats(id)` |
 | `explorer_id` | `UUID` | `NOT NULL` | Logical reference to `identity.explorers(id)` |
 | `kind` | `VARCHAR(16)` | `NOT NULL` | Reaction type (`HEART`, `BOLT`) |
 | `created_at` | `TIMESTAMPTZ` | `NOT NULL` | Reaction timestamp |

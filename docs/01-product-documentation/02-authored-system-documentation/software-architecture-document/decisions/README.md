@@ -23,5 +23,7 @@ change a decision, add a new ADR that supersedes the old one.
 | [0011](0011-expo-router-zustand-maestro-for-mobile.md) | Expo Router, Zustand, and Maestro for the mobile app | Accepted |
 | [0012](0012-nativewind-and-react-native-reusables-for-mobile-ui.md) | NativeWind + React Native Reusables for the mobile UI component base | Accepted |
 | [0013](0013-object-storage-for-beat-media.md) | Cloudflare R2 for Beat media, MinIO locally | Proposed |
+| [0014](0014-uuidv7-primary-keys.md) | Uniform UUIDv7 primary keys | Accepted |
+| [0015](0015-lombok-for-entity-boilerplate.md) | Lombok for entity and DTO boilerplate | Accepted |
 
 Filename pattern: `NNNN-short-kebab-title.md`. Statuses: Proposed · Accepted · Superseded · Deprecated.

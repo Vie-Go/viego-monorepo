@@ -19,6 +19,7 @@ spring:
       - classpath:db/migration/engagement
       - classpath:db/migration/content
       - classpath:db/migration/social
+      - classpath:db/migration/notification
       - classpath:db/migration/public
 
 management:

@@ -21,10 +21,16 @@ each module is actually built*. There is **one design document per
 | [Content](content.md) | `content` | [Beat capture](../../../01-core-specifications/executable-specifications/features/content/beat-capture.feature) | **`BeatCaptured`** *(the backbone)* | [P3](../../../../02-process-documentation/plans-estimates-schedules.md) |
 | [Engagement](engagement.md) | `engagement` | [Daily streak](../../../01-core-specifications/executable-specifications/features/engagement/daily-streak.feature) | `StreakAdvanced` / `StreakBroken` / `MilestoneReached` | [P4](../../../../02-process-documentation/plans-estimates-schedules.md) |
 | [Social](social.md) | `social` | [Friends, feeds & reactions](../../../01-core-specifications/executable-specifications/features/social/social-feed.feature) | `FriendAdded` / `BeatReacted` | [P5](../../../../02-process-documentation/plans-estimates-schedules.md) |
+| [Notification](notification.md) | `notification` | Notifications & delivery | `NotificationRaised` | [P4](../../../../02-process-documentation/plans-estimates-schedules.md) |
 
 > The `shared` module is an open kernel of cross-cutting value objects (ids, `LocalizedText`) — it
 > has no core feature and therefore no design doc; it is documented in the
 > [domain model](../ddd-and-domain-model.md).
+>
+> **Notification** is a cross-cutting **delivery sink**, not a product feature owned by one context
+> — it consumes events from several modules. It gets a design doc because it is a real module with
+> its own schema and boundary, but its "backbone event" is the internal `NotificationRaised` rather
+> than a domain milestone.
 
 ## How each design document is organised
 

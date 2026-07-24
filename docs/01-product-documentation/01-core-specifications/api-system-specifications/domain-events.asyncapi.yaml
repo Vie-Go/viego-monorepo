@@ -9,6 +9,10 @@ info:
 
     BeatCaptured is the backbone event: one capture fans out to exploration (unlock), engagement
     (streak), and social (feeds).
+
+    notification is the downstream sink: it consumes MilestoneReached, ProvinceUnlocked,
+    FriendAdded, and BeatReacted, then publishes NotificationRaised for delivery channels. No
+    module consumes notification's events except a push/email adapter.
 defaultContentType: application/json
 channels:
   explorerRegistered:
@@ -56,6 +60,11 @@ channels:
     messages:
       BeatReacted:
         $ref: '#/components/messages/BeatReacted'
+  notificationRaised:
+    address: viego.notification.notification-raised
+    messages:
+      NotificationRaised:
+        $ref: '#/components/messages/NotificationRaised'
 operations:
   publishBeatCaptured:
     action: send
@@ -78,7 +87,32 @@ operations:
     action: receive
     channel:
       $ref: '#/channels/provinceUnlocked'
-    summary: engagement consumes this for province-milestone surfaces
+    summary: engagement consumes this for province-milestone surfaces; notification records a PROVINCE_UNLOCKED
+  onMilestoneReached:
+    action: receive
+    channel:
+      $ref: '#/channels/milestoneReached'
+    summary: notification records a MILESTONE_REACHED; social surfaces the badge
+  onFriendAdded:
+    action: receive
+    channel:
+      $ref: '#/channels/friendAdded'
+    summary: notification records a FRIEND_ADDED
+  onBeatReacted:
+    action: receive
+    channel:
+      $ref: '#/channels/beatReacted'
+    summary: notification records a BEAT_REACTED for the Beat's author
+  publishNotificationRaised:
+    action: send
+    channel:
+      $ref: '#/channels/notificationRaised'
+    summary: notification publishes when a notification is recorded, for out-of-app delivery channels
+  onNotificationRaised:
+    action: receive
+    channel:
+      $ref: '#/channels/notificationRaised'
+    summary: a push/email delivery adapter consumes this; no domain module depends on notification
 components:
   messages:
     ExplorerRegistered:
@@ -152,3 +186,13 @@ components:
           explorerId: { type: string }
           kind: { type: string, enum: [like, bolt] }
           at: { type: string, format: date-time }
+    NotificationRaised:
+      payload:
+        type: object
+        properties:
+          notificationId: { type: string }
+          recipientId: { type: string }
+          kind:
+            type: string
+            enum: [STREAK_REMINDER, MILESTONE_REACHED, PROVINCE_UNLOCKED, FRIEND_ADDED, BEAT_REACTED, FRIEND_BEAT, PLACE_NEARBY]
+          raisedAt: { type: string, format: date-time }

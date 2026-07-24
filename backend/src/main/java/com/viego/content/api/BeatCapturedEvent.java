@@ -9,9 +9,9 @@ import java.util.UUID;
  * Cross-module backbone event consumed by Exploration (unlocks), Engagement (streaks), and Social (feed).
  */
 public record BeatCapturedEvent(
-        Long beatId,          // TSID (64-bit BIGINT)
-        UUID explorerId,      // Identity UUID (16 bytes)
-        Long placeId,         // Exploration TSID (64-bit BIGINT)
+        UUID beatId,          // content.beats(id) — UUIDv7
+        UUID explorerId,      // identity.explorers(id) — UUIDv7
+        UUID placeId,         // exploration.places(id) — UUIDv7
         String provinceId,    // Exploration ISO Code e.g. VN-HN
         String mediaUrl,
         Instant capturedAt

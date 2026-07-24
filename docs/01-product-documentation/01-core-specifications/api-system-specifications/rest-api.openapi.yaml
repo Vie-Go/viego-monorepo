@@ -20,9 +20,11 @@ tags:
   - name: content
     description: Beats (photo check-ins), reviews, memories
   - name: engagement
-    description: Streaks, milestones, notifications
+    description: Streaks, milestones
   - name: social
     description: Friends, invite links, feeds, reactions
+  - name: notification
+    description: Notifications (delivery sink) and push device tokens
 security:
   - bearerAuth: []
 paths:
@@ -254,8 +256,8 @@ paths:
               schema: { $ref: '#/components/schemas/Streak' }
   /notifications/me:
     get:
-      tags: [engagement]
-      summary: The Explorer's notifications
+      tags: [notification]
+      summary: The Explorer's notifications, newest first
       responses:
         '200':
           description: OK
@@ -264,6 +266,52 @@ paths:
               schema:
                 type: array
                 items: { $ref: '#/components/schemas/Notification' }
+  /notifications/me/unread-count:
+    get:
+      tags: [notification]
+      summary: Count of the Explorer's unread notifications (badge)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+  /notifications/{notificationId}/read:
+    post:
+      tags: [notification]
+      summary: Mark one notification read (idempotent)
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Marked read }
+  /notifications/me/read-all:
+    post:
+      tags: [notification]
+      summary: Mark all the Explorer's notifications read (idempotent)
+      responses:
+        '204': { description: Marked read }
+  /notifications/me/device-tokens:
+    put:
+      tags: [notification]
+      summary: Register or refresh a push device token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, platform]
+              properties:
+                token: { type: string }
+                platform: { type: string, enum: [ios, android] }
+      responses:
+        '204': { description: Registered }
   /feed/me:
     get:
       tags: [social]
@@ -484,12 +532,20 @@ components:
               captured: { type: boolean }
     Notification:
       type: object
+      description: >
+        A recorded notification. Copy is rendered client-side from kind + payload via localized
+        keys (FR-NT-06) — the server never returns rendered strings.
       properties:
-        kind: { type: string, enum: [streak, like, friend-beat, milestone, place-nearby] }
-        title: { type: string }
-        subtitle: { type: string }
-        time: { type: string }
-        unread: { type: boolean }
+        id: { type: string }
+        kind:
+          type: string
+          enum: [streak_reminder, milestone_reached, province_unlocked, friend_added, beat_reacted, friend_beat, place_nearby]
+        payload:
+          type: object
+          additionalProperties: true
+          description: Event data for the kind (e.g. milestone number, province id, friend handle)
+        read: { type: boolean }
+        createdAt: { type: string, format: date-time }
     Friend:
       type: object
       properties:

@@ -1,9 +1,10 @@
 -- Schema: identity
 -- Managed by identityFlyway bean (history table: identity.flyway_schema_history)
+-- Primary keys: UUIDv7 (time-ordered, application-generated) — see ADR-0014.
 
 CREATE SCHEMA IF NOT EXISTS identity;
 
--- 1. Explorers table (Security UUIDv7/v4 primary key)
+-- 1. Explorers table
 CREATE TABLE IF NOT EXISTS identity.explorers (
     id UUID PRIMARY KEY,
     handle VARCHAR(32) NOT NULL UNIQUE,
@@ -14,7 +15,7 @@ CREATE TABLE IF NOT EXISTS identity.explorers (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Auth Providers table (Security UUID primary key)
+-- 2. Auth Providers table
 CREATE TABLE IF NOT EXISTS identity.auth_providers (
     id UUID PRIMARY KEY,
     explorer_id UUID NOT NULL REFERENCES identity.explorers(id) ON DELETE CASCADE,

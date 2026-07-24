@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * Spring configuration providing 5 separate Flyway beans.
+ * Spring configuration providing one Flyway bean per module schema.
  * Each Flyway bean manages migration execution and history independently within its schema namespace
- * (identity.flyway_schema_history, exploration.flyway_schema_history, etc.).
+ * (identity.flyway_schema_history, exploration.flyway_schema_history, etc.), so a module can be
+ * extracted to its own database without splitting migration history.
  */
 @Configuration
 public class FlywayConfig {
@@ -73,6 +74,19 @@ public class FlywayConfig {
                 .schemas("social")
                 .defaultSchema("social")
                 .locations("classpath:db/migration/social")
+                .table("flyway_schema_history")
+                .load();
+        flyway.migrate();
+        return flyway;
+    }
+
+    @Bean
+    public Flyway notificationFlyway(DataSource dataSource) {
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .schemas("notification")
+                .defaultSchema("notification")
+                .locations("classpath:db/migration/notification")
                 .table("flyway_schema_history")
                 .load();
         flyway.migrate();

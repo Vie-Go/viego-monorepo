@@ -76,7 +76,7 @@ Phase [P3](../../../../02-process-documentation/plans-estimates-schedules.md) ·
 | FR-CO-06 | An Explorer can view their **Memories** — their own Beats, time-ordered by month. | MUST | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
 | FR-CO-07 | An Explorer can leave a **Review** on a Place **only if** they have captured a Beat there ("verified by location"). | SHOULD | [beat-capture.feature](../executable-specifications/features/content/beat-capture.feature) | draft |
 
-## FR-EN — Engagement (Streaks, milestones & notifications)
+## FR-EN — Engagement (Streaks & milestones)
 
 Phase [P4](../../../../02-process-documentation/plans-estimates-schedules.md) · Design: [engagement](../../02-authored-system-documentation/software-architecture-document/design/engagement.md) · Spec: [`daily-streak.feature`](../executable-specifications/features/engagement/daily-streak.feature)
 
@@ -89,8 +89,22 @@ Phase [P4](../../../../02-process-documentation/plans-estimates-schedules.md) ·
 | FR-EN-05 | A streak breaks even when the Explorer never opens the app (evaluation on read and/or scheduled sweep). | SHOULD | [daily-streak.feature](../executable-specifications/features/engagement/daily-streak.feature) | ready |
 | FR-EN-06 | An Explorer can view their **current** and **longest** streak, last capture date, and a **this-week** view. | MUST | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
 | FR-EN-07 | Reaching a streak **milestone** (e.g. 7 days) awards a **Badge**, publishes **`MilestoneReached`**, and surfaces a celebration. | SHOULD | [daily-streak.feature](../executable-specifications/features/engagement/daily-streak.feature) | ready |
-| FR-EN-08 | An Explorer receives **notifications**: streak reminder, a like on their Beat, a friend's Beat, a milestone, and new places nearby. | SHOULD | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
 | FR-EN-09 | The **day/timezone boundary** for "a day" is fixed and applied consistently. | MUST | [daily-streak.feature](../executable-specifications/features/engagement/daily-streak.feature) | draft |
+
+## FR-NT — Notification (Delivery sink)
+
+Phase [P4](../../../../02-process-documentation/plans-estimates-schedules.md) · Design: [notification](../../02-authored-system-documentation/software-architecture-document/design/notification.md)
+
+The `notification` module records notifications from every context and delivers them. It **consumes** peers' events and depends on no peer.
+
+| ID | Requirement | Priority | Spec | Status |
+|----|-------------|----------|------|--------|
+| FR-NT-01 | An Explorer receives **notifications** for: streak reminder, streak **milestone**, a **province unlocked**, a **friend added**, a **reaction** on their Beat, a **friend's Beat**, and a **new place nearby** — one `kind` per publishing context. | SHOULD | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
+| FR-NT-02 | Each notification is **recorded from a published domain event** (`MilestoneReached`, `ProvinceUnlocked`, `FriendAdded`, `BeatReacted`, …); no context calls the notification module directly. | MUST | [domain-events](../api-system-specifications/domain-events.asyncapi.yaml) | ready |
+| FR-NT-03 | An Explorer can view their notification **feed** (newest first) and an **unread count**, and **mark** items read (idempotent). | MUST | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | ready |
+| FR-NT-04 | Recording a notification publishes **`NotificationRaised`** so out-of-app delivery (push) reacts without the notification module depending on the delivery channel. | SHOULD | [domain-events](../api-system-specifications/domain-events.asyncapi.yaml) | ready |
+| FR-NT-05 | An Explorer can register one or more **device tokens** for **push** delivery. | SHOULD | [rest-api](../api-system-specifications/rest-api.openapi.yaml) | draft |
+| FR-NT-06 | Notification **copy is rendered client-side** from `kind` + payload via localized keys — the server stores data, never rendered strings. | MUST | [localization](../../02-authored-system-documentation/ui-ux-design-document/localization.md) | ready |
 
 ## FR-SO — Social (Friends, feeds & reactions)
 

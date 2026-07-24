@@ -11,7 +11,8 @@ in CI — a violation fails the build. Design rationale:
 
 ## Must
 - One module per [bounded context](../../01-product-documentation/02-authored-system-documentation/software-architecture-document/ddd-and-domain-model.md):
-  `identity`, `exploration`, `content`, `engagement`, `social`.
+  `identity`, `exploration`, `content`, `engagement`, `social`, plus the `notification` delivery
+  sink (a consumer-only module — every dependency arrow points **into** it).
 - Expose only the `api` **named interface**; keep `domain`/`application`/`infrastructure` internal.
 - Integrate via **published events**; use a peer's `::api` only when a synchronous read is
   unavoidable (treat as an anti-corruption boundary).

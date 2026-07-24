@@ -1,11 +1,27 @@
 package com.viego.exploration.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 
+/**
+ * A Vietnamese province. Reference data keyed by its natural ISO administrative code
+ * rather than a generated key — see ADR-0014.
+ */
 @Entity
 @Table(name = "provinces", schema = "exploration")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Province implements Serializable {
 
     @Id
@@ -18,13 +34,13 @@ public class Province implements Serializable {
     @Column(name = "name_en", nullable = false, length = 128)
     private String nameEn;
 
+    @Builder.Default
     @Column(name = "beat_count", nullable = false)
     private Long beatCount = 0L;
 
+    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
-
-    public Province() {}
 
     public Province(String id, String nameVi, String nameEn) {
         this.id = id;
@@ -32,13 +48,16 @@ public class Province implements Serializable {
         this.nameEn = nameEn;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getNameVi() { return nameVi; }
-    public void setNameVi(String nameVi) { this.nameVi = nameVi; }
-    public String getNameEn() { return nameEn; }
-    public void setNameEn(String nameEn) { this.nameEn = nameEn; }
-    public Long getBeatCount() { return beatCount; }
-    public void setBeatCount(Long beatCount) { this.beatCount = beatCount; }
-    public Instant getCreatedAt() { return createdAt; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Province province = (Province) o;
+        return id != null && Objects.equals(id, province.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

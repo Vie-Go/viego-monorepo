@@ -41,6 +41,11 @@ text.
 
 ## Notifications
 
+> **Backend owner:** the [`notification` module](../../software-architecture-document/design/notification.md),
+> not Engagement — this screen reads `GET /api/v1/notifications/me` and is fed by every context that
+> publishes a notification-worthy event. It is documented here because it ships alongside the streak
+> UI in P4; the mobile feature folder is `features/notification`.
+
 **Purpose & entry.** Chronological activity list (streak reminders, likes, friends' beats, nearby
 places, badges). Reached from the [Map Home](exploration.md#map-home) / Snap home bell; the bell shows
 an unread dot. Opening marks all read.

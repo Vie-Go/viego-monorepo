@@ -68,6 +68,7 @@
         { "title": "· Content (Beats)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/content", "icon": "camera" },
         { "title": "· Engagement (Streaks)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/engagement", "icon": "flame" },
         { "title": "· Social (Friends & Feeds)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/social", "icon": "users" },
+        { "title": "· Notification (Delivery sink)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/design/notification", "icon": "bell" },
         { "title": "Infrastructure", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/infrastructure", "icon": "cloud" },
         { "title": "Decisions (ADRs)", "path": "/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions", "icon": "git-commit" }
       ]
@@ -120,7 +121,7 @@
       "collapsible": true,
       "children": [
         { "title": "Overview", "path": "/02-process-documentation", "icon": "book-open" },
-        { "title": "Roadmaps & Backlogs", "path": "/02-process-documentation/roadmaps-and-backlogs", "icon": "map" },
+        { "title": "Product Roadmap", "path": "/02-process-documentation/roadmaps-and-backlogs", "icon": "map" },
         { "title": "SDD Standards", "path": "/02-process-documentation/sdd-standards", "icon": "ruler" },
         { "title": "Plans, Estimates, Schedules", "path": "/02-process-documentation/plans-estimates-schedules", "icon": "calendar" },
         { "title": "Test Strategy", "path": "/02-process-documentation/test-strategy", "icon": "flask-conical" },

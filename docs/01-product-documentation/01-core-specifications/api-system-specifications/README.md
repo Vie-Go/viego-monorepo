@@ -11,7 +11,7 @@ modules. These **replace traditional PRDs/tech-design docs for system interfaces
 | File | Contract | Consumers |
 |------|----------|-----------|
 | [`rest-api.openapi.yaml`](rest-api.openapi.yaml) | Synchronous REST API (client ↔ backend) | React Native app, integrators |
-| [`domain-events.asyncapi.yaml`](domain-events.asyncapi.yaml) | Asynchronous domain events between Spring Modulith modules (and future services) | `identity`, `exploration`, `content`, `engagement`, `social` |
+| [`domain-events.asyncapi.yaml`](domain-events.asyncapi.yaml) | Asynchronous domain events between Spring Modulith modules (and future services) | `identity`, `exploration`, `content`, `engagement`, `social`, `notification` |
 | [`data-schemas.md`](data-schemas.md) | Canonical province/ward/place datasets + the Beat/Review shapes | `exploration` & `content` modules, map UI |
 
 ## Conventions

@@ -110,51 +110,71 @@ public class FlywayConfig {
 
 ---
 
-## 3. Hybrid Primary Key JPA Entity Mapping Example
+## 3. Primary Key JPA Entity Mapping
 
-### TSID (64-bit `BIGINT`) Entity Example (`content.beats`)
+Key generation is defined **once**, in the shared base class. Nothing else declares an `@Id`
+unless it uses a natural key. See
+[ADR-0014](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0014-uuidv7-primary-keys.md)
+for why UUIDv7, and [ADR-0015](../../docs/01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0015-lombok-for-entity-boilerplate.md)
+for the Lombok pattern.
+
+### The shared base class (`shared/domain/BaseEntity.java`)
+```java
+@MappedSuperclass
+@Getter
+@Setter
+@NoArgsConstructor
+@SuperBuilder
+public abstract class BaseEntity implements Serializable {
+
+    @Id
+    @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
+    private UUID id;
+
+    // equals/hashCode are hand-written on the primary key alone — never @EqualsAndHashCode.
+}
+```
+
+### A module entity (`content.beats`)
 ```java
 @Entity
 @Table(name = "beats", schema = "content")
 @Getter
 @Setter
-public class Beat {
-
-    @Id
-    @Tsid  // Hyperscale 64-bit TSID (8 bytes)
-    private Long id;
+@NoArgsConstructor
+@SuperBuilder
+public class Beat extends BaseEntity {
 
     @Column(name = "explorer_id", nullable = false)
     private UUID explorerId; // Logical reference to identity.explorers(id)
 
     @Column(name = "place_id", nullable = false)
-    private Long placeId; // Logical reference to exploration.places(id)
+    private UUID placeId; // Logical reference to exploration.places(id)
 
     @Column(name = "media_url", nullable = false)
     private String mediaUrl;
 
-    @Column(name = "captured_at", nullable = false)
-    private Instant capturedAt;
+    @Builder.Default  // without this, Lombok's builder drops the initialiser
+    @Column(name = "captured_at", nullable = false, updatable = false)
+    private Instant capturedAt = Instant.now();
 }
 ```
 
-### Security UUIDv7 Entity Example (`identity.explorers`)
+### A natural-key entity (`exploration.provinces`)
+Reference data keeps its external identifier and does **not** extend `BaseEntity`:
 ```java
 @Entity
-@Table(name = "explorers", schema = "identity")
+@Table(name = "provinces", schema = "exploration")
 @Getter
 @Setter
-public class Explorer {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Province implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id; // Security 128-bit UUID (16 bytes)
-
-    @Column(name = "handle", nullable = false, unique = true)
-    private String handle;
-
-    @Column(name = "display_name", nullable = false)
-    private String displayName;
+    @Column(name = "id", length = 16)
+    private String id; // ISO code, e.g. VN-HN
 }
 ```
 

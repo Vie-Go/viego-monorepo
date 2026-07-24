@@ -3,9 +3,10 @@
  * aggregates, events, and persistence. Integrates with peers only via published
  * domain events or a peer's {@code api} named interface (never internals).
  *
- * <p>{@code allowedDependencies = {}} makes the boundary strict from day one: this
- * module may depend on nothing but the OPEN {@code shared} kernel. Later phases add
- * explicit allowed dependencies as real integration is introduced.
+ * <p>Identity is the upstream supplier to every other context and consumes no peer's events,
+ * so it depends only on the {@code shared} kernel (its entities extend the shared
+ * {@code BaseEntity}). Later phases add explicit allowed dependencies only if real integration
+ * is introduced.
  */
-@org.springframework.modulith.ApplicationModule(displayName = "Identity", allowedDependencies = {})
+@org.springframework.modulith.ApplicationModule(displayName = "Identity", allowedDependencies = {"shared"})
 package com.viego.identity;

@@ -1,15 +1,34 @@
 ---
 title: "Plans, Estimates, Schedules"
-description: "The two-engineer delivery roadmap taking VieGo from scratch to production."
+description: "The detailed, phase-by-phase delivery plan: sprint goals, owners, schedule, and the specs inside each phase."
 ---
 
 # Plans, Estimates, Schedules
 
-The delivery plan that turns the [roadmap & backlog](roadmaps-and-backlogs.md) into a sequenced,
-estimated schedule. This page holds the **two-engineer, scratch-to-production roadmap**. Each
-product phase (P1–P5) builds one module whose low-level design is in the
-[Detailed Design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/)
-section — the phase and its design doc are cross-linked.
+The **detailed view** of the [Product Roadmap](roadmaps-and-backlogs.md). The roadmap says *which
+version ships when*; this page says *how each one gets built* — by whom, in what order, and against
+which specs.
+
+## How to read this page
+
+- A **phase (P0–P7) is one product feature, planned like a sprint**: a single goal, a named
+  full-stack owner, an estimate in weeks, and explicit exit criteria.
+- Each phase delivers exactly one **release** on the roadmap's
+  [release train](roadmaps-and-backlogs.md#release-train) (P0 → v0.1, P1 → v0.2, … P7 → v1.0).
+- A phase decomposes into **one or more smaller specs** — each a
+  [Spec Kit](sdd-standards/) feature folder under [`specs/`](../../specs/) with its own
+  `spec.md` → `plan.md` → `tasks.md`. A spec is the unit an engineer actually picks up; a phase is
+  the unit the roadmap tracks. Every phase below lists its specs.
+- Each product phase (P1–P5) builds one module whose low-level design is in the
+  [Detailed Design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/)
+  section — the phase and its design doc are cross-linked.
+
+| Level | Artifact | Owner | Tracked in |
+|-------|----------|-------|-----------|
+| Product | Version (v0.1 … v1.0) | Product | [Product Roadmap](roadmaps-and-backlogs.md) |
+| Phase / sprint | Phase P0–P7 | One full-stack engineer | This page |
+| Spec | `specs/NNN-slug/` | One engineer | `spec.md` · `plan.md` · `tasks.md` |
+| Task | `tasks.md` checkbox | — | The spec's `tasks.md` |
 
 ## Team model
 
@@ -32,6 +51,9 @@ ahead) against the agreed contracts. Ownership swaps every phase.
 - Every phase's "done" is defined by the matching
   [executable spec](../01-product-documentation/01-core-specifications/executable-specifications/)
   passing in CI, plus `ApplicationModules.verify()` staying green.
+- A phase is **cut into its specs at the start of the phase**, not months ahead: the owner takes
+  each spec through `spec.md` → `plan.md` → `tasks.md` before building it. The "planned" spec rows
+  below are therefore *intent* — slugs and numbers are fixed only when the folder is created.
 - Because ownership rotates full-stack every phase, both engineers cross-train on the whole
   system as a side effect of the schedule — not as a separate initiative.
 - Weekly sync to clear the **open product decisions** (below) before they block a phase.
@@ -45,6 +67,22 @@ ahead) against the agreed contracts. Ownership swaps every phase.
   [UI/UX Design Document](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/)),
   and infra is a managed container platform + managed Postgres.
 - Timeline is **relative** (Week 1…21); the example calendar starts **2026-08-04** and can shift.
+
+## Phase index
+
+| Phase | Feature (sprint goal) | Weeks | Ships | Owner | Specs |
+|-------|----------------------|-------|-------|-------|-------|
+| **P0** | Walking skeleton | 1–2 | **v0.1** | A + B (split by app) | 1 |
+| **P1** | Identity & foundations | 3–5 | **v0.2** | Engineer A | 3 |
+| **P2** | Exploration: map, places & unlocking | 6–9 | **v0.3** | Engineer B | 3 |
+| **P3** | Content: Beats (the core loop) | 10–12 | **v0.4** | Engineer A | 3 |
+| **P4** | Engagement: streaks & milestones + notification sink | 13–14 | **v0.5** | Engineer B | 3 |
+| **P5** | Social: friends & feeds | 15–17 | **v0.6** | Engineer A | 3 |
+| **P6** | Hardening & production readiness | 18–20 | **v0.9** | A + B (split by concern) | 2 |
+| **P7** | Launch | 21 | **v1.0** | A + B | — |
+
+Spec status legend used below: **done** (tasks complete, merged) · **in progress** ·
+**drafted** (spec folder exists, not started) · **planned** (not yet created — slug is indicative).
 
 ## Roadmap at a glance
 
@@ -70,7 +108,7 @@ gantt
   P7 Launch                           :b7, after b6, 1w
 ```
 
-## Phase 0 — Walking skeleton (Weeks 1–2)
+## Phase 0 — Walking skeleton (Weeks 1–2) · ships **v0.1**
 **Goal:** the monorepo builds (`backend/` + `mobile/`), a trivial vertical slice runs in the
 **dev** environment, path-scoped CI is green, and module-boundary verification is wired from day
 one. (No feature vertical exists yet, so this phase is still split by app.)
@@ -86,11 +124,17 @@ UI/UX: [Design System + RN translation layer](../01-product-documentation/02-aut
 | One trivial endpoint + springdoc OpenAPI; Dockerize | i18n scaffold (vi/en); theme switch; API client skeleton |
 | CI: build → test → scan → image → deploy to dev | CI: typecheck → lint → test → build |
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| [`001-phase-0-walking-skeleton`](../../specs/001-phase-0-walking-skeleton/spec.md) | The whole phase as one spec: backend + mobile scaffolds, dev deploy, CI, `verify()` | A + B | done |
+
 **Shared decisions:** Expo vs. bare RN (finish [ADR-0003](../01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0003-react-native-for-mobile.md));
 branch strategy; dev environment.
 **Exit:** app calls the dev backend's health/ping; CI green both sides; `verify()` green; deployed to dev.
 
-## Phase 1 — Identity & foundations (Weeks 3–5)
+## Phase 1 — Identity & foundations (Weeks 3–5) · ships **v0.2**
 **Goal:** authentication end-to-end; Explorer + handle + preferences; the event log proven;
 contract-first flow validated on a real feature.
 Spec: [`authentication.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/identity/authentication.feature).
@@ -115,11 +159,19 @@ UI/UX: [Identity screens](../01-product-documentation/02-authored-system-documen
 - Ingest canonical province/place datasets into the `exploration` schema
 - Port `<vn-map>` to an RN SVG map component
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| [`003-modular-database-schemas`](../../specs/003-modular-database-schemas/spec.md) | Backend data foundation: per-module schemas, 5 Flyway beans, TSID/UUID key strategy — unblocks every later module | A | done |
+| [`002-theme-components-identity`](../../specs/002-theme-components-identity/spec.md) | Mobile foundation: theme, component base, tooling, and the first-launch identity screens on **mock data** | B → A | done |
+| `identity-auth-backend` *(planned)* | Live auth: Explorer aggregate + handle, OIDC (Email + Google), JWT, preferences endpoints, `ExplorerRegistered`/`PreferencesUpdated` + outbox; mobile swapped off mock data onto the real API | A | planned |
+
 **Fast-follow:** Facebook + Zalo providers (can slip to P5).
 **Exit:** sign in (Email+Google), get a handle, set language/theme, persists across sessions;
 `@ready` auth scenarios pass; first real contract + BDD tests in CI.
 
-## Phase 2 — Exploration: map, places & unlocking (Weeks 6–9)
+## Phase 2 — Exploration: map, places & unlocking (Weeks 6–9) · ships **v0.3**
 **Goal:** the map surface — provinces with heat, **places (POIs)**, search, collection, and the
 capture-driven **unlock** listener (ready for P3's `BeatCaptured`).
 Spec: [`province-unlocking.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/exploration/province-unlocking.feature).
@@ -142,10 +194,18 @@ UI/UX: [Exploration screens](../01-product-documentation/02-authored-system-docu
 **Meanwhile — Engineer A (P3 groundwork, camera-side):**
 - `content` module skeleton: `Beat` aggregate + invariants; camera + capture UI scaffolding
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| `exploration-place-dataset` *(planned)* | Canonical province/ward/place ingestion into the `exploration` schema + `/provinces`, `/places/{id}`, `/search` endpoints | B | planned |
+| `exploration-map-collection` *(planned)* | `<VnMap>` RN component, Map Home, province sheet, place detail, Collection tab, offline cache basics | B | planned |
+| `exploration-province-unlocking` *(planned)* | `Collection` aggregate + invariants, `BeatCaptured` listener → `ProvinceUnlocked` (against the stub contract until P3) | B | planned |
+
 **Exit:** map, places, search, and collection render end-to-end; the unlock listener is in place;
 `@ready` unlock scenarios pass against a stub `BeatCaptured`; map rendering performance acceptable.
 
-## Phase 3 — Content: Beats (the core loop) (Weeks 10–12)
+## Phase 3 — Content: Beats (the core loop) (Weeks 10–12) · ships **v0.4**
 **Goal:** the heart of the product — capture a **Beat**, publish **`BeatCaptured`**, and see it
 unlock the province and populate memories. This closes the core loop.
 Spec: [`beat-capture.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/content/beat-capture.feature).
@@ -168,11 +228,20 @@ the capture flow [Camera](../01-product-documentation/02-authored-system-documen
 - `engagement` module skeleton: `Streak` aggregate + invariants (once/day, reset, longest)
 - Streak surfaces + counter/celebration animation components
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| `content-beat-capture` *(planned)* | `Beat` aggregate, `CaptureBeat`, audience, location resolution, **`BeatCaptured`** event contract; `/beats` endpoints | A | planned |
+| `content-media-pipeline` *(planned)* | Object storage upload, signed/CDN URLs, image processing per [ADR-0013](../01-product-documentation/02-authored-system-documentation/software-architecture-document/decisions/0013-object-storage-for-beat-media.md) | A | planned |
+| `content-capture-ui-memories` *(planned)* | Camera → Send → Beat Sent flow, Beat detail modal, Memories screen, optimistic upload UX | A | planned |
+
 **Exit:** capture a Beat → it unlocks the province (gold fill), appears in Memories, and emits
 `BeatCaptured`; `@ready` beat-capture + unlock scenarios pass end-to-end.
 
-## Phase 4 — Engagement: Streaks & milestones (Weeks 13–14)
-**Goal:** daily **streak** driven by capture, plus milestones/badges and notifications.
+## Phase 4 — Engagement: Streaks & milestones (Weeks 13–14) · ships **v0.5**
+**Goal:** daily **streak** driven by capture, plus milestones/badges, and the **notification**
+delivery sink (first publisher: `MilestoneReached`).
 Spec: [`daily-streak.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/engagement/daily-streak.feature).
 Design: [Engagement module design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/engagement.md).
 UI/UX: [Engagement screens](../01-product-documentation/02-authored-system-documentation/ui-ux-design-document/screens/engagement.md) —
@@ -184,16 +253,30 @@ UI/UX: [Engagement screens](../01-product-documentation/02-authored-system-docum
 **Owner — Engineer B (full stack, integrating P3's `BeatCaptured`):**
 - Wire the `BeatCaptured` listener into `engagement`; advance-streak use case
 - `StreakAdvanced` / `StreakBroken` / `MilestoneReached`; `/streaks/me`; break evaluation + timezone
-- Milestone/badge + celebration; notifications feed (`/notifications/me`)
+- Milestone/badge + celebration
+- `notification` module: fan-in listener for `MilestoneReached`, `/notifications/me` feed + unread count
 - Integrate streak surfaces (built in P3 prep) with live data
 
 **Meanwhile — Engineer A (P5 groundwork):**
 - `social` module skeleton: friendship + feed projection design; invite-link handling
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| `engagement-daily-streak` *(planned)* | `Streak` aggregate, `BeatCaptured` listener, advance/break with the day/timezone rule, `/streaks/me`, streak surfaces | B | planned |
+| `engagement-milestones` *(planned)* | `MilestoneReached` + badges, celebration screen | B | planned |
+| `notification-delivery-sink` *(planned)* | `notification` module: fan-in listeners (`MilestoneReached` first), `Notification` aggregate, `/notifications/me` feed + unread count, device tokens, `NotificationRaised` | B | planned |
+
+The `notification` module is a **cross-cutting delivery sink** ([design](../01-product-documentation/02-authored-system-documentation/software-architecture-document/design/notification.md)),
+not part of Engagement — it lands here because Engagement provides its first publisher
+(`MilestoneReached`). Exploration (`ProvinceUnlocked`) and Social (`FriendAdded`/`BeatReacted`)
+publishers are wired to it as those phases land.
+
 **Exit:** capturing advances the streak once/day, breaks correctly (tested with clock control),
 awards a badge at a milestone; `@ready` streak scenarios pass.
 
-## Phase 5 — Social: friends & feeds (Weeks 15–17)
+## Phase 5 — Social: friends & feeds (Weeks 15–17) · ships **v0.6**
 **Goal:** the friends-first layer — friendships, invite links, the friend feed, public Discover,
 and reactions.
 Spec: [`social-feed.feature`](../01-product-documentation/01-core-specifications/executable-specifications/features/social/social-feed.feature).
@@ -214,10 +297,18 @@ UI/UX: [Social screens](../01-product-documentation/02-authored-system-documenta
 **Meanwhile — Engineer B (P6 groundwork):**
 - Mobile store prep + accessibility/i18n audit scaffolding
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| `social-friendships-invites` *(planned)* | `Friendship` aggregate, invite-link resolution, `FriendAdded`, `/friends*`, Add-friends + share-link modal | A | planned |
+| `social-feed-discover` *(planned)* | Feed projections from `BeatCaptured`, `/feed/me` + `/discover`, audience enforcement, feed & Discover screens | A | planned |
+| `identity-auth-facebook-zalo` *(planned)* | The P1 fast-follow: Facebook + Zalo providers (+ account linking, if decided) | A | planned |
+
 **Exit:** add a friend via invite link; a friend's Beat appears in the friend feed; public beats
 appear in Discover; reactions work; `@ready` social scenarios pass.
 
-## Phase 6 — Hardening & production readiness (Weeks 18–20)
+## Phase 6 — Hardening & production readiness (Weeks 18–20) · ships **v0.9**
 **Goal:** make it launch-grade. Driven by the [Release Checklist](release-checklist.md). Not a
 single vertical feature, so this phase is **joint**, split by concern.
 
@@ -229,9 +320,16 @@ single vertical feature, so this phase is **joint**, split by concern.
 | Ops: staging cutover; blue/green deploy + **rollback rehearsal**; migration safety (expand/contract) | Store prep: metadata, screenshots, **camera + location** privacy disclosures; TestFlight / Play **beta** |
 | Runbooks: complete them; run an incident-response drill | Auth completeness: add Facebook + Zalo if deferred (mobile side) |
 
+**Specs in this phase**
+
+| Spec | Scope | Owner | Status |
+|------|-------|-------|--------|
+| `hardening-backend-production` *(planned)* | Observability, security review, load testing + indexing, staging cutover, blue/green + rollback rehearsal, runbooks | A | planned |
+| `hardening-mobile-store-readiness` *(planned)* | Sentry, a11y + VI/EN parity audit, low-end device profiling, store metadata & privacy disclosures, TestFlight/Play beta | B | planned |
+
 **Exit:** Release Checklist fully green; beta feedback addressed.
 
-## Phase 7 — Launch (Week 21)
+## Phase 7 — Launch (Week 21) · ships **v1.0**
 - Deploy backend to **production**; submit app to **App Store + Google Play** production.
 - Hypercare: monitor dashboards, keep rollback ready.
 
@@ -274,13 +372,16 @@ P0 skeleton → P1 identity (auth + events) → P2 exploration (map/places + unl
 | Two-person bus factor | Continuity | Contract-first + docs-as-source-of-truth; rotating full-stack ownership cross-trains both engineers |
 
 ## Milestone summary
-| Milestone | Phase | Exit criteria |
-|-----------|-------|---------------|
-| **M0 Foundations** | P0 | Skeleton runs in dev; CI green; `verify()` green |
-| **M1 Identity** | P1 | Auth + handle + preferences specs pass |
-| **M2 Exploration** | P2 | Map, places, search, collection + unlock listener ready |
-| **M3 Core loop** | P3 | Capture → unlock + memories; `BeatCaptured` proven |
-| **M4 Engagement** | P4 | Streak + milestone specs pass |
-| **M5 Social** | P5 | Friends, feeds, discover, reactions specs pass |
-| **M6 Launch-ready** | P6 | Release Checklist green; beta validated |
-| **Production** | P7 | Live on App Store + Play; healthy |
+| Milestone | Phase | Release | Exit criteria |
+|-----------|-------|---------|---------------|
+| **M0 Foundations** | P0 | v0.1 | Skeleton runs in dev; CI green; `verify()` green |
+| **M1 Identity** | P1 | v0.2 | Auth + handle + preferences specs pass |
+| **M2 Exploration** | P2 | v0.3 | Map, places, search, collection + unlock listener ready |
+| **M3 Core loop** | P3 | **v0.4** | Capture → unlock + memories; `BeatCaptured` proven |
+| **M4 Engagement** | P4 | v0.5 | Streak + milestone specs pass |
+| **M5 Social** | P5 | v0.6 | Friends, feeds, discover, reactions specs pass |
+| **M6 Launch-ready** | P6 | v0.9 | Release Checklist green; beta validated |
+| **Production** | P7 | **v1.0** | Live on App Store + Play; healthy |
+
+> Version targets and audience per release live in the
+> [Product Roadmap → release train](roadmaps-and-backlogs.md#release-train).

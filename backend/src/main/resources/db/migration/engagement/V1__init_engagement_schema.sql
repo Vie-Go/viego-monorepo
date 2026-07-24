@@ -1,9 +1,10 @@
 -- Schema: engagement
 -- Managed by engagementFlyway bean (history table: engagement.flyway_schema_history)
+-- Primary keys: UUIDv7 (time-ordered, application-generated) — see ADR-0014.
 
 CREATE SCHEMA IF NOT EXISTS engagement;
 
--- 1. Streaks table (Primary Key: explorer_id UUID; NO FK to identity.explorers)
+-- 1. Streaks table (Primary Key: explorer_id; NO FK to identity.explorers)
 CREATE TABLE IF NOT EXISTS engagement.streaks (
     explorer_id UUID PRIMARY KEY, -- Logical ref to identity.explorers(id)
     current_streak INT NOT NULL DEFAULT 0,
@@ -12,22 +13,12 @@ CREATE TABLE IF NOT EXISTS engagement.streaks (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Milestones table (TSID 64-bit BIGINT primary key)
+-- 2. Milestones table
 CREATE TABLE IF NOT EXISTS engagement.milestones (
-    id BIGINT PRIMARY KEY,
+    id UUID PRIMARY KEY,
     explorer_id UUID NOT NULL, -- Logical ref to identity.explorers(id)
     badge_code VARCHAR(32) NOT NULL,
     unlocked_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Notifications table (TSID 64-bit BIGINT primary key)
-CREATE TABLE IF NOT EXISTS engagement.notifications (
-    id BIGINT PRIMARY KEY,
-    recipient_id UUID NOT NULL, -- Logical ref to identity.explorers(id)
-    kind VARCHAR(32) NOT NULL,
-    payload_json JSONB NOT NULL,
-    is_read BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX IF NOT EXISTS idx_notifications_recipient_unread ON engagement.notifications(recipient_id, is_read) WHERE is_read = FALSE;
+-- Notifications are NOT owned here — they belong to the `notification` schema/module.

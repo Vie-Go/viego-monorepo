@@ -22,8 +22,9 @@ src/
 │   ├── identity/        ← auth screens, handle, session, preferences
 │   ├── exploration/     ← map, province sheet, place detail, search, collection
 │   ├── content/         ← camera, capture/send flow, beat detail, memories
-│   ├── engagement/      ← streak UI, milestones/celebration, notifications
-│   └── social/          ← friend feed, discover, add-friends, reactions
+│   ├── engagement/      ← streak UI, milestones/celebration
+│   ├── social/          ← friend feed, discover, add-friends, reactions
+│   └── notification/    ← notifications screen, unread badge, push token registration
 │       ├── api/         ← endpoints + React Query hooks
 │       ├── components/  ← feature-scoped UI
 │       ├── screens/     ← navigable screens

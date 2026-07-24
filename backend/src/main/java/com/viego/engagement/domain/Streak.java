@@ -1,47 +1,53 @@
 package com.viego.engagement.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * An Explorer's daily capture streak. Keyed by the owning Explorer's id rather than a
+ * generated key — strictly one row per Explorer.
+ */
 @Entity
 @Table(name = "streaks", schema = "engagement")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Streak implements Serializable {
 
     @Id
     @Column(name = "explorer_id")
     private UUID explorerId; // Logical ref to identity.explorers(id)
 
+    @Builder.Default
     @Column(name = "current_streak", nullable = false)
     private Integer currentStreak = 0;
 
+    @Builder.Default
     @Column(name = "longest_streak", nullable = false)
     private Integer longestStreak = 0;
 
     @Column(name = "last_capture_date")
     private LocalDate lastCaptureDate;
 
+    @Builder.Default
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt = Instant.now();
-
-    public Streak() {}
 
     public Streak(UUID explorerId) {
         this.explorerId = explorerId;
     }
-
-    public UUID getExplorerId() { return explorerId; }
-    public void setExplorerId(UUID explorerId) { this.explorerId = explorerId; }
-    public Integer getCurrentStreak() { return currentStreak; }
-    public void setCurrentStreak(Integer currentStreak) { this.currentStreak = currentStreak; }
-    public Integer getLongestStreak() { return longestStreak; }
-    public void setLongestStreak(Integer longestStreak) { this.longestStreak = longestStreak; }
-    public LocalDate getLastCaptureDate() { return lastCaptureDate; }
-    public void setLastCaptureDate(LocalDate lastCaptureDate) { this.lastCaptureDate = lastCaptureDate; }
-    public Instant getUpdatedAt() { return updatedAt; }
 
     @Override
     public boolean equals(Object o) {

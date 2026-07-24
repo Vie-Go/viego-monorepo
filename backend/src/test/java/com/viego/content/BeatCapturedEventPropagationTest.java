@@ -19,8 +19,14 @@ public class BeatCapturedEventPropagationTest {
 
     @Test
     void testBeatCapturePublishesEvent() {
-        Beat beat = new Beat(UUID.randomUUID(), 1001L, "VN-HN", "https://media.viego.app/beat.jpg", "PUBLIC");
-        beat.setId(5001L);
+        Beat beat = Beat.builder()
+                .id(UUID.randomUUID())
+                .explorerId(UUID.randomUUID())
+                .placeId(UUID.randomUUID())
+                .provinceId("VN-HN")
+                .mediaUrl("https://media.viego.app/beat.jpg")
+                .audience("PUBLIC")
+                .build();
 
         beatCaptureService.captureBeat(beat);
         assertThat(beat.getId()).isNotNull();

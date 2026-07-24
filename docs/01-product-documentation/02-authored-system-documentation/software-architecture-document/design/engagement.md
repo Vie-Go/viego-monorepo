@@ -1,6 +1,6 @@
 ---
 title: "Design — Engagement module (Daily streak)"
-description: "Detailed design of the engagement module: the Streak aggregate, capture-driven daily ritual, milestones/badges, notifications, and StreakAdvanced/StreakBroken/MilestoneReached events."
+description: "Detailed design of the engagement module: the Streak aggregate, capture-driven daily ritual, milestones/badges, and StreakAdvanced/StreakBroken/MilestoneReached events (notifications live in the notification module)."
 ---
 
 # Design — Engagement module (Daily streak)
@@ -30,10 +30,12 @@ The **ritual is settled**: capturing a Beat. The **day/timezone boundary** remai
     - a **missed day resets** `current` to 0 and emits `StreakBroken`;
     - `longest` is **monotonic** — it never decreases, even after a break.
 - **Milestone** *(entity)* — a streak threshold (e.g. 7) that awards a named **Badge**.
-- **Notification** *(entity)* — a surfaced event (streak reminder, like, friend Beat, milestone, new
-  place nearby).
 - **DayClock** *(port)* — resolves "today" under the agreed timezone rule; injected so tests control
   the clock.
+
+> **Notifications moved out.** Engagement no longer owns a `Notification` entity. It *publishes*
+> events (`MilestoneReached`, streak-at-risk); the [`notification`](notification.md) module decides
+> what becomes a notification and how it is delivered.
 
 ## Commands & events
 
@@ -44,16 +46,18 @@ The **ritual is settled**: capturing a Beat. The **day/timezone boundary** remai
 | **Publishes** | **`StreakAdvanced`** | `{ explorerId, newCount, at }`. |
 | **Publishes** | **`StreakBroken`** | `{ explorerId, previousCount, at }`. |
 | **Publishes** | **`MilestoneReached`** | `{ explorerId, milestone, badge, at }`. |
-| Consumes | `ProvinceUnlocked` (Exploration) | Notification: province added to collection. |
-| Consumes | `FriendAdded` (Social) | Notification: new friend. |
 | Consumes | `ExplorerRegistered` (Identity) | Create a zeroed Streak for the new Explorer. |
+
+> `ProvinceUnlocked` and `FriendAdded` are no longer consumed *here* to raise notifications — those
+> now flow directly to the [`notification`](notification.md) module.
 
 ## REST API
 
 | Method & path | Purpose | Notes |
 |---------------|---------|-------|
 | `GET /api/v1/streaks/me` | Current + longest streak, last capture date, this-week view | Drives the streak badge + profile |
-| `GET /api/v1/notifications/me` | The Explorer's notifications | Notifications screen |
+
+`GET /api/v1/notifications/me` now belongs to the [`notification`](notification.md) module.
 
 Break evaluation runs on read and/or a scheduled sweep so a streak breaks even when the Explorer
 never opens the app.
@@ -62,9 +66,10 @@ never opens the app.
 
 - Schema **`engagement`** (owned).
 - Tables: `streak (explorer_id PK, current, longest, last_capture_date, updated_at)`,
-  `badge (explorer_id, milestone, awarded_at)`, `notification`.
+  `milestone (id, explorer_id, badge_code, unlocked_at)`. No `notification` table — that belongs to
+  the [`notification`](notification.md) schema.
 - No FK to peers — referenced by id value.
-- Flyway: `db/migration/engagement/V1__init.sql`.
+- Flyway: `db/migration/engagement/V1__init_engagement_schema.sql`.
 
 ## Backend flow — capture advances the streak
 
@@ -87,9 +92,9 @@ Missing-day path: `EvaluateStreak` sees `lastCaptureDate` older than one day →
 - **Surfaces:** the streak flame badge in the header/nav; the **Snap home** "Day N — chụp một tấm
   để giữ lửa" prompt; the **Beat sent!** streak card; the milestone **celebration** screen (confetti,
   badge unlocked); a **this-week** row on the profile; a **relight** banner when broken.
-- **Notifications** screen with typed rows (streak, like, friend beat, place nearby, badge).
-- **State:** React Query `['engagement','streak'|'notifications']`; invalidated by the capture
-  mutation so a Beat visibly advances the streak in one refresh.
+- The **Notifications** screen is owned by the [`notification`](notification.md) module.
+- **State:** React Query `['engagement','streak']`; invalidated by the capture mutation so a Beat
+  visibly advances the streak in one refresh.
 - **Motion:** counter + celebration respect **reduced-motion**.
 
 ## Open decisions

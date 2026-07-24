@@ -12,9 +12,10 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Integration Test for Multi-Schema Isolation and Hybrid Key Architecture.
+ * Integration Test for Multi-Schema Isolation.
  * Verifies:
- * 1. 5 separate Flyway schema history tables exist (identity, exploration, content, engagement, social).
+ * 1. One Flyway schema history table per module schema (identity, exploration, content,
+ *    engagement, social, notification).
  * 2. 0 cross-schema foreign key constraints exist across the database.
  */
 @SpringBootTest
@@ -25,15 +26,16 @@ public class SchemaIsolationTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void testFiveSeparateFlywayHistoryTablesExist() {
+    void testSeparateFlywayHistoryTablePerModuleSchemaExists() {
         String sql = """
-            SELECT table_schema 
-            FROM information_schema.tables 
-            WHERE table_name = 'flyway_schema_history' 
-              AND table_schema IN ('identity', 'exploration', 'content', 'engagement', 'social')
+            SELECT table_schema
+            FROM information_schema.tables
+            WHERE table_name = 'flyway_schema_history'
+              AND table_schema IN ('identity', 'exploration', 'content', 'engagement', 'social', 'notification')
         """;
         List<String> schemas = jdbcTemplate.queryForList(sql, String.class);
-        assertThat(schemas).containsExactlyInAnyOrder("identity", "exploration", "content", "engagement", "social");
+        assertThat(schemas).containsExactlyInAnyOrder(
+                "identity", "exploration", "content", "engagement", "social", "notification");
     }
 
     @Test

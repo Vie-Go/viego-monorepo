@@ -26,39 +26,39 @@
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Core ORM, TSID generator, and testing infrastructure that MUST be complete before user stories
+**Purpose**: Core ORM, key generation, and testing infrastructure that MUST be complete before user stories
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
 - [x] T004 Setup PostgreSQL PostGIS and JPA Dialect configuration in backend/src/main/java/com/viego/shared/config/DatabaseConfig.java
-- [x] T005 [P] Integrate 64-bit TSID generator and base entity classes in backend/src/main/java/com/viego/shared/domain/BaseTsidEntity.java
+- [x] T005 [P] Integrate UUIDv7 key generation and base entity class in backend/src/main/java/com/viego/shared/domain/BaseEntity.java
 - [x] T006 [P] Configure Spring Modulith module verification test harness in backend/src/test/java/com/viego/ApplicationModulesTest.java
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
 ---
 
-## Phase 3: User Story 1 - Backend Developer Module Data Isolation & Hybrid Keys (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - Backend Developer Module Data Isolation & Keys (Priority: P1) 🎯 MVP
 
-**Goal**: Create 5 isolated PostgreSQL schemas with 5 separate Flyway beans and hybrid TSID (`BIGINT` 8B) vs UUID (16B) entity mappings.
+**Goal**: Create 5 isolated PostgreSQL schemas with 5 separate Flyway beans and uniform UUIDv7 entity mappings.
 
 **Independent Test**: Run `ApplicationModulesTest.java` and `SchemaIsolationTest.java` to verify all 5 schemas migrate with 5 isolated `flyway_schema_history` tables and 0 cross-schema FKs.
 
 ### Implementation for User Story 1
 
 - [x] T007 [P] [US1] Write identity schema Flyway migration script (UUID keys) in backend/src/main/resources/db/migration/identity/V1__init_identity_schema.sql
-- [x] T008 [P] [US1] Write exploration schema Flyway migration script (String & TSID keys) in backend/src/main/resources/db/migration/exploration/V1__init_exploration_schema.sql
-- [x] T009 [P] [US1] Write content schema Flyway migration script (TSID BIGINT keys) in backend/src/main/resources/db/migration/content/V1__init_content_schema.sql
-- [x] T010 [P] [US1] Write engagement schema Flyway migration script (TSID BIGINT keys) in backend/src/main/resources/db/migration/engagement/V1__init_engagement_schema.sql
-- [x] T011 [P] [US1] Write social schema Flyway migration script (TSID BIGINT keys) in backend/src/main/resources/db/migration/social/V1__init_social_schema.sql
+- [x] T008 [P] [US1] Write exploration schema Flyway migration script (ISO & UUIDv7 keys) in backend/src/main/resources/db/migration/exploration/V1__init_exploration_schema.sql
+- [x] T009 [P] [US1] Write content schema Flyway migration script (UUIDv7 keys) in backend/src/main/resources/db/migration/content/V1__init_content_schema.sql
+- [x] T010 [P] [US1] Write engagement schema Flyway migration script (UUIDv7 keys) in backend/src/main/resources/db/migration/engagement/V1__init_engagement_schema.sql
+- [x] T011 [P] [US1] Write social schema Flyway migration script (UUIDv7 keys) in backend/src/main/resources/db/migration/social/V1__init_social_schema.sql
 - [x] T012 [P] [US1] Map identity domain entities (Explorer, AuthProvider, Preferences with UUID PKs) in backend/src/main/java/com/viego/identity/domain/
-- [x] T013 [P] [US1] Map exploration domain entities (Province, Ward, Place, Collection with TSID/String PKs) in backend/src/main/java/com/viego/exploration/domain/
-- [x] T014 [P] [US1] Map content domain entities (Beat, Review, Memory with TSID BIGINT PKs) in backend/src/main/java/com/viego/content/domain/
-- [x] T015 [P] [US1] Map engagement domain entities (Streak, Milestone, Notification with TSID BIGINT PKs) in backend/src/main/java/com/viego/engagement/domain/
-- [x] T016 [P] [US1] Map social domain entities (Friendship, InviteLink, Reaction, FeedEntry with TSID BIGINT PKs) in backend/src/main/java/com/viego/social/domain/
+- [x] T013 [P] [US1] Map exploration domain entities (Province, Ward, Place, Collection with ISO/UUIDv7 PKs) in backend/src/main/java/com/viego/exploration/domain/
+- [x] T014 [P] [US1] Map content domain entities (Beat, Review, Memory with UUIDv7 PKs) in backend/src/main/java/com/viego/content/domain/
+- [x] T015 [P] [US1] Map engagement domain entities (Streak, Milestone, Notification with UUIDv7 PKs) in backend/src/main/java/com/viego/engagement/domain/
+- [x] T016 [P] [US1] Map social domain entities (Friendship, InviteLink, Reaction, FeedEntry with UUIDv7 PKs) in backend/src/main/java/com/viego/social/domain/
 - [x] T017 [US1] Implement information schema integration test verifying 5 separate flyway_schema_history tables and 0 cross-schema FKs in backend/src/test/java/com/viego/shared/SchemaIsolationTest.java
 
-**Checkpoint**: User Story 1 complete - all 5 domain schemas created, 5 Flyway beans active, and hybrid TSID/UUID keys mapped.
+**Checkpoint**: User Story 1 complete - all 5 domain schemas created, 5 Flyway beans active, and UUIDv7 keys mapped.
 
 ---
 
@@ -70,7 +70,7 @@
 
 ### Implementation for User Story 2
 
-- [x] T018 [P] [US2] Define BeatCapturedEvent domain contract (with TSID & UUID references) in backend/src/main/java/com/viego/content/domain/event/BeatCapturedEvent.java
+- [x] T018 [P] [US2] Define BeatCapturedEvent domain contract (UUIDv7 references) in backend/src/main/java/com/viego/content/domain/event/BeatCapturedEvent.java
 - [x] T019 [US2] Implement Beat capture event publisher in backend/src/main/java/com/viego/content/service/BeatCaptureService.java
 - [x] T020 [P] [US2] Implement exploration event listener for province unlocks in backend/src/main/java/com/viego/exploration/listener/BeatCapturedExplorationListener.java
 - [x] T021 [P] [US2] Implement engagement event listener for streak progress in backend/src/main/java/com/viego/engagement/listener/BeatCapturedEngagementListener.java

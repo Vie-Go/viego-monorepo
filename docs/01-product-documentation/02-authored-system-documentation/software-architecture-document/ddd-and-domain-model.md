@@ -1,6 +1,6 @@
 ---
 title: "DDD & Domain Model"
-description: "Ubiquitous language, context map, domain model, and the five product bounded contexts."
+description: "Ubiquitous language, context map, domain model, the five product bounded contexts, and the notification delivery sink."
 ---
 
 # DDD & Domain Model
@@ -35,7 +35,8 @@ The shared vocabulary used identically in specs, UI, and code. **Never introduce
 | **Memories** | An Explorer's personal, time-ordered history of their own Beats | Content |
 | **Streak** | Count of consecutive days on which the Explorer captured at least one Beat | Engagement |
 | **Milestone** | A streak achievement that unlocks a **Badge** (e.g. "Tuần Rực Lửa" — one full week) | Engagement |
-| **Notification** | An event surfaced to the Explorer (streak reminder, like, friend's Beat, milestone) | Engagement |
+| **Notification** | An event surfaced to the Explorer (streak reminder, like, friend's Beat, milestone, province unlocked, place nearby) | Notification |
+| **Device Token** | A registered push target for one of an Explorer's devices | Notification |
 | **Friendship** | A mutual connection between two Explorers | Social |
 | **Invite Link** | A shareable link (`viego.app/add/@handle`) or QR that adds the sharer as a friend | Social |
 | **Feed** | A stream of Beats — the **friend feed** (from your friends) or **Discover** (public) | Social |
@@ -51,8 +52,9 @@ Each context is one Modulith module under `com.viego.<module>`.
 | **Identity** | `identity` | Explorer accounts, handles, auth, language/theme preferences |
 | **Exploration** | `exploration` | Interactive map, provinces/wards, places (POIs), unlocking, collection, search |
 | **Content** | `content` | Beats (photo captures), reviews, memories, media delivery |
-| **Engagement** | `engagement` | Streaks, milestones/badges, notifications |
+| **Engagement** | `engagement` | Streaks, milestones/badges |
 | **Social** | `social` | Friendships, invite links, feeds (friend + discover), reactions |
+| **Notification** | `notification` | Recording notifications from every context and delivering them (in-app feed, push) |
 | _(shared kernel)_ | `shared` | Cross-cutting value objects only (ids, `LocalizedText`) |
 
 ```mermaid
@@ -67,12 +69,19 @@ flowchart LR
   Exploration -->|ProvinceUnlocked| Engagement
   Social -->|FriendAdded| Engagement
   Engagement -->|MilestoneReached| Social
+  Engagement -->|MilestoneReached / StreakReminder| Notification
+  Exploration -->|ProvinceUnlocked| Notification
+  Social -->|FriendAdded / BeatReacted| Notification
 ```
 
 **`BeatCaptured` is the backbone event.** One capture fans out to three consumers at once —
 Exploration unlocks the province, Engagement advances the streak, and Social pushes the Beat onto
 friends' feeds. Modules integrate through **published domain events**, never by calling internals.
-The full event catalog is the
+
+**Notification is the downstream sink.** Every context that has something worth telling the
+Explorer publishes an event; `notification` consumes those events and owns the decision of what
+becomes a notification and how it is delivered. All arrows point **into** it and none point out, so
+"notify the user" never leaks back into the domain contexts. The full event catalog is the
 [AsyncAPI spec](../../../01-core-specifications/api-system-specifications/domain-events.asyncapi.yaml).
 
 ## Domain model by context
@@ -115,12 +124,11 @@ The full event catalog is the
   *Invariants:* advances **at most once per calendar day**; a missed day resets `current` (emit
   `StreakBroken`); `longest` never decreases.
 - **Milestone** _(entity)_ — a streak threshold (e.g. 7 days) that awards a **Badge**.
-- **Notification** _(entity)_ — a surfaced event for the Explorer (streak reminder, like, friend
-  Beat, milestone, new place nearby).
 - **DayClock** _(port)_ — resolves "today" under the agreed timezone rule.
 - Consumes **`BeatCaptured`** (advances the streak — capturing is the daily ritual),
   `ProvinceUnlocked`, `FriendAdded`, `ExplorerRegistered`. Publishes **`StreakAdvanced`**,
-  **`StreakBroken`**, **`MilestoneReached`**. Owns `engagement` schema.
+  **`StreakBroken`**, **`MilestoneReached`**. Owns `engagement` schema. (Notifications are **not**
+  owned here — Engagement publishes events; `notification` decides what the Explorer is told.)
 
 ### Social
 - **Friendship** _(aggregate root)_ — a mutual link between two Explorers. *Invariant:* symmetric;
@@ -132,6 +140,18 @@ The full event catalog is the
 - **Reaction** _(entity)_ — a like or bolt on a Beat, by an Explorer.
 - Consumes **`BeatCaptured`** (fan-out to feeds), `ExplorerRegistered`. Publishes **`FriendAdded`**,
   **`BeatReacted`**. Owns `social` schema.
+
+### Notification
+- **Notification** _(aggregate root)_ — one addressed, recorded message: `recipientId`, `kind`
+  (streak reminder, milestone, province unlocked, friend added, beat reacted, friend beat, place
+  nearby), immutable `payload` captured when it happened, and read state. *Invariant:* `markRead`
+  is **idempotent** — re-reading never moves `readAt`.
+- **DeviceToken** _(entity)_ — a registered push target for one of the Explorer's devices.
+- The system's **delivery sink**: consumes peers' events (`MilestoneReached`, `ProvinceUnlocked`,
+  `FriendAdded`, `BeatReacted`, …) and, for each, decides whether to record a Notification and
+  which channels apply. Publishes **`NotificationRaised`** so delivery channels (push) can react
+  without Notification depending on them. **No peer depends on `notification`.** Owns `notification`
+  schema.
 
 ## Shared value objects
 - **LocalizedText** `{ vi, en, … }` — all user-facing text.
