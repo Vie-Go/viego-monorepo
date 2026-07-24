@@ -23,7 +23,11 @@ description: "Authentication, secrets, and data protection."
 ## Data protection
 - TLS everywhere (HTTPS, DB in transit).
 - Minimize PII; encrypt sensitive data at rest; no PII in logs/URLs.
-- Media served via signed/CDN URLs; access respects unlock entitlement.
+- Media served via signed/CDN URLs; access respects unlock entitlement. Media buckets are **private**
+  with a **per-environment API token**; upload uses short-lived presigned `PUT`, delivery uses an
+  edge-validated token ([ADR 0013](../../02-authored-system-documentation/software-architecture-document/decisions/0013-object-storage-for-beat-media.md)).
+- **Data residency:** Beat photos sit outside Vietnam on Cloudflare R2 (`apac-se` hint, no enforced
+  jurisdiction) — an open compliance question under Decree 53/2022, blocking before prod.
 
 ## Application hardening
 - Input validation at the API boundary; RFC 9457 errors without leaking internals.

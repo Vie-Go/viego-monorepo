@@ -43,8 +43,21 @@ is not pinned to a precise point ([FR-EX-09](../../../01-core-specifications/req
 | Command | `LeaveReview(explorerId, placeId, note, rating)` | Allowed only if the Explorer has a Beat there. |
 | Consumes | `ExplorerRegistered` (Identity) | Initialise per-Explorer content state. |
 
-Media (photos) live in **object storage / CDN**; the DB holds `photoRef` + metadata. Content is the
-**publisher** of the core path, not a terminal consumer.
+Media (photos) live in **Cloudflare R2 + CDN** ([ADR 0013](../decisions/0013-object-storage-for-beat-media.md));
+the DB holds `photoRef` + metadata. Content is the **publisher** of the core path, not a terminal
+consumer.
+
+### Media variants
+
+A capture uploads **three WebP objects** under one `photoRef` prefix, resized **on-device** before
+upload — there is no server-side or on-the-fly transformation service, which keeps media cost to
+storage alone and keeps the upload small enough for the optimistic send path.
+
+| Variant | Long edge | Typical size | Serves |
+|---------|-----------|--------------|--------|
+| `thumb/` | 240 px | ~15 KB | Memories calendar, map pins |
+| `feed/` | 720 px | ~70 KB | Discover and friends feeds |
+| `orig/` | 1600 px | ~350 KB | Beat detail modal, export |
 
 ## REST API
 
@@ -55,13 +68,22 @@ Media (photos) live in **object storage / CDN**; the DB holds `photoRef` + metad
 | `GET /api/v1/memories/me` | The Explorer's own Beats, by month | Drives the Memories screen |
 | `POST /api/v1/places/{id}/reviews` | Leave a review | **403** if no Beat at the place |
 
-Photos are returned as **short-lived signed/CDN URLs**, never proxied through the app server.
+Photos are returned as **short-lived signed/CDN URLs**, never proxied through the app server:
+
+- **Upload:** the API issues a **presigned S3 `PUT`** per variant (5-minute TTL, content-length and
+  content-type bound); the client uploads **directly to R2**.
+- **Delivery:** the audience check is evaluated against Postgres, then the API returns a
+  `media.viego.app` URL carrying a **15-minute HMAC token** validated at the edge. The cache key
+  excludes the token, so every viewer of a Beat shares one cached object.
+- Presigned `GET` on the S3 endpoint bypasses the CDN, so it is reserved for server-to-server and
+  export use — never the feed.
 
 ## Persistence
 
 - Schema **`content`** (owned).
 - Tables: `beat`, `review`, and a `memories` projection (or a query over `beat`).
-- **Media** lives in object storage / CDN; the DB holds only `photo_ref` + metadata.
+- **Media** lives in Cloudflare R2 / CDN; the DB holds only `photo_ref` (the variant prefix) +
+  metadata. Deleting a Beat must delete **all three variants** and purge the edge cache.
 - No FK to `identity`/`exploration` — `explorer_id`, `place_id`, `province_id` are id values.
 - Flyway: `db/migration/content/V1__init.sql`.
 - **Cache** (Redis namespace `content:*`, [ADR 0007](../decisions/0007-redis-cache-and-token-rotation.md)):

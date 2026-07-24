@@ -33,6 +33,7 @@ services.
 | Source control | Single monorepo, path-scoped CI | [0006](decisions/0006-monorepo-source-control.md) |
 | Datastore | PostgreSQL, schema-per-module | [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
 | Cache / token store | Redis — hot & slow-changing read cache + refresh-token rotation | [0007](decisions/0007-redis-cache-and-token-rotation.md) |
+| Media store | Cloudflare R2 + CDN (S3 API); MinIO locally | [0013](decisions/0013-object-storage-for-beat-media.md) |
 | Module integration | Domain events (transactional outbox) → broker on extraction | [0002](decisions/0002-modular-monolith-with-spring-modulith.md) / [0005](decisions/0005-postgresql-and-event-driven-integration.md) |
 | Mobile | React Native + TypeScript (iOS/Android) | [0003](decisions/0003-react-native-for-mobile.md) |
 | API | REST + OpenAPI; async events + AsyncAPI | — |
@@ -58,7 +59,7 @@ flowchart TD
 | Backend API | Spring Boot · Java 25 · Spring Modulith | Domain logic across five modules; REST API; event log |
 | PostgreSQL | Postgres | Persistence, schema-per-module (source of truth) |
 | Redis | Redis | Non-authoritative cache for hot/slow-changing reads; refresh-token rotation & revocation ([ADR 0007](decisions/0007-redis-cache-and-token-rotation.md)) |
-| Object storage/CDN | TBD | Beat photos (served via short-lived signed URLs) |
+| Object storage/CDN | Cloudflare R2 + CDN (MinIO locally) | Beat photos (served via short-lived signed URLs) ([ADR 0013](decisions/0013-object-storage-for-beat-media.md)) |
 | Identity Providers | External | Auth (Google, Facebook, Zalo, email) |
 
 ## C4 Level 3 — Backend modules

@@ -64,7 +64,7 @@ A photo check-in (owned by `content`). Immutable once captured.
 |-------|------|-------------|
 | `id` | string | Beat id |
 | `explorerId` | string | Author |
-| `photoRef` | string | Object-storage key; served as a signed/CDN URL |
+| `photoRef` | string | Object-storage prefix for the `thumb/`, `feed/`, `orig/` variants; served as a signed/CDN URL |
 | `placeId` | string? | Tagged place, if any |
 | `provinceId` | string | Resolved province (suppressed outside Vietnam) |
 | `caption` | string? | Optional caption |
